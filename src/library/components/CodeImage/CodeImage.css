@@ -5,9 +5,9 @@
    whatever the pack. */
 
 .lib-codeimage {
-  --lib-code-size: calc(var(--control-h) * 4);
   display: inline-block;
-  inline-size: var(--lib-code-size);
+  /* Set --lib-code-size on a parent to size it; four controls wide until then. */
+  inline-size: var(--lib-code-size, calc(var(--control-h) * 4));
   aspect-ratio: 1;
 }
 .lib-codeimage[data-empty] { display: none; }

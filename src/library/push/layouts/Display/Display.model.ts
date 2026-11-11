@@ -10,10 +10,11 @@
 // The display knows a screen's parts, never which screen it is.
 import { toCssVars, type Facets } from '../../../contract';
 import { lampVars } from '../../../foundation/themes/lamps';
+import { iconNode } from '../../../primitives/Icon/Icon.model';
 import { textNode } from '../../../primitives/Text/Text.model';
 import { component, h, styleText, wire, type Child, type ChildArg, type Handlers, type Node } from '../../../foundation/view/Tree.model';
 import { DISPLAY, encoderId } from '../../model/layout';
-import type { BodyCell, ListCell, ListItem, Overlay, ParamCell, PushFrame, PushInput, RowCell, Screen } from '../../model/types';
+import type { BodyCell, ListCell, ListItem, Overlay, ParamCell, Picture, PushFrame, PushInput, RowCell, Screen } from '../../model/types';
 import { colourCss } from '../lamp';
 
 export interface DisplayModelProps {
@@ -41,10 +42,10 @@ export function listWindow(items: readonly ListItem[], chosen: string | undefine
 }
 
 const ICON: Record<NonNullable<RowCell['icon']>, string> = {
-  midi: '♪', audio: '∿', group: '▣', return: '↩', main: '▬', instrument: '♪', effect: '∿', 'midi-effect': '⋯', rack: '▤', 'drum-rack': '▦', folder: '▸', left: '‹', right: '›', close: '✕', plus: '+', check: '✓',
+  midi: '♪', audio: '∿', group: '▣', return: '↩', main: '▬', instrument: '♪', effect: '∿', 'midi-effect': '⋯', rack: '▤', 'drum-rack': '▦', folder: '▸', left: '‹', right: '›', close: '✕', plus: '+', check: '✓', 'switch-on': '■', 'switch-off': '□', map: '⇤',
 };
 const ICON_NAME: Record<NonNullable<RowCell['icon']>, string> = {
-  midi: 'MIDI track', audio: 'audio track', group: 'group', return: 'return', main: 'Main', instrument: 'instrument', effect: 'effect', 'midi-effect': 'MIDI effect', rack: 'Rack', 'drum-rack': 'Drum Rack', folder: 'folder', left: 'more to the left', right: 'more to the right', close: 'close', plus: 'add', check: 'done',
+  midi: 'MIDI track', audio: 'audio track', group: 'group', return: 'return', main: 'Main', instrument: 'instrument', effect: 'effect', 'midi-effect': 'MIDI effect', rack: 'Rack', 'drum-rack': 'Drum Rack', folder: 'folder', left: 'more to the left', right: 'more to the right', close: 'close', plus: 'add', check: 'done', 'switch-on': 'on', 'switch-off': 'off', map: 'map to a macro',
 };
 
 const lamp = (colour: RowCell['colour'] | undefined) => (colour === undefined ? undefined : colourCss(colour));
@@ -64,7 +65,12 @@ function tab(cell: RowCell | null, row: 'top' | 'bottom', col: number): Node {
       style: styleText({ '--push-lamp': lamp(cell.colour) }),
     },
     cell.icon ? textNode({ role: 'label', leading: 'tight' }, { 'data-part': 'icon', role: 'img', 'aria-label': ICON_NAME[cell.icon] }, ICON[cell.icon]) : null,
-    cell.label ? textNode({ role: 'label', leading: 'tight', truncate: true }, { 'data-part': 'label' }, cell.label) : null,
+    // A pair of options at one button: the current one lit, the other dim beside it.
+    cell.options
+      ? h('span', { class: 'push-display__options', 'data-part': 'options', role: 'group', 'aria-label': `${cell.label}: ${cell.options[cell.chosen ?? 0] ?? ''}` }, ...cell.options.map((option, i) => textNode({ role: 'label', leading: 'tight' }, { 'data-part': 'option', 'data-current': i === (cell.chosen ?? 0) ? 'true' : undefined, key: String(i) }, option)))
+      : cell.label
+        ? textNode({ role: 'label', leading: 'tight', truncate: true }, { 'data-part': 'label' }, cell.label)
+        : null,
     cell.armed ? h('span', { class: 'push-display__armed', 'data-part': 'armed', role: 'img', 'aria-label': 'armed' }) : null,
     cell.progress === undefined
       ? null
@@ -75,10 +81,61 @@ function tab(cell: RowCell | null, row: 'top' | 'bottom', col: number): Node {
 const TEXT_ROLE = { label: 'label', value: 'numeral', large: 'display' } as const;
 const LEVEL = { kind: 'float', min: 0, max: 1, defaultValue: 0 } as const;
 
-/** A parameter: an arc, a centred arc, a switch, a bar, or a list of choices with the current one marked. */
+/** The small pictures a setting's value can carry, each a few strokes in a 24 by 24 box; `fill` marks a filled shape, `dots` a dotted line. */
+const PICTURES: Record<Picture, { d: string; fill?: boolean; dots?: boolean }[]> = {
+  finger: [{ d: 'M2 4h14v11H2z' }, { d: 'M9 6h5v5H9z', fill: true }, { d: 'M12 10v8l-2-2M12 13l5 2v4l-2 3' }],
+  pad: [{ d: 'M2 4h18v15H2z' }, { d: 'M7 8h8v7H7z', fill: true }],
+  input: [{ d: 'M1 12h13M10 8l4 4-4 4' }, { d: 'M10 4h10v16H10' }],
+  output: [{ d: 'M10 12h13M19 8l4 4-4 4' }, { d: 'M14 4H4v16h10' }],
+  on: [{ d: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z', fill: true }],
+  off: [{ d: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18zM5.6 5.6l12.8 12.8' }],
+  scene: [{ d: 'M2 4h20M2 12h20M2 16h20M2 20h20', dots: true }, { d: 'M2 8h20', fill: true }],
+  clip: [{ d: 'M4 2v20M12 2v20M16 2v20M20 2v20', dots: true }, { d: 'M8 2v20', fill: true }],
+  width: [{ d: 'M2 4h20v16H2z' }, { d: 'M9 4h6v16H9z', fill: true }],
+  height: [{ d: 'M2 4h20v16H2z' }, { d: 'M2 8h20v8H2z', fill: true }],
+};
+const PICTURE_NAME: Record<Picture, string> = { finger: 'finger', pad: 'pad', input: 'input', output: 'output', on: 'on', off: 'off', scene: 'scene', clip: 'clip', width: 'width', height: 'height' };
+
+function picture(name: Picture): Node {
+  return iconNode(
+    { label: PICTURE_NAME[name] },
+    { 'data-part': 'picture', 'data-picture': name },
+    ...PICTURES[name].map((p, i) => h('path', { d: p.d, 'data-fill': p.fill ? 'true' : undefined, 'data-dots': p.dots ? 'true' : undefined, key: String(i) })),
+  );
+}
+
+/** How many of a choice's choices each layout shows, starting at the current one. */
+const CHOICES_SHOWN = { stack: 3, single: 1, row: 4 } as const;
+
+/** A parameter: an arc, a centred arc, a switch, a bar, a value with a small picture, or a choice with the choices after it. */
 function param(cell: ParamCell & { col: number }): ChildArg {
   const hue = cell.colour === undefined ? {} : { hue: 1 };
   const name = `${cell.name} ${cell.value}${cell.unit ?? ''}`;
+  const label = textNode({ role: 'label', truncate: true, leading: 'tight' }, { 'data-part': 'name' }, cell.name);
+  if (cell.picture) {
+    // A setting with a picture: its name, its value large, and the picture where a dial would be.
+    const reading = cell.unit ? ([cell.value, cell.unit] as const) : splitUnit(cell.value);
+    return [
+      label,
+      h('div', { class: 'push-display__reading', 'data-part': 'reading', role: 'group', 'aria-label': name }, textNode({ role: TEXT_ROLE.large, leading: 'tight' }, { 'data-part': 'value' }, reading[0]), reading[1] ? textNode({ role: 'label', leading: 'tight' }, { 'data-part': 'unit' }, reading[1]) : null),
+      picture(cell.picture),
+    ];
+  }
+  const layout = cell.layout ?? (cell.style === 'value' && cell.choices?.length ? 'row' : undefined);
+  if (layout && cell.choices?.length) {
+    // The current choice lit, and the ones after it dim: beneath it, or beside it in a row. A `list` shows them all, small.
+    const at = Math.min(cell.choices.length - 1, Math.max(0, cell.chosen ?? 0));
+    const shown = layout === 'list' ? cell.choices.map((c, i) => [c, i] as const) : cell.choices.slice(at, at + CHOICES_SHOWN[layout]).map((c, i) => [c, at + i] as const);
+    const role = layout === 'list' ? 'label' : layout === 'row' ? 'numeral' : TEXT_ROLE.large;
+    return [
+      label,
+      h(
+        'div',
+        { class: 'push-display__choices', 'data-part': 'choices', 'data-layout': layout, role: 'group', 'aria-label': name },
+        ...shown.map(([c, i]) => textNode({ role, leading: 'tight', truncate: layout !== 'row', tone: i === at ? undefined : 'muted', ...(layout === 'list' && i === at ? { weight: 'strong' as const } : {}) }, { 'data-part': i === at ? 'value' : 'choice', 'data-current': i === at ? 'true' : undefined, key: String(i) }, c)),
+      ),
+    ];
+  }
   if (cell.style === 'choice') {
     const items = (cell.choices ?? []).map((label, i) => ({ id: String(i), label }));
     const view = listWindow(items, String(cell.chosen ?? 0), LIST_ROWS - 1);
@@ -227,6 +284,8 @@ function content(cell: BodyCell): ChildArg {
         ),
       );
     }
+    case 'code':
+      return component('CodeImage', { text: cell.text, label: cell.label });
     case 'grid':
       // The Set's clips: a row per scene, a block per clip in its colour, and the scene's number or name at the right.
       return h(
@@ -294,7 +353,7 @@ function overlay(o: Overlay): Node {
     case 'confirm':
       return box('confirm', { role: 'alertdialog', 'aria-label': o.text }, label(o.text, 'text', 'value'), label(`Press the jog wheel: ${o.yes}`, 'yes'), label(`✕: ${o.no}`, 'no'));
     case 'dialog':
-      return box('dialog', { role: 'dialog', 'aria-label': o.title }, label(o.title, 'title', 'value'), o.text ? label(o.text, 'text') : null, o.code ? label(o.code, 'code', 'large') : null, o.address ? label(o.address, 'address') : null);
+      return box('dialog', { role: 'dialog', 'aria-label': o.title }, label(o.title, 'title', 'value'), o.text ? label(o.text, 'text') : null, o.code ? label(o.code, 'code', 'large') : null, o.image && o.address ? component('CodeImage', { text: o.address }) : null, o.address ? label(o.address, 'address') : null);
     case 'text-entry':
       return box(
         'text-entry',

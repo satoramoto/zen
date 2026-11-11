@@ -109,7 +109,7 @@ export const codeDialog: Layer = {
     const code = paint.set.unit.software.code!;
     paint.screen = screen('dialog', {
       top: row({ 1: X }),
-      overlays: [{ type: 'dialog', title: PURPOSE[code.purpose], text: 'Enter this code at the address below.', code: code.code.replace(/^(\d{3})(\d{3})$/, '$1 $2'), address: code.address }],
+      overlays: [{ type: 'dialog', title: PURPOSE[code.purpose], text: 'Enter this code at the address below.', code: code.code.replace(/^(\d{3})(\d{3})$/, '$1 $2'), address: code.address, ...(code.address ? { image: true } : {}) }],
       close: true,
     });
   },

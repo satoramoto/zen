@@ -25,7 +25,7 @@ export const ALoadedSample: Story = scenario(
     when: 'Device View shows a Simpler holding a sample',
     then: 'the waveform is drawn with a marker at Start and one at End',
     requirement: 'Simpler shows its sample',
-    shall: 'Device View on a Simpler with a sample SHALL draw the sample\'s waveform across the display with its start and end markers, the playing position while a note sounds, and the main bank\'s parameters over it, with Mode on its own encoder.',
+    shall: 'Device View on a Simpler with a sample SHALL draw the sample\'s waveform across the display with its start and end markers, the playing position while a note sounds, and the main bank\'s parameters over it: Zoom, Start and End on the first three encoders and Mode on the eighth, in every mode.',
     act: plays.ALoadedSample.act,
     check: plays.ALoadedSample.check,
   },
@@ -38,7 +38,7 @@ export const AnEmptySimpler: Story = scenario(
     when: 'Device View shows a Simpler with no sample',
     then: 'the display invites loading one with Swap',
     requirement: 'Simpler shows its sample',
-    shall: 'Device View on a Simpler with a sample SHALL draw the sample\'s waveform across the display with its start and end markers, the playing position while a note sounds, and the main bank\'s parameters over it, with Mode on its own encoder.',
+    shall: 'Device View on a Simpler with a sample SHALL draw the sample\'s waveform across the display with its start and end markers, the playing position while a note sounds, and the main bank\'s parameters over it: Zoom, Start and End on the first three encoders and Mode on the eighth, in every mode.',
     act: plays.AnEmptySimpler.act,
     check: plays.AnEmptySimpler.check,
   },
@@ -87,10 +87,10 @@ export const LoopOff: Story = scenario(
 export const Gate: Story = scenario(
   {
     name: 'Gate',
-    when: 'a person switches Trigger to Gate',
+    when: 'Simpler\'s Edit Mode is shown in One-Shot mode and a person presses the display button at Trigger and Gate',
     then: 'the app is asked to set the sample to fade out when the pad is released',
     requirement: 'One-Shot mode shows its envelope and trigger',
-    shall: 'In One-Shot mode the bank SHALL show Trigger or Gate, Fade In, Fade Out, Transpose up to 48 semitones either way, and Gain.',
+    shall: 'In One-Shot mode the main bank SHALL show Fade In, Fade Out, Transpose up to 48 semitones either way and Gain on the fourth to seventh encoders, and Edit Mode SHALL offer Trigger and Gate as a pair at its second display button.',
     act: plays.Gate.act,
     check: plays.Gate.check,
   },
@@ -142,7 +142,7 @@ export const DeletingASlice: Story = scenario(
     when: 'a person holds Delete and taps a slice\'s pad',
     then: 'the app is asked to delete that slice',
     requirement: 'A slice is nudged, split and deleted',
-    shall: 'Pressing a slice\'s pad SHALL select it; Nudge SHALL ask to move its marker, finer with Shift; Split Slice SHALL ask for a new slice in its middle; and holding Delete and tapping its pad SHALL ask to delete it.',
+    shall: 'Pressing a slice\'s pad SHALL select it; Nudge, on the fourth encoder of the main bank in Slicing mode, SHALL ask to move its marker, finer with Shift; Split Slice SHALL ask for a new slice in its middle; and holding Delete and tapping its pad SHALL ask to delete it.',
     act: plays.DeletingASlice.act,
     check: plays.DeletingASlice.check,
   },
@@ -155,7 +155,7 @@ export const ZoomingToASlice: Story = scenario(
     when: 'a person taps a slice\'s pad and turns Zoom clockwise',
     then: 'the waveform zooms in around that slice',
     requirement: 'A slice is nudged, split and deleted',
-    shall: 'Pressing a slice\'s pad SHALL select it; Nudge SHALL ask to move its marker, finer with Shift; Split Slice SHALL ask for a new slice in its middle; and holding Delete and tapping its pad SHALL ask to delete it.',
+    shall: 'Pressing a slice\'s pad SHALL select it; Nudge, on the fourth encoder of the main bank in Slicing mode, SHALL ask to move its marker, finer with Shift; Split Slice SHALL ask for a new slice in its middle; and holding Delete and tapping its pad SHALL ask to delete it.',
     act: plays.ZoomingToASlice.act,
     check: plays.ZoomingToASlice.check,
   },
@@ -181,7 +181,7 @@ export const Reversing: Story = scenario(
     when: 'Simpler\'s Edit Mode is shown and a person presses the display button at Reverse',
     then: 'the app is asked to reverse the sample',
     requirement: 'Edit Mode holds the sample actions',
-    shall: 'Pressing Simpler\'s upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons Loop on or off (Classic), Warp as a number of bars, halve and double the speed, Crop (not in Slicing) and Reverse; pressing the button again SHALL leave.',
+    shall: 'Pressing Simpler\'s upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons, each where the unit has it, Loop on or off (Classic), Trigger or Gate (One-Shot and Slicing), Warp as a number of bars, halve and double the speed, Crop (not in Slicing), Reset Slices and Split Slice (Slicing) and Reverse; pressing the first button SHALL leave.',
     act: plays.Reversing.act,
     check: plays.Reversing.check,
   },
@@ -194,7 +194,7 @@ export const CropInSlicing: Story = scenario(
     when: 'Simpler is in Slicing mode and its Edit Mode is shown',
     then: 'Crop is not offered',
     requirement: 'Edit Mode holds the sample actions',
-    shall: 'Pressing Simpler\'s upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons Loop on or off (Classic), Warp as a number of bars, halve and double the speed, Crop (not in Slicing) and Reverse; pressing the button again SHALL leave.',
+    shall: 'Pressing Simpler\'s upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons, each where the unit has it, Loop on or off (Classic), Trigger or Gate (One-Shot and Slicing), Warp as a number of bars, halve and double the speed, Crop (not in Slicing), Reset Slices and Split Slice (Slicing) and Reverse; pressing the first button SHALL leave.',
     act: plays.CropInSlicing.act,
     check: plays.CropInSlicing.check,
   },
@@ -225,4 +225,56 @@ export const APreset: Story = scenario(
     check: plays.APreset.check,
   },
   scenarioStory(plays.APreset),
+);
+
+export const ModeIsLast: Story = scenario(
+  {
+    name: 'Mode is last',
+    when: 'Device View shows a Simpler in each of its three modes',
+    then: 'the eighth column reads Mode and the first three read Zoom, Start and End',
+    requirement: 'Simpler shows its sample',
+    shall: 'Device View on a Simpler with a sample SHALL draw the sample\'s waveform across the display with its start and end markers, the playing position while a note sounds, and the main bank\'s parameters over it: Zoom, Start and End on the first three encoders and Mode on the eighth, in every mode.',
+    act: plays.ModeIsLast.act,
+    check: plays.ModeIsLast.check,
+  },
+  scenarioStory(plays.ModeIsLast),
+);
+
+export const GainIsAtHand: Story = scenario(
+  {
+    name: 'Gain is at hand',
+    when: 'Device View shows a Simpler in One-Shot mode',
+    then: 'the seventh column of its main bank reads Gain',
+    requirement: 'One-Shot mode shows its envelope and trigger',
+    shall: 'In One-Shot mode the main bank SHALL show Fade In, Fade Out, Transpose up to 48 semitones either way and Gain on the fourth to seventh encoders, and Edit Mode SHALL offer Trigger and Gate as a pair at its second display button.',
+    act: plays.GainIsAtHand.act,
+    check: plays.GainIsAtHand.check,
+  },
+  scenarioStory(plays.GainIsAtHand),
+);
+
+export const NudgingASlice: Story = scenario(
+  {
+    name: 'Nudging a slice',
+    when: 'a person taps a slice\'s pad and turns the fourth encoder clockwise',
+    then: 'the app is asked to move that slice\'s marker later',
+    requirement: 'A slice is nudged, split and deleted',
+    shall: 'Pressing a slice\'s pad SHALL select it; Nudge, on the fourth encoder of the main bank in Slicing mode, SHALL ask to move its marker, finer with Shift; Split Slice SHALL ask for a new slice in its middle; and holding Delete and tapping its pad SHALL ask to delete it.',
+    act: plays.NudgingASlice.act,
+    check: plays.NudgingASlice.check,
+  },
+  scenarioStory(plays.NudgingASlice),
+);
+
+export const ResettingTheSlices: Story = scenario(
+  {
+    name: 'Resetting the slices',
+    when: 'Simpler\'s Edit Mode is shown in Slicing mode and a person presses the display button at Reset Slices',
+    then: 'the app is asked to reset the slices',
+    requirement: 'Edit Mode holds the sample actions',
+    shall: 'Pressing Simpler\'s upper display button SHALL enter its Edit Mode: further banks on the lower display buttons, and on the upper display buttons, each where the unit has it, Loop on or off (Classic), Trigger or Gate (One-Shot and Slicing), Warp as a number of bars, halve and double the speed, Crop (not in Slicing), Reset Slices and Split Slice (Slicing) and Reverse; pressing the first button SHALL leave.',
+    act: plays.ResettingTheSlices.act,
+    check: plays.ResettingTheSlices.check,
+  },
+  scenarioStory(plays.ResettingTheSlices),
 );

@@ -20,7 +20,7 @@ const scopeOf = (c: HTMLElement) => (c.closest<HTMLElement>('[data-mode]') ?? c.
 const pack = (id: string) => packs.find((p) => p.id === id)!;
 
 /** Dress the scope in a pack and a mode, as a theme scope would. Returns how to put back what was there. */
-async function wear(c: HTMLElement, id: string, mode: Mode): Promise<() => void> {
+export async function wear(c: HTMLElement, id: string, mode: Mode): Promise<() => void> {
   const scope = scopeOf(c);
   const screen = display(c);
   const before = [scope.getAttribute('style'), scope.dataset.mode, screen.getAttribute('style')] as const;
@@ -95,17 +95,32 @@ export const plays = {
   ThePackIsOffered: {
     act: none,
     check: ({ canvasElement: c }) => {
-      // The picker and the inspector both read this list (ThemePicker.tsx, ThemeInspector.tsx).
+      // The picker itself: a group of packs to choose from, Push 3 one of them, once.
+      const group = c.querySelector('[role="radiogroup"]')!;
+      expect(group).toHaveAccessibleName('Theme');
+      const entries = [...group.querySelectorAll<HTMLElement>('[data-part="entry"]')];
+      expect(entries).toHaveLength(packs.length);
+      const offered = entries.filter((e) => /Push 3/.test(e.textContent ?? ''));
+      expect(offered).toHaveLength(1);
+      expect(offered[0].textContent).toContain(pack('push-3').northStar.slice(0, 24));
+    },
+  },
+
+  ThePackNamesItsSource: {
+    act: none,
+    check: ({ canvasElement: c }) => {
+      // The inspector itself: the pack's name, its source with a link to the manual, and every rule it keeps.
       const offered = pack('push-3');
-      expect(offered).toMatchObject({ label: 'Push 3', source: { name: 'Ableton Push 3 manual' } });
-      expect(offered.source.url).toMatch(/^https:\/\/www\.ableton\.com\//);
-      expect(offered.keep.length).toBeGreaterThanOrEqual(4);
-      expect(offered.keep.join(' ')).toMatch(/black/);
-      expect(offered.keep.join(' ')).toMatch(/display stays dark/);
-      expect(packs.filter((p) => p.id === 'push-3')).toHaveLength(1);
+      expect(c.querySelector('.inspector__title')).toHaveTextContent('Push 3');
+      const link = c.querySelector<HTMLAnchorElement>('.inspector__link')!;
+      expect(link.href).toMatch(/^https:\/\/www\.ableton\.com\//);
+      expect(c.textContent).toContain(offered.source.name);
+      const rules = [...c.querySelectorAll('.inspector__rules li')].map((li) => li.textContent);
+      expect(rules).toEqual(offered.keep);
+      expect(rules.length).toBeGreaterThanOrEqual(4);
+      expect(rules.join(' ')).toMatch(/black/);
       // And a scope can wear it: every contract value is there in both modes.
       for (const mode of ['dark', 'light'] as const) expect(Object.keys(toCssVars(offered.facets, mode))).toEqual(Object.keys(toCssVars(packs[0].facets, mode)));
-      expect(scopeOf(c)).not.toBeNull();
     },
   },
 

@@ -52,6 +52,11 @@ export interface Parameter {
 export interface Bank {
   name: string;
   parameters: (Parameter | null)[];
+  /**
+   * The bank's switches and pairs of options, by column: shown over the upper display buttons while
+   * the device's banks are shown. The first column is the device's own name, so the first is unused.
+   */
+  switches?: (Parameter | null)[];
   /** A drawing that goes with this bank, over the columns it names. */
   drawing?: Drawing;
 }
@@ -562,7 +567,10 @@ export interface RowCell {
   selected?: boolean;
   /** Shown greyed: muted, off, or not available. */
   dim?: boolean;
-  icon?: 'midi' | 'audio' | 'group' | 'return' | 'main' | 'instrument' | 'effect' | 'midi-effect' | 'rack' | 'drum-rack' | 'folder' | 'left' | 'right' | 'close' | 'plus' | 'check';
+  icon?: 'midi' | 'audio' | 'group' | 'return' | 'main' | 'instrument' | 'effect' | 'midi-effect' | 'rack' | 'drum-rack' | 'folder' | 'left' | 'right' | 'close' | 'plus' | 'check' | 'switch-on' | 'switch-off' | 'map';
+  /** A pair (or a few) of options at one button, the current one lit and the others dim beside it. `label` names the whole. */
+  options?: string[];
+  chosen?: number;
   /** The armed circle. */
   armed?: boolean;
   /** A playing clip's progress, 0 to 1. */
@@ -572,6 +580,9 @@ export interface RowCell {
   /** The lamp its display button shows, when not just lit in `colour`. */
   lamp?: Lamp;
 }
+
+/** A small picture under a setting's value: which of two things it is, or what a length measures. */
+export type Picture = 'finger' | 'pad' | 'input' | 'output' | 'on' | 'off' | 'scene' | 'clip' | 'width' | 'height';
 
 /** A parameter on the display. */
 export interface ParamCell {
@@ -584,6 +595,15 @@ export interface ParamCell {
   style: 'arc' | 'bipolar' | 'bar' | 'switch' | 'choice' | 'value';
   choices?: string[];
   chosen?: number;
+  /**
+   * How a choice shows its choices. `stack`: the current one large and the ones after it dim beneath.
+   * `single`: the current one large, alone.
+   * `list`: all of them small, in order, the current one lit. `row`: the current one and the ones
+   * after it dim beside it (what a `value` cell with choices does). Default: a block on the current one.
+   */
+  layout?: 'stack' | 'single' | 'list' | 'row';
+  /** A small picture drawn under the value in place of a dial or the other choices. */
+  picture?: Picture;
   colour?: number | LampMeaning;
   touched?: boolean;
   disabled?: boolean;
@@ -695,7 +715,14 @@ export interface GridCell {
   labels?: string[];
 }
 
-export type BodyContent = ParamCell | ListCell | TextCell | TraceCell | MeterCell | RollCell | GridCell | WaveCell;
+/** An address as a code a phone can scan. One too long to draw shows nothing: its text is given beside it. */
+export interface CodeCell {
+  type: 'code';
+  text: string;
+  label?: string;
+}
+
+export type BodyContent = ParamCell | ListCell | TextCell | TraceCell | MeterCell | RollCell | GridCell | WaveCell | CodeCell;
 
 /** One thing in the display's body: what it is, the first column it covers (1 to 8) and how many. */
 export type BodyCell = BodyContent & { col: number; span?: number };
@@ -703,7 +730,7 @@ export type BodyCell = BodyContent & { col: number; span?: number };
 export type Overlay =
   | { type: 'notice'; text: string; value?: string }
   | { type: 'confirm'; text: string; yes: string; no: string }
-  | { type: 'dialog'; title: string; code?: string; address?: string; text?: string }
+  | { type: 'dialog'; title: string; code?: string; address?: string; text?: string; /** Draw the address as a code a phone can scan, beside its text. */ image?: boolean }
   | { type: 'text-entry'; title: string; text: string; caret: number; characters: string[]; highlighted: number }
   | { type: 'battery'; percent: number; charging: boolean; low?: boolean }
   | { type: 'count-in'; fraction: number }

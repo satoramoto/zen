@@ -22,7 +22,7 @@ export const peaks = (n = 240, seed = 1): [number, number][] =>
     return [0.5 - a / 2, 0.5 + a / 2] as [number, number];
   });
 
-const bank = (name: string, parameters: (Parameter | null)[], drawing?: Bank['drawing']): Bank => ({ name, parameters, ...(drawing ? { drawing } : {}) });
+const bank = (name: string, parameters: (Parameter | null)[], drawing?: Bank['drawing'], switches?: Bank['switches']): Bank => ({ name, parameters, ...(drawing ? { drawing } : {}), ...(switches ? { switches } : {}) });
 
 function synth(id: string, name: string): Device {
   const p = (key: string, label: string, v: number, d?: string, more?: Partial<Parameter>) => param(`${id}.${key}`, label, v, d, more);
@@ -35,7 +35,9 @@ function synth(id: string, name: string): Device {
     preset: 'Warm Keys',
     banks: [
       bank('Oscillator', [pick(`${id}.wave`, 'Shape', ['Sine', 'Triangle', 'Saw', 'Square'], 2), p('octave', 'Octave', 0.5, '0', { kind: 'bipolar' }), p('detune', 'Detune', 0.5, '0 ct', { kind: 'bipolar' }), p('noise', 'Noise', 0.1), p('sub', 'Sub', 0.4), p('glide', 'Glide', 0, '0 ms'), sw(`${id}.retrig`, 'Retrig', true), p('level', 'Level', 0.8, '-3.0 dB')],
-        { kind: 'oscillator', col: 1, span: 2, points: Array.from({ length: 33 }, (_, i) => [i / 32, (i % 16) / 16] as [number, number]) }),
+        { kind: 'oscillator', col: 1, span: 2, points: Array.from({ length: 33 }, (_, i) => [i / 32, (i % 16) / 16] as [number, number]) },
+        // The oscillator's own switch, over the second display button while the banks are shown.
+        [null, sw(`${id}.oscon`, 'Osc', true)]),
       bank('Filter', [pick(`${id}.ftype`, 'Type', ['Low-pass', 'High-pass', 'Band-pass', 'Notch'], 0), p('cutoff', 'Frequency', 0.62, '1.20 kHz', { automated: true }), p('res', 'Resonance', 0.35), p('drive', 'Drive', 0.2, '2.4 dB'), p('fenv', 'Env Amount', 0.7, '40', { kind: 'bipolar' }), p('track', 'Key Track', 0.5), null, null],
         { kind: 'filter', col: 2, span: 2, points: [[0, 0.6], [0.5, 0.6], [0.6, 0.85], [0.66, 0.5], [0.8, 0.1], [1, 0]] }),
       bank('Envelope', [p('attack', 'Attack', 0.05, '4 ms'), p('decay', 'Decay', 0.4, '600 ms'), p('sustain', 'Sustain', 0.7, '-3.0 dB'), p('release', 'Release', 0.3, '250 ms'), null, null, p('vel', 'Vel > Vol', 0.5), p('volume', 'Volume', 0.75, '-6.0 dB')],
@@ -47,7 +49,7 @@ function synth(id: string, name: string): Device {
 
 const effect = (id: string, name: string, banks: Bank[], more: Partial<Device> = {}): Device => ({ id, name, kind: 'audio-effect', on: true, banks, ...more });
 
-const reverb = (id: string) => effect(id, 'Reverb', [bank('Reverb', [param(`${id}.decay`, 'Decay', 0.5, '2.50 s'), param(`${id}.size`, 'Size', 0.6), param(`${id}.pre`, 'Predelay', 0.1, '12 ms'), param(`${id}.hi`, 'High Cut', 0.7, '6.0 kHz'), param(`${id}.lo`, 'Low Cut', 0.2, '120 Hz'), param(`${id}.diff`, 'Diffusion', 0.8), param(`${id}.stereo`, 'Stereo', 1), param(`${id}.mix`, 'Dry/Wet', 0.3)])]);
+const reverb = (id: string) => effect(id, 'Reverb', [bank('Reverb', [param(`${id}.decay`, 'Decay', 0.5, '2.50 s'), param(`${id}.size`, 'Size', 0.6), param(`${id}.pre`, 'Predelay', 0.1, '12 ms'), param(`${id}.hi`, 'High Cut', 0.7, '6.0 kHz'), param(`${id}.lo`, 'Low Cut', 0.2, '120 Hz'), param(`${id}.diff`, 'Diffusion', 0.8), param(`${id}.stereo`, 'Stereo', 1), param(`${id}.mix`, 'Dry/Wet', 0.3)], undefined, [null, sw(`${id}.freezein`, 'Freeze In', false), sw(`${id}.freeze`, 'Freeze', false)])]);
 const delay = (id: string) => effect(id, 'Delay', [bank('Delay', [param(`${id}.time`, 'Time', 0.4, '1/8'), sw(`${id}.sync`, 'Sync', true), param(`${id}.fb`, 'Feedback', 0.45), param(`${id}.filter`, 'Filter', 0.5, '1.0 kHz'), null, null, sw(`${id}.ping`, 'Ping Pong', false), param(`${id}.mix`, 'Dry/Wet', 0.25)])]);
 const eq = (id: string) => effect(id, 'EQ Eight', [bank('Bands', [param(`${id}.f1`, 'Freq 1', 0.15, '80 Hz'), param(`${id}.g1`, 'Gain 1', 0.5, '0.0 dB', { kind: 'bipolar' }), param(`${id}.f2`, 'Freq 2', 0.4, '400 Hz'), param(`${id}.g2`, 'Gain 2', 0.4, '-2.5 dB', { kind: 'bipolar' }), param(`${id}.f3`, 'Freq 3', 0.7, '3.0 kHz'), param(`${id}.g3`, 'Gain 3', 0.6, '2.0 dB', { kind: 'bipolar' }), param(`${id}.f4`, 'Freq 4', 0.9, '10 kHz'), param(`${id}.g4`, 'Gain 4', 0.5, '0.0 dB', { kind: 'bipolar' })],
   { kind: 'spectrum', col: 1, span: 8, points: Array.from({ length: 41 }, (_, i) => [i / 40, 0.5 + 0.3 * Math.sin(i / 5) * Math.exp(-i / 40)] as [number, number]) })]);
@@ -61,26 +63,28 @@ export const DRUM_KINDS: DrumPad['kind'][] = ['kick', 'perc', 'snare', 'snare', 
 const DRUM_COLOURS = [14, 1, 3, 3, 3, 15, 5, 15, 5, 15, 5, 9, 12, 9, 12, 9];
 
 /**
- * Simpler's banks for its mode: Zoom, Start, End and Mode in every one, then the mode's own. The
+ * Simpler's banks for its mode, in the unit's order: Zoom, Start and End first, the mode's own four,
+ * and Mode on the last encoder. Trigger and Gate are a pair of options at a display button. The
  * banks are the app's to give; the stand-in host gives these again when the mode changes.
  */
 export function simplerBanks(id: string, sampler: Sampler): Bank[] {
   const p = (key: string, label: string, v: number, d?: string, more?: Partial<Parameter>) => param(`${id}.${key}`, label, v, d, more);
   const mode = pick(`${id}.mode`, 'Mode', ['Classic', 'One-Shot', 'Slicing'], sampler.mode === 'classic' ? 0 : sampler.mode === 'one-shot' ? 1 : 2);
-  const common = [p('zoom', 'Zoom', sampler.zoom), p('start', 'Start', sampler.start, sampler.start.toFixed(2)), p('end', 'End', sampler.end, sampler.end.toFixed(2)), mode];
+  const common = [p('zoom', 'Zoom', sampler.zoom), p('start', 'Start', sampler.start, sampler.start.toFixed(2)), p('end', 'End', sampler.end, sampler.end.toFixed(2))];
+  const gain = p('gain', 'Gain', 0.5, '0.0 dB', { kind: 'bipolar' });
   const loopOff = !sampler.loop?.on;
   const trigger = pick(`${id}.trigger`, 'Trigger', ['Trigger', 'Gate'], sampler.trigger === 'gate' ? 1 : 0);
   let own: (Parameter | null)[];
-  if (sampler.mode === 'classic') own = [p('sstart', 'S Start', 0, '0 %'), p('slength', 'S Length', 1, '100 %'), p('looplength', 'Loop Length', 0.5, '50 %', { disabled: loopOff }), p('loopfade', 'Loop Fade', 0, '0 %', { disabled: loopOff })];
-  else if (sampler.mode === 'one-shot') own = [trigger, p('fadein', 'Fade In', 0, '0 ms'), p('fadeout', 'Fade Out', 0.1, '10 ms'), p('transp', 'Transpose', 0.5, '0 st', { kind: 'bipolar' })];
+  if (sampler.mode === 'classic') own = [p('sstart', 'S Start', 0, '0 %'), p('slength', 'Length', 1, '100 %'), p('looplength', 'Loop Length', 0.5, '50 %', { disabled: loopOff }), p('loopfade', 'Loop Fade', 0, '0 %', { disabled: loopOff })];
+  else if (sampler.mode === 'one-shot') own = [p('fadein', 'Fade In', 0, '0 ms'), p('fadeout', 'Fade Out', 0.1, '10 ms'), p('transp', 'Transpose', 0.5, '0 st', { kind: 'bipolar' }), gain];
   else {
     const by = sampler.sliceBy ?? 'transient';
     const companion = by === 'transient' ? p('sensitivity', 'Sensitivity', 0.5) : by === 'beat' ? pick(`${id}.division`, 'Division', ['1/16', '1/8', '1/4', '1/2', '1 Bar'], 2) : by === 'region' ? p('regions', 'Regions', 0.25, '8') : sw(`${id}.padslicing`, 'Pad Slicing', !!sampler.padSlicing);
-    own = [pick(`${id}.sliceby`, 'Slice By', ['Transient', 'Beat', 'Region', 'Manual'], ['transient', 'beat', 'region', 'manual'].indexOf(by)), companion, pick(`${id}.playback`, 'Playback', ['Mono', 'Poly', 'Through'], ['mono', 'poly', 'thru'].indexOf(sampler.playback ?? 'mono')), trigger];
+    own = [p('nudge', 'Nudge', 0.5, '0', { kind: 'bipolar' }), pick(`${id}.playback`, 'Playback', ['Mono', 'Poly', 'Through'], ['mono', 'poly', 'thru'].indexOf(sampler.playback ?? 'mono')), pick(`${id}.sliceby`, 'Slice By', ['Transient', 'Beat', 'Region', 'Manual'], ['transient', 'beat', 'region', 'manual'].indexOf(by)), companion];
   }
   return [
-    bank('Sample', [...common, ...own]),
-    bank('Global', [p('gain', 'Gain', 0.5, '0.0 dB', { kind: 'bipolar' }), sw(`${id}.warp`, 'Warp', !!sampler.warped), p('detune', 'Detune', 0.5, '0 ct', { kind: 'bipolar' }), ...(sampler.mode === 'slicing' ? [p('nudge', 'Nudge', 0.5, '0', { kind: 'bipolar' })] : [null]), null, null, null, p('vol', 'Volume', 0.75, '-6.0 dB')]),
+    { ...bank('Main', [...common, ...own, mode]), ...(sampler.mode === 'classic' ? {} : { switches: [null, trigger] }) },
+    bank('Global', [...(sampler.mode === 'one-shot' ? [null] : [gain]), sw(`${id}.warp`, 'Warp', !!sampler.warped), p('detune', 'Detune', 0.5, '0 ct', { kind: 'bipolar' }), null, null, null, null, p('vol', 'Volume', 0.75, '-6.0 dB')]),
     bank('Filter', [sw(`${id}.fon`, 'Filter', true), p('freq', 'Frequency', 0.8, '8.0 kHz'), p('res', 'Resonance', 0.1), null, null, null, null, null]),
   ];
 }
@@ -244,7 +248,7 @@ function unit(): Unit {
     jacks: {
       'In 1': {}, 'In 2': {}, 'Out 1': { plugged: 'cable' }, 'Out 2': { plugged: 'cable' }, Phones: { plugged: 'headphones' }, 'ADAT In': {}, 'ADAT Out': {}, 'MIDI In': {}, 'MIDI Out': {},
       'USB-A': { plugged: 'device' }, 'USB-C': {}, Power: { plugged: 'cable' },
-      'Pedal 1': { plugged: 'footswitch', job: 'Record / New', jobs: ['Record / New', 'CV Out'] }, 'Pedal 2': { job: 'Sustain', jobs: ['Sustain', 'CV Out'] },
+      'Pedal 1': { plugged: 'footswitch', job: 'Trigger', jobs: ['Trigger', 'CV Out'] }, 'Pedal 2': { job: 'Sustain', jobs: ['Sustain', 'CV Out'] },
     },
     preferences: {
       Workflow: { value: 'Scene', choices: ['Scene', 'Clip'] },
@@ -311,7 +315,7 @@ export function sampleSet(): PushSet {
       { id: 'pack-4', name: 'Chop and Swing', size: '640 MB', state: 'downloaded' },
     ],
     lessons: [
-      { id: 'lesson-1', name: 'A tour of Push', steps: ['The pads play notes and launch clips.', 'The display shows what the encoders set.', 'The encoders turn without end.'], link: 'ableton.com/learn-push' },
+      { id: 'lesson-1', name: 'A tour of Push', steps: ['The pads play notes and launch clips.', 'The display shows what the encoders set.', 'The encoders turn without end.'], link: 'https://www.ableton.com/learn-push' },
       { id: 'lesson-2', name: 'Make a beat', steps: ['Add a Drum Rack', 'Tap steps', 'Change the loop length'], done: true },
       { id: 'lesson-3', name: 'Play a melody', steps: ['Pick a scale', 'Record a clip'] },
     ],
