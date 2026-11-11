@@ -124,7 +124,7 @@ export const AContinuousParameter: Story = { ...scenario(
   scenarioStory(plays.AContinuousParameter),
 ), tags: ['browser'] };
 
-export const AChoice: Story = scenario(
+export const AChoice: Story = { ...scenario(
   {
     name: 'A choice',
     when: 'a column shows a parameter with four named choices',
@@ -135,7 +135,7 @@ export const AChoice: Story = scenario(
     check: plays.AChoice.check,
   },
   scenarioStory(plays.AChoice),
-);
+), tags: ['browser'] };
 
 export const ABipolarValue: Story = { ...scenario(
   {
@@ -475,7 +475,7 @@ export const UserMode: Story = scenario(
   scenarioStory(plays.UserMode),
 );
 
-export const ChoicesBeneathASetting: Story = scenario(
+export const ChoicesBeneathASetting: Story = { ...scenario(
   {
     name: 'Choices beneath a setting',
     when: 'the Expression tab shows Expression Mode at MPE',
@@ -486,9 +486,9 @@ export const ChoicesBeneathASetting: Story = scenario(
     check: plays.ChoicesBeneathASetting.check,
   },
   scenarioStory(plays.ChoicesBeneathASetting),
-);
+), tags: ['browser'] };
 
-export const ChoicesBesideAParameter: Story = scenario(
+export const ChoicesBesideAParameter: Story = { ...scenario(
   {
     name: 'Choices beside a parameter',
     when: 'Device View shows a Simpler in Classic mode',
@@ -499,7 +499,7 @@ export const ChoicesBesideAParameter: Story = scenario(
     check: plays.ChoicesBesideAParameter.check,
   },
   scenarioStory(plays.ChoicesBesideAParameter),
-);
+), tags: ['browser'] };
 
 export const TheLastChoice: Story = scenario(
   {
@@ -527,7 +527,7 @@ export const ACodeForAnAddress: Story = scenario(
   scenarioStory(plays.ACodeForAnAddress),
 );
 
-export const ScannableInADarkPack: Story = scenario(
+export const ScannableInADarkPack: Story = { ...scenario(
   {
     name: 'Scannable in a dark pack',
     when: 'the code image is drawn in the push-3 pack in dark mode',
@@ -538,7 +538,7 @@ export const ScannableInADarkPack: Story = scenario(
     check: plays.ScannableInADarkPack.check,
   },
   scenarioStory(plays.ScannableInADarkPack),
-);
+), tags: ['browser'] };
 
 export const AnAddressTooLong: Story = scenario(
   {
@@ -553,7 +553,7 @@ export const AnAddressTooLong: Story = scenario(
   scenarioStory(plays.AnAddressTooLong),
 );
 
-export const AValueWithAPicture: Story = scenario(
+export const AValueWithAPicture: Story = { ...scenario(
   {
     name: 'A value with a picture',
     when: 'the app gives a setting\'s value with the picture of a finger',
@@ -564,4 +564,4 @@ export const AValueWithAPicture: Story = scenario(
     check: plays.AValueWithAPicture.check,
   },
   scenarioStory(plays.AValueWithAPicture),
-);
+), tags: ['browser'] };
