@@ -34,7 +34,8 @@
     <div class="push-surface__cell" data-cap="fill" data-cluster="upper" data-col="8" data-control="upper-8" data-kind="button" data-lamp="off" style="--x: 277.4; --y: 36.7; --w: 25.8; --h: 12.3">
       <Pad fillCell=true label="" name="Upper display button 8" state="idle">
     <div class="push-surface__cell" data-cluster="display" data-control="display" data-kind="display" style="--x: 72.8; --y: 60.1; --w: 232; --h: 41.5">
-      <div aria-label="Display" class="push-surface__glass" role="img">
+      <div class="push-surface__glass">
+        <PushDisplay dark=true screen={"kind":"device","top":[null,null,null,null,null,null,null,null],"bottom":[null,null,null,null,null,null,null,null],"body":[],"overlays":[]} @onInput=input>
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="1" data-control="lower-1" data-kind="button" data-lamp="off" style="--x: 74.4; --y: 112.3; --w: 25.8; --h: 12.6">
       <Pad fillCell=true label="" name="Lower display button 1" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="2" data-control="lower-2" data-kind="button" data-lamp="off" style="--x: 103.4; --y: 112.3; --w: 25.8; --h: 12.6">
@@ -402,7 +403,8 @@
     <div class="push-surface__cell" data-cap="fill" data-cluster="upper" data-col="8" data-control="upper-8" data-kind="button" data-lamp="off" style="--x: 277.4; --y: 36.7; --w: 25.8; --h: 12.3">
       <Pad fillCell=true label="" name="Upper display button 8" state="idle">
     <div class="push-surface__cell" data-cluster="display" data-control="display" data-kind="display" style="--x: 72.8; --y: 60.1; --w: 232; --h: 41.5">
-      <div aria-label="Display" class="push-surface__glass" role="img">
+      <div class="push-surface__glass">
+        <PushDisplay dark=true @onInput=input>
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="1" data-control="lower-1" data-kind="button" data-lamp="off" style="--x: 74.4; --y: 112.3; --w: 25.8; --h: 12.6">
       <Pad fillCell=true label="" name="Lower display button 1" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="2" data-control="lower-2" data-kind="button" data-lamp="off" style="--x: 103.4; --y: 112.3; --w: 25.8; --h: 12.6">
@@ -770,7 +772,8 @@
     <div class="push-surface__cell" data-cap="fill" data-cluster="upper" data-col="8" data-control="upper-8" data-kind="button" data-lamp="lit" style="--x: 277.4; --y: 36.7; --w: 25.8; --h: 12.3; --push-lamp: var(--push-lamp-7)">
       <Pad fillCell=true hue=1 label="" name="Upper display button 8" state="playing">
     <div class="push-surface__cell" data-cluster="display" data-control="display" data-kind="display" style="--x: 72.8; --y: 60.1; --w: 232; --h: 41.5">
-      <div aria-label="Display" class="push-surface__glass" role="img">
+      <div class="push-surface__glass">
+        <PushDisplay dark=true @onInput=input>
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="1" data-control="lower-1" data-kind="button" data-lamp="lit" style="--x: 74.4; --y: 112.3; --w: 25.8; --h: 12.6; --push-lamp: var(--push-lamp-8)">
       <Pad fillCell=true hue=1 label="" name="Lower display button 1" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="2" data-control="lower-2" data-kind="button" data-lamp="lit" style="--x: 103.4; --y: 112.3; --w: 25.8; --h: 12.6; --push-lamp: var(--push-lamp-9)">
@@ -1138,7 +1141,8 @@
     <div class="push-surface__cell" data-cap="fill" data-cluster="upper" data-col="8" data-control="upper-8" data-kind="button" data-lamp="off" style="--x: 277.4; --y: 36.7; --w: 25.8; --h: 12.3">
       <Pad fillCell=true label="" name="Upper display button 8" state="idle">
     <div class="push-surface__cell" data-cluster="display" data-control="display" data-kind="display" style="--x: 72.8; --y: 60.1; --w: 232; --h: 41.5">
-      <div aria-label="Display" class="push-surface__glass" role="img">
+      <div class="push-surface__glass">
+        <PushDisplay dark=true @onInput=input>
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="1" data-control="lower-1" data-kind="button" data-lamp="lit" style="--x: 74.4; --y: 112.3; --w: 25.8; --h: 12.6; --push-lamp: var(--push-lamp-14)">
       <Pad fillCell=true hue=1 label="" name="Lower display button 1" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="2" data-control="lower-2" data-kind="button" data-lamp="off" style="--x: 103.4; --y: 112.3; --w: 25.8; --h: 12.6">
@@ -1506,7 +1510,8 @@
     <div class="push-surface__cell" data-cap="fill" data-cluster="upper" data-col="8" data-control="upper-8" data-kind="button" data-lamp="lit" style="--x: 277.4; --y: 36.7; --w: 25.8; --h: 12.3; --push-lamp: var(--push-lamp-7)">
       <Pad fillCell=true hue=1 label="" name="Upper display button 8" state="playing">
     <div class="push-surface__cell" data-cluster="display" data-control="display" data-kind="display" style="--x: 72.8; --y: 60.1; --w: 232; --h: 41.5">
-      <div aria-label="Display" class="push-surface__glass" role="img">
+      <div class="push-surface__glass">
+        <PushDisplay dark=true light=40 @onInput=input>
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="1" data-control="lower-1" data-kind="button" data-lamp="lit" style="--x: 74.4; --y: 112.3; --w: 25.8; --h: 12.6; --push-lamp: var(--push-lamp-8)">
       <Pad fillCell=true hue=1 label="" name="Lower display button 1" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="2" data-control="lower-2" data-kind="button" data-lamp="lit" style="--x: 103.4; --y: 112.3; --w: 25.8; --h: 12.6; --push-lamp: var(--push-lamp-9)">
@@ -1874,7 +1879,8 @@
     <div class="push-surface__cell" data-cap="fill" data-cluster="upper" data-col="8" data-control="upper-8" data-kind="button" data-lamp="off" style="--x: 277.4; --y: 36.7; --w: 25.8; --h: 12.3">
       <Pad fillCell=true label="" name="Upper display button 8" state="idle">
     <div class="push-surface__cell" data-cluster="display" data-control="display" data-kind="display" style="--x: 72.8; --y: 60.1; --w: 232; --h: 41.5">
-      <div aria-label="Display" class="push-surface__glass" role="img">
+      <div class="push-surface__glass">
+        <PushDisplay dark=true @onInput=input>
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="1" data-control="lower-1" data-kind="button" data-lamp="off" style="--x: 74.4; --y: 112.3; --w: 25.8; --h: 12.6">
       <Pad fillCell=true label="" name="Lower display button 1" state="idle">
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="2" data-control="lower-2" data-kind="button" data-lamp="off" style="--x: 103.4; --y: 112.3; --w: 25.8; --h: 12.6">
@@ -2242,7 +2248,8 @@
     <div class="push-surface__cell" data-cap="fill" data-cluster="upper" data-col="8" data-control="upper-8" data-kind="button" data-lamp="lit" style="--x: 204.6; --y: 21.1; --w: 25.8; --h: 12.3; --push-lamp: var(--push-lamp-7)">
       <Pad fillCell=true hue=1 label="" name="Upper display button 8" state="playing">
     <div class="push-surface__cell" data-cluster="display" data-control="display" data-kind="display" style="--x: 0; --y: 44.5; --w: 232; --h: 41.5">
-      <div aria-label="Display" class="push-surface__glass" role="img">
+      <div class="push-surface__glass">
+        <PushDisplay dark=true @onInput=input>
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="1" data-control="lower-1" data-kind="button" data-lamp="lit" style="--x: 1.6; --y: 96.7; --w: 25.8; --h: 12.6; --push-lamp: var(--push-lamp-8)">
       <Pad fillCell=true hue=1 label="" name="Lower display button 1" state="playing">
     <div class="push-surface__cell" data-cap="fill" data-cluster="lower" data-col="2" data-control="lower-2" data-kind="button" data-lamp="lit" style="--x: 30.6; --y: 96.7; --w: 25.8; --h: 12.6; --push-lamp: var(--push-lamp-9)">

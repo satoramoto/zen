@@ -1,0 +1,24 @@
+## Envelope
+<svg aria-label="Envelope" class="push-trace" data-part="root" preserveAspectRatio="none" role="img" viewBox="0 0 100 40">
+  <path class="push-trace__line" d="M 0 40 L 5 0 L 35 12 L 70 12 L 100 40" data-part="line" vector-effect="non-scaling-stroke">
+
+## Filled
+<svg aria-label="Filter response" class="push-trace" data-hue="2" data-part="root" preserveAspectRatio="none" role="img" viewBox="0 0 100 40">
+  <path class="push-trace__fill" d="M 0 16 L 50 16 L 60 6 L 66 20 L 80 36 L 100 40 L 100 40 L 0 40 Z" data-part="fill">
+  <path class="push-trace__line" d="M 0 16 L 50 16 L 60 6 L 66 20 L 80 36 L 100 40" data-part="line" vector-effect="non-scaling-stroke">
+
+## Marked
+<svg aria-label="Oscillator shape" class="push-trace" data-part="root" preserveAspectRatio="none" role="img" viewBox="0 0 100 40">
+  <rect class="push-trace__region" data-part="region" height="40" width="50" x="25" y="0">
+  <path class="push-trace__line" d="M 0 40 L 3.13 37.5 L 6.25 35 L 9.38 32.5 L 12.5 30 L 15.63 27.5 L 18.75 25 L 21.88 22.5 L 25 20 L 28.13 17.5 L 31.25 15 L 34.38 12.5 L 37.5 10 L 40.63 7.5 L 43.75 5 L 46.88 2.5 L 50 40 L 53.13 37.5 L 56.25 35 L 59.38 32.5 L 62.5 30 L 65.63 27.5 L 68.75 25 L 71.88 22.5 L 75 20 L 78.13 17.5 L 81.25 15 L 84.38 12.5 L 87.5 10 L 90.63 7.5 L 93.75 5 L 96.88 2.5 L 100 40" data-part="line" vector-effect="non-scaling-stroke">
+  <line class="push-trace__marker" data-name="loop start" data-part="marker" vector-effect="non-scaling-stroke" x1="25" x2="25" y1="0" y2="40">
+  <line class="push-trace__marker" data-name="loop end" data-part="marker" vector-effect="non-scaling-stroke" x1="75" x2="75" y1="0" y2="40">
+  <line class="push-trace__marker" data-name="playhead" data-part="marker" data-strong="true" vector-effect="non-scaling-stroke" x1="40" x2="40" y1="0" y2="40">
+
+## Disabled
+<svg aria-label="Envelope, off" class="push-trace" data-disabled="true" data-part="root" preserveAspectRatio="none" role="img" viewBox="0 0 100 40">
+  <path class="push-trace__fill" d="M 0 40 L 5 0 L 35 12 L 70 12 L 100 40 L 100 40 L 0 40 Z" data-part="fill">
+  <path class="push-trace__line" d="M 0 40 L 5 0 L 35 12 L 70 12 L 100 40" data-part="line" vector-effect="non-scaling-stroke">
+
+## Empty
+<svg aria-label="Nothing measured" class="push-trace" data-part="root" preserveAspectRatio="none" role="img" viewBox="0 0 100 40">

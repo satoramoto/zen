@@ -8,10 +8,11 @@
 // `Slider`, the display a `PushDisplay`. The cell says where it is and how its lamp is lit, by
 // restating the variables those components already read (`--hue-1` for a fill, `--text-1` for a
 // legend); the components gain nothing. Input is the `pushSurface` store on the root.
-import { lampShadeCss, lampVar, lampVars } from '../../../foundation/themes/lamps';
+import { lampVars } from '../../../foundation/themes/lamps';
 import { component, h, styleText, wire, type Child, type ChildArg, type Handlers, type Node } from '../../../foundation/view/Tree.model';
 import { BODY, CONTROLS, controlsIn, regionBox, type Control, type Region } from '../../model/layout';
-import type { Lamp, LampMeaning, PushInput, Screen, StripLamps, Unit } from '../../model/types';
+import type { Lamp, PushInput, Screen, StripLamps, Unit } from '../../model/types';
+import { lampCss } from '../lamp';
 import type { Beat } from './lampClock';
 import type { Sensitivity } from './padInput';
 import type { SurfaceInputParams } from './surfaceInput';
@@ -39,28 +40,6 @@ export interface SurfaceModelProps {
   onInput?: (input: PushInput) => void;
   /** Classes added to the root. */
   className?: string;
-}
-
-/** The colour a meaning takes: the pack's own meaning colours, so a pack can restate them. */
-const MEANING: Record<LampMeaning, string> = {
-  white: 'var(--push-white)',
-  play: 'var(--success)',
-  queue: 'var(--success)',
-  note: 'var(--success)',
-  record: 'var(--danger)',
-  stop: 'var(--danger)',
-  select: 'var(--push-select)',
-  solo: 'var(--push-solo)',
-  root: 'var(--push-solo)',
-  mute: 'var(--warning)',
-  warn: 'var(--warning)',
-  accent: 'var(--accent)',
-};
-
-/** A lamp's colour as CSS: a table colour or a meaning's, in the shade asked for (dim by default when the lamp is dim). */
-export function lampCss(lamp: Lamp): string {
-  const base = typeof lamp.colour === 'number' ? lampVar(lamp.colour) : MEANING[lamp.colour ?? 'white'];
-  return lampShadeCss(base, lamp.shade ?? (lamp.state === 'dim' ? 'dim' : 'lit'), 'var(--push-unlit)');
 }
 
 /** Controls whose whole cap lights in a colour (pads, display buttons, scene buttons); the others light their legend. */
@@ -129,7 +108,7 @@ function inner(c: Control, props: SurfaceModelProps, lamp: Lamp): ChildArg {
   if (c.kind === 'encoder') return knob(c);
   if (c.kind === 'wheel') return jog(c);
   if (c.kind === 'strip') return strip(props.strip ?? { kind: 'off' });
-  return h('div', { class: 'push-surface__glass', role: 'img', 'aria-label': c.name });
+  return h('div', { class: 'push-surface__glass' }, component('PushDisplay', { screen: props.screen, dark: props.darkDisplay !== false, light: props.displayLight }, { on: { onInput: 'input' } }));
 }
 
 const percent = (n: number | undefined) => String(Math.min(100, Math.max(0, n ?? 100)) / 100);
