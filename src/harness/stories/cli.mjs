@@ -6,6 +6,8 @@
 //   zen-stories --browser-all [prefix ...] every story in the browser, against the served Storybook or a built one
 //
 //   --workers N      stories played at once (2)
+//   --gpu            the browser uses this machine's GPU, for WebGL stories
+//   --viewport WxH   the browser's page size (1600x1000), for stories drawn for one screen
 //   --timeout MS     per story (90000)
 //   --url URL        the served Storybook, for `browser` and `stage` stories (default: the port of
 //                    the project's `storybook` script, when something answers there)
@@ -34,6 +36,8 @@ const { values, positionals } = parseArgs({
     'no-browser': { type: 'boolean' },
     'browser-all': { type: 'boolean' },
     list: { type: 'boolean' },
+    gpu: { type: 'boolean' },
+    viewport: { type: 'string', default: '1600x1000' },
   },
 });
 if (values['no-browser'] && values['browser-all']) { console.error('--no-browser and --browser-all are two different runs: pick one'); process.exit(2); }
@@ -44,6 +48,9 @@ if (!fs.existsSync(configDir)) { console.error(`no Storybook here: ${configDir} 
 const mode = values['browser-all'] ? 'browser-all' : values['no-browser'] ? 'no-browser' : 'local';
 const workers = Math.max(1, Number(values.workers) || 2);
 const timeout = Number(values.timeout) || 90000;
+const size = /^(\d+)x(\d+)$/.exec(values.viewport);
+if (!size) { console.error(`--viewport is a width and height in pixels, as 1180x820, not ${values.viewport}`); process.exit(2); }
+const viewport = { width: Number(size[1]), height: Number(size[2]) };
 
 const answers = async (url, what) => {
   try { const res = await fetch(url, { signal: AbortSignal.timeout(3000) }); return res.ok && (res.headers.get('content-type') ?? '').includes(what); } catch { return false; }
@@ -113,7 +120,7 @@ if (todo.browser.length) {
     else unplayed(todo.browser, `no built Storybook in ${values.static}`, 'Build it first, or name a served one with --url.');
   } else if (!base) unplayed(todo.browser, 'no Storybook is being served for them', 'Start the project\'s Storybook, or name one with --url.');
   if (base) {
-    const not = await playInBrowser({ base, stories: todo.browser, workers, timeout, report: report('browser') });
+    const not = await playInBrowser({ base, stories: todo.browser, workers, timeout, gpu: values.gpu, viewport, report: report('browser') });
     if (not) unplayed(todo.browser, not.why, `Run: ${not.fix}`);
   }
   await built?.close();

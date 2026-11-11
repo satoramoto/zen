@@ -73,24 +73,26 @@ const cutShort = (r) => r.reloaded || r.problems.some((p) => /storyHotUpdated|th
  * Plays `stories` in the headless shell against the Storybook at `base`, `workers` at a time.
  * Resolves to null, or to why nothing was played ({ why, fix }) when the shell is not installed.
  */
-export async function playInBrowser({ base, stories, workers, timeout, report }) {
+export async function playInBrowser({ base, stories, workers, timeout, gpu = false, viewport = { width: 1600, height: 1000 }, report }) {
   if (!stories.length) return null;
   let chromium;
-  try { ({ chromium } = await import('playwright')); } catch (e) {
-    if (e?.code !== 'ERR_MODULE_NOT_FOUND') throw e;
-    return { why: 'Playwright is not installed in this project', fix: `npm install --save-dev playwright && ${INSTALL}` };
+  // `playwright`, or `@playwright/test`, which a project with Playwright's test runner has instead.
+  for (const name of ['playwright', '@playwright/test']) {
+    try { ({ chromium } = await import(name)); break; } catch (e) { if (e?.code !== 'ERR_MODULE_NOT_FOUND') throw e; }
   }
+  if (!chromium) return { why: 'Playwright is not installed in this project', fix: `npm install --save-dev playwright && ${INSTALL}` };
   // No executable path and no channel: Playwright launches the headless shell of the revision
   // this project's Playwright pins.
   let browser;
-  try { browser = await chromium.launch({ headless: true }); } catch (e) {
+  // `gpu`: this machine's GPU for WebGL, where software WebGL is too slow for the plays.
+  try { browser = await chromium.launch({ headless: true, ...(gpu ? { args: ['--ignore-gpu-blocklist', '--enable-gpu'] } : {}) }); } catch (e) {
     if (!/Executable doesn't exist/.test(e.message)) throw e;
     return { why: 'Playwright\'s Chromium headless shell is not installed', fix: INSTALL };
   }
   const queue = [...stories];
   try {
     await Promise.all(Array.from({ length: Math.max(1, workers) }, async () => {
-      const context = await browser.newContext({ viewport: { width: 1600, height: 1000 } });
+      const context = await browser.newContext({ viewport });
       for (let s = queue.shift(); s; s = queue.shift()) {
         let r = await play(context, base, s, timeout);
         for (let again = 0; !r.ok && cutShort(r) && again < 2; again++) r = await play(context, base, s, timeout);

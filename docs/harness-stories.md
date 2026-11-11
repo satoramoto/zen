@@ -48,6 +48,10 @@ Options:
 - `--url URL`: the served Storybook, for `browser` and `stage` stories. By default the port in
   the project's `storybook` script, when something answers there, or `STORYBOOK_URL`.
 - `--list`: prints each story and where it would be played, and plays nothing.
+- `--gpu`: the headless shell uses this machine's GPU (`--enable-gpu`). For a project whose
+  stories draw with WebGL and run long, which software WebGL plays too slowly to pass.
+- `--viewport WxH`: the browser's page size, 1600x1000 by default. For stories drawn for one
+  screen: wavedude-web's are an iPad's, `--viewport 1180x820`.
 - `--timeout MS`: per story, 90000 by default.
 
 Each story gets one line, `pass` or `FAIL`, with its time, and `[browser]` when it played in

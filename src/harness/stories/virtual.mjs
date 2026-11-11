@@ -154,7 +154,8 @@ export async function playVirtual({ root, configDir, stories, workers, timeout, 
     ...base,
     plugins: [plugin, ...(base.plugins ?? [])],
     // Stories are browser code: packages are resolved as a browser would resolve them.
-    resolve: { ...(base.resolve ?? {}), conditions: ['browser', 'module', 'import', 'default'] },
+    // One React, even with zen linked from a checkout that has its own.
+    resolve: { ...(base.resolve ?? {}), conditions: ['browser', 'module', 'import', 'default'], dedupe: [...new Set([...(base.resolve?.dedupe ?? []), 'react', 'react-dom'])] },
     // zen may be linked from a checkout rather than installed: its runner and harness are then
     // outside the project, and Vite serves them only when allowed to.
     server: { ...(base.server ?? {}), watch: null, fs: { ...(base.server?.fs ?? {}), allow: [...(base.server?.fs?.allow ?? [vite.searchForWorkspaceRoot(root)]), ZEN] } },
