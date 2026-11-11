@@ -3,7 +3,6 @@
 // first use, as the React side is.
 import type { Component } from 'svelte';
 import { musicSvelteComponents } from '../../music/registry.svelte';
-import { pushSvelteComponents } from '../../push/registry.svelte';
 import Button from '../../components/Button/Button.svelte';
 import ActionButton from '../../components/ActionButton/ActionButton.svelte';
 import SearchField from '../../components/SearchField/SearchField.svelte';
@@ -85,12 +84,13 @@ import StatusLine from '../../yahaha/components/StatusLine/StatusLine.svelte';
 import WaitingChip from '../../yahaha/components/WaitingChip/WaitingChip.svelte';
 
 let registry: Record<string, Component<any>> | undefined;
+/** The parts an app registered (`registerComponents`), by name. */
+const added = new Map<string, Component<any>>();
 
 /** The Svelte component registered as `name`; throws for an unknown name. */
 export function svelteComponent(name: string): Component<any> {
   registry ??= {
     ...musicSvelteComponents(),
-    ...pushSvelteComponents(),
     AssembledScreen,
     FormScope,
     Layer,
@@ -171,7 +171,20 @@ export function svelteComponent(name: string): Component<any> {
     PageList,
     FolderList,
   } as Record<string, Component<any>>;
-  const found = registry[name];
-  if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/foundation/view/reactComponents.ts and svelteComponents.ts)`);
+  const found = registry[name] ?? added.get(name);
+  if (!found) throw new Error(`view: no component named "${name}" (zen's are listed in src/library/foundation/view/reactComponents.ts and svelteComponents.ts; an app adds its own with registerComponents)`);
   return found;
+}
+
+/**
+ * Adds an app's own parts to the Svelte registry, by the names its trees give them
+ * (`component('AppGauge', …)`). A name zen already has is refused, so an app never replaces a zen
+ * part; registering an app's name again replaces it (a hot reload).
+ */
+export function registerComponents(parts: Record<string, Component<any>>): void {
+  svelteComponent('Button');
+  for (const [name, part] of Object.entries(parts)) {
+    if (registry![name]) throw new Error(`view: "${name}" is zen's own part; give the app's part a name of its own`);
+    added.set(name, part);
+  }
 }

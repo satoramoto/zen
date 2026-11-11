@@ -3,6 +3,7 @@
 // (the Set, the state, `step` and `project`, the layout table, the sample Set) is framework-free
 // and has its own entry, `@satoramoto/zen/push/model`; it is re-exported here for a React app
 // that wants one import.
+import './registry.react';
 export { Surface, type SurfaceProps } from './layouts/Surface/Surface';
 export { Display, type DisplayProps } from './layouts/Display/Display';
 export { Device, type DeviceProps } from './layouts/Device/Device';

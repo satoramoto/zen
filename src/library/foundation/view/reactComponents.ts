@@ -5,7 +5,6 @@
 // draws a `Tree`, which reads this) never sees a half-loaded module.
 import type { ComponentType } from 'react';
 import { musicReactComponents } from '../../music/registry.react';
-import { pushReactComponents } from '../../push/registry.react';
 import { Button } from '../../components/Button/Button';
 import { ActionButton } from '../../components/ActionButton/ActionButton';
 import { SearchField } from '../../components/SearchField/SearchField';
@@ -82,12 +81,13 @@ import { StatusLine } from '../../yahaha/components/StatusLine/StatusLine';
 import { WaitingChip } from '../../yahaha/components/WaitingChip/WaitingChip';
 
 let registry: Record<string, ComponentType<any>> | undefined;
+/** The parts an app registered (`registerComponents`), by name. */
+const added = new Map<string, ComponentType<any>>();
 
 /** The React component registered as `name`; throws for an unknown name. */
 export function reactComponent(name: string): ComponentType<any> {
   registry ??= {
     ...musicReactComponents(),
-    ...pushReactComponents(),
     AssembledScreen,
     FormScope,
     Layer,
@@ -168,7 +168,20 @@ export function reactComponent(name: string): ComponentType<any> {
     PageList,
     FolderList,
   };
-  const found = registry[name];
-  if (!found) throw new Error(`view: no component named "${name}" (register it in src/library/foundation/view/reactComponents.ts and svelteComponents.ts)`);
+  const found = registry[name] ?? added.get(name);
+  if (!found) throw new Error(`view: no component named "${name}" (zen's are listed in src/library/foundation/view/reactComponents.ts and svelteComponents.ts; an app adds its own with registerComponents)`);
   return found;
+}
+
+/**
+ * Adds an app's own parts to the React registry, by the names its trees give them
+ * (`component('AppGauge', …)`). A name zen already has is refused, so an app never replaces a zen
+ * part; registering an app's name again replaces it (a hot reload).
+ */
+export function registerComponents(parts: Record<string, ComponentType<any>>): void {
+  reactComponent('Button');
+  for (const [name, part] of Object.entries(parts)) {
+    if (registry![name]) throw new Error(`view: "${name}" is zen's own part; give the app's part a name of its own`);
+    added.set(name, part);
+  }
 }

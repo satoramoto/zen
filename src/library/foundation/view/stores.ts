@@ -4,7 +4,6 @@
 // `bind` entry up here, so there are no per-component hooks or actions.
 import type { Handler } from './Tree.model';
 import { musicStores } from '../../music/registry.stores';
-import { pushStores } from '../../push/registry.stores';
 import { bindLongPress, type LongPressParams } from '../../components/Button/longPress';
 import { bindHold, type HoldParams } from '../../components/Button/hold';
 import { bindKnob, type KnobParams } from '../../music/components/KnobReadout/knobInput';
@@ -87,7 +86,6 @@ export function keyed<P extends object, F extends keyof P & string>(
 /** Every store a tree can bind, by name. A new store is one line here. */
 export const stores = {
   ...musicStores(),
-  ...pushStores(),
   /** Button's long press (`longPress.ts`). */
   longPress: keyed<LongPressParams, 'onLongPress' | 'onLongRelease'>(bindLongPress, ['onLongPress', 'onLongRelease']),
   /** Button's repeat-while-held (`hold.ts`). */
@@ -176,3 +174,17 @@ export const stores = {
 } satisfies Stores;
 
 export type StoreName = keyof typeof stores;
+
+/** zen's own store names: an app's may not take one. */
+const own = new Set(Object.keys(stores));
+
+/**
+ * Adds an app's own stores to the registry every tree reads, in both renderers, by the names its
+ * trees `bind`. A name zen already has is refused; registering an app's name again replaces it.
+ */
+export function registerStores(more: Stores): void {
+  for (const [name, store] of Object.entries(more)) {
+    if (own.has(name)) throw new Error(`view: "${name}" is zen's own store; give the app's store a name of its own`);
+    (stores as Stores)[name] = store;
+  }
+}
