@@ -4,7 +4,7 @@ import HoleSvelte from '../../primitives/Hole/Hole.svelte';
 import OpaqueSvelte from '../../primitives/Opaque/Opaque.svelte';
 import { withLibraryTheme } from '../../storybook';
 import { fixtureStories, withRenderer } from '../../foundation/stories/story';
-import { Layer } from './Layer';
+import { Layer, type LayerProps } from './Layer';
 import LayerSvelte from './Layer.svelte';
 import { holeStories, layerArgTypes, layerStories, opaqueStories } from './Layer.fixtures';
 
@@ -26,10 +26,12 @@ const hidden = { level: { table: { disable: true } } };
 export const Levels: Story = layer(layerStories.Levels);
 
 /** A popover's surface: `float`, with its role and name, taking the right of the picture's light. */
-export const Popover: Story = layer(layerStories.Popover);
+// A fixture with args and no items has no render of its own, and the meta names no component:
+// the story says what it draws.
+export const Popover: Story = { ...layer(layerStories.Popover), render: (args) => <Layer {...(args as LayerProps)} /> };
 
 /** Opaque: every layer inside draws its solid fill and no backdrop. */
-export const OpaqueScope: Story = { name: 'Opaque', argTypes: hidden, ...fixtureStories<Story>(Opaque, OpaqueSvelte)(opaqueStories.OpaqueScope) };
+export const OpaqueScope: Story = { name: 'Opaque', argTypes: hidden, ...fixtureStories<Story>(Opaque, OpaqueSvelte)(opaqueStories.OpaqueScope), render: (args) => <Opaque {...args} /> };
 
 /** Hole: a cut-out through every layer to what's behind the page; it paints nothing. */
 export const HoleCutOut: Story = { name: 'Hole', argTypes: hidden, ...fixtureStories<Story>(Hole, HoleSvelte)(holeStories.HoleCutOut) };

@@ -65,7 +65,7 @@ driven by the fixture.
 
 **Sessions end.** A session ends when:
 - the story unmounts or its page hides;
-- nothing has polled it for 90 seconds;
+- nothing has asked anything of it for 90 seconds;
 - the server stops.
 
 Its process group is killed and both folders are removed. `bwrap
@@ -150,18 +150,31 @@ A fixture module (`Fixture` in `session.d.mts`) returns:
 
 Push service changes with `session.setServices({ upower: … })`.
 
-Run plays headless against a running Storybook:
+Play stage stories with `zen-stories` (`harness-stories.md`), with the Storybook served:
 
 ```sh
-node src/harness/omarchy/stage/play-stories.mjs --url http://127.0.0.1:6010 omarchy-lab-on-qt
+node src/harness/stories/cli.mjs omarchy-lab-on-qt          # in zen
+npx zen-stories --url http://127.0.0.1:6030 omarchy-power   # in a project that uses zen
 ```
 
-It needs `quickshell`, `bwrap`, `dbus-run-session`, Omarchy's shell kit, and
-Playwright with its own Chromium headless shell, installed once with
-`npx playwright install --only-shell chromium`. The runner plays in that shell
-and no other browser: it reads no browser path, and says so when
-`CHROMIUM_PATH` is set. A story whose plugin or tools are missing shows why, and
-its play fails.
+Tag a stories file whose stories run on the stage `stage`. Such a story plays on the
+runner's virtual DOM, with no browser: `<OmarchyStage>` starts its session on the served
+stage, the play drives it through `stageOf(canvasElement)` as it would in a page, and the
+session ends with the story. Where nothing draws, the component fetches no frames and no log;
+the play's own calls keep the session alive. Where no stage server answers (a CI runner),
+`stage` stories are skipped with the reason. A story about the stage's own page (its frame,
+clicking and typing on the canvas) is tagged `stage` and `browser` and plays in Playwright's
+headless shell against the served Storybook.
+
+The tools it needs are `quickshell`, `bwrap`, `dbus-run-session` and Omarchy's shell kit, and,
+for the stories tagged `browser`, Playwright's own Chromium headless shell, installed once with
+`npx playwright install --only-shell chromium`. A story whose plugin or tools are missing shows
+why, and its play fails.
+
+**Sessions start four at a time.** Starting Quickshell is the burst of CPU a run makes, so the
+server starts no more than four sessions at once, whoever asks: every page and every runner of
+every agent goes through it. The rest wait their turn rather than fail. A project sets another
+limit with `omarchyStage({ plugins, maxStarting: 2 })`.
 
 ## The portable kit
 

@@ -91,7 +91,8 @@ export const plays = {
     },
     check: (context) => {
       expect(all(context, 'set-loop')).toEqual([{ kind: 'edit', action: 'set-loop', track: 't-bass', scene: 0, end: 5 }]);
-      expect(param(context.canvasElement, 3)).toContain('5 beats');
+      // One bar and one beat, as the unit words a length.
+      expect(param(context.canvasElement, 3)).toBe('Loop Length 1.1.0');
     },
   },
 
@@ -117,7 +118,7 @@ export const plays = {
       expect(param(c, 2)).toContain('Start');
       expect(param(c, 3)).toContain('End');
       expect(screenText(c)).not.toContain('Loop Length');
-      expect(tab(c, 'top', 2)).toHaveTextContent('Loop: Off');
+      expect(tab(c, 'top', 2)).toHaveTextContent('□Loop');
     },
   },
 
@@ -308,12 +309,12 @@ export const plays = {
     ...inClip(),
     set: vocals(),
     act: async ({ canvasElement: c }) => {
-      // Beats, Tones, Texture, Re-Pitch, Complex: four choices on, at four steps a choice.
-      await turn(c, 'encoder-5', 16);
+      // Beats, Tones, Texture, Re-Pitch, Complex: four choices on, at four steps a choice. Warp is the sixth encoder's.
+      await turn(c, 'encoder-6', 16);
     },
     check: (context) => {
       expect(all(context, 'set-clip').at(-1)).toEqual({ kind: 'edit', action: 'set-clip', track: 't-vocals', scene: 1, warpMode: 'Complex' });
-      expect(param(context.canvasElement, 5)).toContain('Complex');
+      expect(param(context.canvasElement, 6)).toContain('Complex');
     },
   },
 
@@ -321,9 +322,9 @@ export const plays = {
     ...inClip(),
     set: vocals(),
     act: async ({ canvasElement: c }) => {
-      await turn(c, 'encoder-6', 1);
+      await turn(c, 'encoder-7', 1);
       await holding(c, 'shift', async () => {
-        await turn(c, 'encoder-6', 1);
+        await turn(c, 'encoder-7', 1);
       });
     },
     check: (context) => {
@@ -331,7 +332,7 @@ export const plays = {
         { kind: 'edit', action: 'set-clip', track: 't-vocals', scene: 1, transpose: 1 },
         { kind: 'edit', action: 'set-clip', track: 't-vocals', scene: 1, detune: 1 },
       ]);
-      expect(param(context.canvasElement, 6)).toContain('1 st 1 ct');
+      expect(param(context.canvasElement, 7)).toContain('1 st 1 ct');
     },
   },
 

@@ -1,0 +1,124 @@
+name: stories
+
+# Plays a repo's Storybook stories with zen-stories (docs/harness-stories.md). Any repo calls it:
+#
+#   jobs:
+#     stories:
+#       uses: satoramoto/zen/.github/workflows/stories.yml@main
+#
+# On a pull request every story plays on a virtual DOM and none needs a browser; stories tagged
+# `browser` are counted and skipped. On a push to the default branch the Storybook's dev server is
+# started and every story plays in Playwright's Chromium headless shell against it, the check
+# that what passed on the virtual DOM also passes in a real browser. The dev server, not a build:
+# plays are written against it, and a build runs React's production code. Stage stories need
+# Quickshell and are skipped here.
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: Where the project's package.json and .storybook are
+        type: string
+        default: .
+      stories:
+        description: The command that runs zen-stories, to which the run's flag is added
+        type: string
+        default: npx zen-stories
+      serve:
+        description: The command that serves the Storybook's dev server on port 6006
+        type: string
+        default: npx storybook dev --ci --no-open --disable-telemetry --host 127.0.0.1 --port 6006
+      node-version:
+        type: string
+        default: '24'
+      workers:
+        description: Stories played at once (a public repo's runner has four cores)
+        type: number
+        default: 2
+      retries:
+        description: More tries for a story that fails in the browser on main; one that then passes is reported flaky (zen-stories --retries, zen 6886cb5 or later)
+        type: number
+        default: 0
+      shards:
+        description: Runners the browser run on main is split across, each playing an even share (zen-stories --shard)
+        type: number
+        default: 1
+      timeout-minutes:
+        description: How long the browser run on main may take, per runner
+        type: number
+        default: 60
+      setup:
+        description: Commands run before npm ci in both jobs (git settings, say)
+        type: string
+        default: ''
+      browser-setup:
+        description: Commands run before the browser plays on main (a tool the dev server calls, say)
+        type: string
+        default: ''
+
+jobs:
+  virtual-dom:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      - if: inputs.setup != ''
+        run: ${{ inputs.setup }}
+      - run: npm ci
+      - name: Every story on a virtual DOM
+        run: ${{ inputs.stories }} --no-browser --workers ${{ inputs.workers }}
+
+  shards:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - id: list
+        run: echo "list=[$(seq -s, 1 ${{ inputs.shards }})]" >> "$GITHUB_OUTPUT"
+
+  browser:
+    needs: shards
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.shards.outputs.list) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+      - if: inputs.setup != ''
+        run: ${{ inputs.setup }}
+      - run: npm ci
+      - name: Install Playwright's Chromium headless shell
+        run: npx playwright install --with-deps --only-shell chromium
+      - if: inputs.browser-setup != ''
+        run: ${{ inputs.browser-setup }}
+      - name: Serve the Storybook
+        run: |
+          nohup ${{ inputs.serve }} > "$RUNNER_TEMP/storybook.log" 2>&1 &
+          for i in $(seq 1 120); do
+            curl -sf http://127.0.0.1:6006/index.json > /dev/null && exit 0
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/storybook.log"; exit 1
+      - name: Every story in the headless shell
+        # An option goes on the command only when it is asked for: a repo's zen may predate it.
+        run: ${{ inputs.stories }} --browser-all --url http://127.0.0.1:6006 --workers ${{ inputs.workers }}${{ inputs.retries > 0 && format(' --retries {0}', inputs.retries) || '' }}${{ inputs.shards > 1 && format(' --shard {0}/{1}', matrix.shard, inputs.shards) || '' }}

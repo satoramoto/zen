@@ -9,6 +9,9 @@ async function evidence(name: string) {
 }
 const meta = {
   title: 'Site/Screens/ScenarioCapture',
+  // Played by scripts/check-manual-stories.mjs, which serves the evidence and the built manual
+  // they read; no other run can, so they are not tests to Storybook's runners.
+  tags: ['!test'],
   render: () => <p>Capture checkpoints share the scenario's existing actions and assertions.</p>,
   parameters: { spec: { capability: 'scenario-stories' } },
 } satisfies Meta;

@@ -70,9 +70,11 @@ export function Text({
   children,
   ...rest
 }: TextProps) {
+  // Inner HTML (MathML in running text) is the element's content: React refuses children beside it.
+  const inner = rest.dangerouslySetInnerHTML != null;
   return (
     <Tree
-      tree={textNode({ role, ariaRole, tone, tabular, truncate, leading, size, weight, case: textCase, className, as }, {}, slot('children'))}
+      tree={textNode({ role, ariaRole, tone, tabular, truncate, leading, size, weight, case: textCase, className, as }, {}, ...(inner ? [] : [slot('children')]))}
       slots={{ children }}
       {...rest}
     />

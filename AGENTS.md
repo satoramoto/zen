@@ -32,6 +32,7 @@ Each must exit 0. Run the narrowest one that covers your change. CI on the PR ru
 | `npm test` | Anything else under `src/` (it includes the above). |
 | `npm run build` | The static root page. |
 | `npm run build:storybook` | Any stories (library, harnesses, Yahaha), `.storybook/`. |
+| `node src/harness/stories/cli.mjs [prefix]` | Any story: plays it on the virtual DOM, and in the headless shell when tagged `browser` (`docs/harness-stories.md`). `npx vitest run src/harness/stories` for the runner itself. |
 | `npm run build:lib` | The package: anything a public entry exports (`src/library/index.ts`, `src/library/themes.ts`, `src/library/storybook.tsx`, `src/library/svelte.ts` and what they reach), `vite.lib.config.ts`, `tsconfig.lib.json`, `package.json` exports. |
 | `npm run check:lib` (after `build:lib`) | The same: `lib/svelte.js`, `lib/themes.js` and every chunk they import never import React (`scripts/check-lib-entries.ts`). A model or other framework-free file never imports a value from a `.tsx`. |
 | `npx vitest run src/library/parity.test.tsx` | Any unconverted component's model, React or Svelte renderer, or fixtures: both renderers draw the same DOM for every story. |

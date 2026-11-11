@@ -146,6 +146,7 @@ export const InstrumentSwatches: Story = {
   },
 };
 
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
 /** Real edits, four legacy facet swaps, a normal JSON export/import and a per-colour reset.
  * Optional roles are validated and merged against the selected facets' own virtual defaults. */
 export const InstrumentSkinRoundTrip: Story = {
@@ -207,4 +208,5 @@ export const InstrumentSkinRoundTrip: Story = {
       await expect(skin().overrides?.palette).toBeUndefined();
     });
   },
+  tags: ['browser'],
 };

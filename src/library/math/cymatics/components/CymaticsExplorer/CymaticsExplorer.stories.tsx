@@ -2,7 +2,8 @@ import type {Meta,StoryObj} from '@storybook/react-vite';
 import {expect,userEvent,within,waitFor} from 'storybook/test';
 import {withLibraryTheme} from '../../../../storybook';
 import {CymaticsExplorer} from './CymaticsExplorer';
-const meta={title:'Math/Cymatics/Components/Cymatics Explorer',component:CymaticsExplorer,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{kind:'plate',m:3,n:2,mix:Math.PI/4,phase:Math.PI},argTypes:{kind:{control:'select',options:['plate','membrane','drum']},m:{control:{type:'range',min:0,max:6,step:1}},n:{control:{type:'range',min:1,max:6,step:1}},mix:{control:{type:'range',min:0,max:Math.PI/2,step:.01}},phase:{control:{type:'range',min:0,max:2*Math.PI,step:.01}}}} satisfies Meta<typeof CymaticsExplorer>;
+// Stories tagged browser here draw on a canvas: they play in a real browser, not on zen-stories' virtual DOM.
+const meta={title:'Math/Cymatics/Components/Cymatics Explorer',component:CymaticsExplorer,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{kind:'plate',m:3,n:2,mix:Math.PI/4,phase:Math.PI},argTypes:{kind:{control:'select',options:['plate','membrane','drum']},m:{control:{type:'range',min:0,max:6,step:1}},n:{control:{type:'range',min:1,max:6,step:1}},mix:{control:{type:'range',min:0,max:Math.PI/2,step:.01}},phase:{control:{type:'range',min:0,max:2*Math.PI,step:.01}}}, tags: ['browser'] } satisfies Meta<typeof CymaticsExplorer>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const ChladniPattern:Story={};
 export const SquareMembrane:Story={args:{kind:'membrane',m:4,n:2}};

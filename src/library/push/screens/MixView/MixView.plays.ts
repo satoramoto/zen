@@ -3,7 +3,7 @@ import { lampVar } from '../../../foundation/themes/lamps';
 import { param } from '../../model/sample';
 import { initialState } from '../../model/state';
 import type { PushSet, Track } from '../../model/types';
-import { all, app, bodyTexts, cell, column, columns, display, expect, forget, given, holding, intent, lamp, lampState, onTrack, overlay, press, rowTexts, screenKind, tab, turn, wait, waitFor } from '../play';
+import { all, app, bodyTexts, cell, column, columns, display, expect, forget, given, holding, intent, lamp, lampState, onTrack, overlay, press, pressTwice, rowTexts, screenKind, tab, turn, wait, waitFor } from '../play';
 import type { Play } from '../scenario';
 
 const none = async () => {};
@@ -196,7 +196,7 @@ export const plays = {
     },
     check: async (context) => {
       const c = context.canvasElement;
-      expect(cell(c, 'main').dataset.shown).toContain('mix-track Volume');
+      expect(cell(c, 'main').dataset.shown).toContain('mix-track Track Volume');
       expect(cell(c, 'main').dataset.shown).toContain('lit');
       expect(all(context, 'select-track').map((i) => i.track)).toEqual(['main', 't-keys']);
       await waitFor(() => expect(app(c).getSet().selection.track).toBe('t-keys'));
@@ -345,8 +345,7 @@ export const plays = {
 
   ADoublePress: {
     act: async ({ canvasElement: c }) => {
-      await press(c, 'lower-3');
-      await press(c, 'lower-3');
+      await pressTwice(c, 'lower-3');
     },
     check: (context) => {
       expect(all(context, 'arm')).toEqual([{ kind: 'edit', action: 'arm', track: 't-keys', on: true, exclusive: true }]);

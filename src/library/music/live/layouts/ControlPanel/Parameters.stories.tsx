@@ -71,7 +71,8 @@ export const TheCatalogueIsPlainData: Story = scenario(
   spied(s.Default),
 ) as Story;
 
-export const APadIsOfferedOnlyWhatItCanFire: Story = scenario(
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
+export const APadIsOfferedOnlyWhatItCanFire: Story = { ...scenario(
   {
     name: 'A pad is offered only what it can fire',
     when: 'a person opens a pad’s sheet while building',
@@ -89,7 +90,7 @@ export const APadIsOfferedOnlyWhatItCanFire: Story = scenario(
     },
   },
   { parameters: { frame: { w: 1280, h: 800 } }, render: () => <Building /> },
-) as Story;
+), tags: ['browser'] } as Story;
 
 export const AFaderDrag: Story = scenario(
   {

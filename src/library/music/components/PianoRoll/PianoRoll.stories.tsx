@@ -41,6 +41,7 @@ const story = fixtureStories<Story>(PianoRoll, PianoRollSvelte);
 /** A I–vi–IV–V in C, the playhead a third of the way through. */
 export const Default: Story = story(s.Default);
 
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 /** An emphasized passing tone, a note off the keys (drawn nowhere), and a late playhead. */
 /** `level` on a note: how strongly it is drawn. A lower level is plainly fainter. */
 export const Levels: Story = {
@@ -52,6 +53,7 @@ export const Levels: Story = {
     await expect([...opacity].sort((a, b) => a - b)).toEqual(opacity);
     await expect(opacity[3] - opacity[0]).toBeGreaterThan(0.4);
   },
+  tags: ['browser'],
 };
 
 export const EveryState: Story = story(s.EveryState);

@@ -11,6 +11,7 @@ export const BowlOrDome:Story={args:{illusion:'bowl'}};
 export const Saddle:Story={args:{illusion:'saddle'}};
 export const RippleTunnel:Story={args:{illusion:'ripples'}};
 export const SecretMessage:Story={args:{illusion:'message'}};
+// Stories tagged browser below draw on a canvas: they play in a real browser, not on zen-stories' virtual DOM.
 /** The confirmation is a synthetic browser fixture, never a real physical calibration. */
 export const CalibrateAndExplore:Story={play:async({canvasElement})=>{
  const c=within(canvasElement);await userEvent.click(c.getByRole('button',{name:'Stereo pair'}));await expect(c.getByRole('button',{name:'Start stereo'})).toBeDisabled();
@@ -27,7 +28,8 @@ export const CalibrateAndExplore:Story={play:async({canvasElement})=>{
  await userEvent.click(c.getByRole('button',{name:'Crossed viewing'}));await userEvent.click(c.getByRole('button',{name:'Start stereo'}));
  await expect(canvasElement.querySelector('.zen-dot-stereo')).toHaveAttribute('data-viewing','crossed');
  await userEvent.click(c.getByRole('button',{name:'Flatten depth'}));await expect(c.getByLabelText('Effective relief')).toHaveTextContent('0.0 arcmin');
-}};
+},
+  tags: ['browser'],};
 
 export const MotionWithoutFusion:Story={play:async({canvasElement})=>{
  const c=within(canvasElement);await expect(c.queryByRole('button',{name:'Start stereo'})).not.toBeInTheDocument();

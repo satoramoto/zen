@@ -35,6 +35,9 @@ export const Dialog: Story = story(s.Dialog);
 export const TextEntry: Story = story(s.TextEntry);
 /** A low battery, a count-in and a long task, over the screen. */
 export const Status: Story = story(s.Status);
+export const Settings: Story = story(s.Settings);
+export const Code: Story = story(s.Code);
+export const CodeDialog: Story = story(s.CodeDialog);
 export const Blank: Story = story(s.Blank);
 export const LowLight: Story = story(s.LowLight);
 export const FollowsMode: Story = story(s.FollowsMode);

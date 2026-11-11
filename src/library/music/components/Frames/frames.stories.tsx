@@ -28,7 +28,8 @@ const story = (fixture: StoryFixture<FrameWaveformProps>, extra: Partial<Story>)
   ...extra,
 });
 
-export const IndependentSources: Story = story(s.IndependentSources, { play: async ({ canvasElement, args }) => {
+// Stories tagged browser below measure layout and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const IndependentSources: Story = { ...story(s.IndependentSources, { play: async ({ canvasElement, args }) => {
   const drums = canvasElement.querySelector<HTMLElement>('[aria-label="Deck 1 Drums waveform"]')!;
   const bass = canvasElement.querySelector<HTMLElement>('[aria-label="Deck 1 Bass waveform"]')!;
   await expect(drums).toHaveAttribute('data-focused', 'true');
@@ -43,7 +44,7 @@ export const IndependentSources: Story = story(s.IndependentSources, { play: asy
   await expect(within(canvasElement).getByText('0:08 · 5.1')).toBeInTheDocument();
   await fireEvent.pointerDown(bass, { button: 0, pointerId: 1 });
   await expect(args.commands.setFocus).toHaveBeenLastCalledWith('a', 'bass');
-} });
+} }), tags: ['browser'] };
 
 export const WholeTrack: Story = story(s.WholeTrack, { play: async ({ canvasElement }) => {
   const strip = canvasElement.querySelector<HTMLElement>('.play-wave-scroll')!;
@@ -66,6 +67,7 @@ export const SmoothedMeter: StoryObj<FrameMeterProps> = {
     await expect(meter.getBoundingClientRect().height).toBe(210);
     await expect(getComputedStyle(meter.querySelector('.wdg-meter-level')!).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
   },
+  tags: ['browser'],
 };
 
 export const NegativePlayhead: StoryObj<FramePlayheadProps> = {

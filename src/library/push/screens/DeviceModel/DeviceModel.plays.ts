@@ -10,7 +10,7 @@ import { initialState } from '../../model/state';
 import { step } from '../../model/step';
 import { DOUBLE_MS } from '../../model/timing';
 import type { PushIntent, PushSet, PushState } from '../../model/types';
-import { actions, all, app, asked, cell, display, expect, forget, given, hit, holdDown, holding, HOLD, kinds, lamp, lampState, onTrack, overlay, paramText, pedal, press, RED, report, rowTexts, screenKind, screenText, tab, turn, wait, waitFor } from '../play';
+import { actions, all, app, asked, cell, display, expect, forget, given, hit, holdDown, holding, HOLD, kinds, lamp, lampState, onTrack, overlay, paramText, pedal, pedalTwice, press, RED, report, rowTexts, screenKind, screenText, tab, turn, wait, waitFor } from '../play';
 import type { Play, PlayContext } from '../scenario';
 
 const none = async () => {};
@@ -423,8 +423,7 @@ export const plays = {
 
   ADoubleTapOnPedal1: {
     act: async ({ canvasElement: c }) => {
-      await pedal(c, 1);
-      await pedal(c, 1);
+      await pedalTwice(c, 1);
       await wait(500);
     },
     check: (context) => {

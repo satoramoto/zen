@@ -132,7 +132,7 @@
   overflow: hidden;
   color: var(--push-lit);
 }
-.push-display__cell[data-type='text'] { padding: 0 calc(var(--push-px) * 8); color: var(--push-lit); }
+.push-display__cell[data-type='text'] { padding: 0 calc(var(--push-px) * 8); color: var(--push-lit); overflow-wrap: anywhere; }
 .push-display__cell[data-type='text'][data-align='start'] { align-items: flex-start; }
 .push-display__cell[data-type='text'][data-align='centre'] { text-align: center; }
 .push-display__cell[data-disabled] { --push-lit: var(--text-3); opacity: 0.6; }
@@ -166,7 +166,55 @@
   white-space: nowrap;
   color: var(--push-lit);
 }
-.push-display__cell[data-type='param'][data-style='choice'],
+/* A choice with the choices after it: beneath it, each on its own line, or beside it in a row. The
+   current one is lit and the others dim. */
+.push-display__choices {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 100%;
+  min-width: 0;
+  color: var(--push-lit);
+}
+.push-display__choices > * { max-width: 100%; }
+.push-display__choices[data-layout='row'] {
+  flex-direction: row;
+  align-items: baseline;
+  gap: calc(var(--push-px) * 5);
+  white-space: nowrap;
+}
+/* A setting's small picture, where a dial would be, in the value's colour. */
+.push-display__cell [data-part='picture'] {
+  flex: none;
+  inline-size: calc(var(--push-px) * 30);
+  block-size: calc(var(--push-px) * 30);
+  margin-top: calc(var(--push-px) * 4);
+  color: var(--push-lit);
+}
+.push-display__cell [data-part='picture'] svg { inline-size: 100%; block-size: 100%; }
+.push-display__cell [data-part='picture'] path { fill: none; stroke: currentColor; stroke-width: 1.5; }
+.push-display__cell [data-part='picture'] path[data-fill] { fill: currentColor; }
+.push-display__cell [data-part='picture'] path[data-dots] { stroke-dasharray: 1 2; }
+/* A pair of options at a display button. */
+.push-display__options { display: flex; gap: calc(var(--push-px) * 5); min-width: 0; white-space: nowrap; overflow: hidden; }
+.push-display__options > :not([data-current]) { color: var(--text-3); }
+/* A code a phone can scan: as large as the body allows. */
+.push-display__cell[data-type='code'] { --lib-code-size: calc(var(--push-px) * 104); }
+/* A dialog with a code: the code at the left, as high as the dialog, and its words beside it. */
+.push-display__overlay[data-overlay='dialog']:has(.lib-codeimage) {
+  --lib-code-size: calc(var(--push-px) * 100);
+  display: grid;
+  grid-template-columns: auto auto;
+  align-content: center;
+  justify-content: center;
+  justify-items: start;
+  column-gap: calc(var(--push-px) * 16);
+  text-align: start;
+}
+.push-display__overlay[data-overlay='dialog'] .lib-codeimage { grid-column: 1; grid-row: 1 / span 4; align-self: center; }
+.push-display__overlay[data-overlay='dialog']:has(.lib-codeimage) > :not(.lib-codeimage) { grid-column: 2; }
+.push-display__cell[data-type='param'][data-style='choice']:not(:has(.push-display__choices)),
 .push-display__cell[data-type='list'] {
   align-items: stretch;
   justify-content: flex-start;
@@ -274,13 +322,16 @@
 .push-display__cell[data-type='meter'] {
   --space-2: calc(var(--push-px) * 5);
   gap: calc(var(--push-px) * 3);
-  padding: calc(var(--push-px) * 5) 0;
+  /* From the column's left edge, as the unit's are, with the reading under them. */
+  align-items: flex-start;
+  padding: calc(var(--push-px) * 5) calc(var(--push-px) * 8);
 }
+.push-display__cell[data-type='meter'] > [data-part='name'] { flex: none; max-width: 100%; color: var(--text-2); }
 .push-display__meter {
   flex: 1;
   display: flex;
   align-items: stretch;
-  justify-content: center;
+  justify-content: flex-start;
   gap: calc(var(--push-px) * 6);
   min-height: 0;
 }
@@ -304,6 +355,7 @@
   min-height: 0;
   /* A clip's block is small: its print and its room are too. */
   --size-label: calc(var(--push-px) * 9);
+  --size-caption: calc(var(--push-px) * 9);
   --space-1: 0px;
   --space-2: 0px;
   --bloom: 0px;
@@ -336,6 +388,10 @@
 /* The scenes' labels sit over the right edge of the last column, as on the unit. */
 .push-display__scene {
   position: absolute;
+  /* As high as its row and no higher, so eight of them stand clear of each other. */
+  inset-block: 0;
+  display: flex;
+  align-items: center;
   right: calc(var(--push-px) * 2);
   padding: 0 calc(var(--push-px) * 3);
   background: var(--push-ground);

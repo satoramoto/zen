@@ -126,6 +126,7 @@ export const LooperLearn: Story = {
   },
 };
 
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 /** The board retuned between songs: unlocked by a hold, its grid widened, the cuts docked under the throws, Vox dropped from the strips, locked again. */
 export const LooperRetuned: Story = {
   name: 'Looper · retuned',
@@ -164,6 +165,7 @@ export const LooperRetuned: Story = {
     await waitFor(() => expect(canvas.getByRole('button', { name: 'unlock Looper' })).toBeTruthy());
     await expect(canvasElement.querySelectorAll('[data-part="handle"]')).toHaveLength(0);
   },
+  tags: ['browser'],
 };
 
 /**

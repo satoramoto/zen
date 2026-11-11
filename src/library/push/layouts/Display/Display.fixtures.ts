@@ -102,6 +102,33 @@ export const displayStories = defineFixtures<DisplayModelProps>()({
   },
   /** The status marks: a low battery, a count-in and a long task. */
   Status: { args: { screen: withOverlay([{ type: 'battery', percent: 5, charging: false, low: true }, { type: 'count-in', fraction: 0.5 }, { type: 'progress', label: 'Downloading Grand Piano', fraction: 0.4 }]) } },
+  /** A setting's ways of showing a choice, a picture in place of a dial, and switches and a pair of options over the buttons. */
+  Settings: {
+    args: {
+      screen: screen('setup', {
+        top: row([{ label: 'Filter', icon: 'left', selected: true }, { label: 'Track', icon: 'switch-on' }, { label: 'Sync', icon: 'switch-off', dim: true }, { label: 'Trigger', options: ['Trigger', 'Gate'], chosen: 1 }]),
+        bottom: row([{ label: 'Status' }, { label: 'Expression', selected: true }]),
+        body: [
+          { type: 'param', col: 1, span: 2, name: 'Expression Mode', value: 'MPE', fraction: 0, style: 'choice', layout: 'stack', choices: ['MPE', 'Poly Aftertouch', 'Mono Aftertouch'], chosen: 0 },
+          { type: 'param', col: 3, name: 'Note Pitch Bend', value: 'On', fraction: 0, style: 'choice', layout: 'list', choices: ['Automatic', 'On', 'Off'], chosen: 1 },
+          { type: 'param', col: 4, name: 'In Tune Location', value: 'Finger', fraction: 0, style: 'choice', choices: ['Finger', 'Pad'], chosen: 0, picture: 'finger' },
+          { type: 'param', col: 5, name: 'In Tune Width', value: '10 mm', fraction: 0.5, style: 'arc', picture: 'width' },
+          { type: 'param', col: 6, name: 'Shape', value: 'Saw', fraction: 0, style: 'choice', layout: 'single', choices: ['Sine', 'Saw'], chosen: 1, colour: 26 },
+          { type: 'param', col: 7, span: 2, name: 'Mode', value: 'Classic', fraction: 0, style: 'value', choices: ['Classic', 'One-Shot', 'Slicing'], chosen: 0, colour: 26 },
+        ],
+      }),
+    },
+  },
+  /** An address as a code to scan: beside a lesson's words, and in a dialog beside its text. */
+  Code: {
+    args: {
+      screen: screen('lesson', {
+        top: row([{ label: '', icon: 'close' }, { label: 'A tour of Push', selected: true }]),
+        body: [{ type: 'text', col: 1, span: 5, text: 'The pads play notes and launch clips.', size: 'value' }, { type: 'code', col: 6, text: 'https://example.com/learn' }, { type: 'text', col: 7, span: 2, text: 'More at https://example.com/learn' }],
+      }),
+    },
+  },
+  CodeDialog: { args: { screen: withOverlay([{ type: 'dialog', title: 'Authorize this Push', code: '481 205', address: 'https://example.com/authorize', image: true }]) } },
   /** The unit is off: nothing at all. */
   Blank: { args: { screen: screen('blank') } },
   /** The display's light turned down. */

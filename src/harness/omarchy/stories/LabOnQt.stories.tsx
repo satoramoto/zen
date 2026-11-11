@@ -8,6 +8,8 @@ import { OmarchyStage, stageOf } from '../stage';
 // quickshell and Omarchy's shell kit installed.
 const meta = {
   title: 'Omarchy/Lab/On Qt',
+  // Drawn by the stage in Qt: zen-stories plays these against a served stage, and skips them where none answers.
+  tags: ['stage'],
   component: OmarchyStage,
   parameters: { layout: 'padded' },
   args: { plugin: 'zen.sample', width: 720, height: 800 },

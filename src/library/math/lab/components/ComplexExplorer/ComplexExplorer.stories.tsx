@@ -2,7 +2,8 @@ import type {Meta,StoryObj} from '@storybook/react-vite';
 import {withLibraryTheme} from '../../../../storybook';
 import {expect,userEvent,within,fireEvent} from 'storybook/test';
 import {ComplexExplorer} from './ComplexExplorer';
-const meta={title:'Math/Lab/Components/Complex Explorer',component:ComplexExplorer,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{functionKind:'zeta'},argTypes:{functionKind:{control:'select',options:['square','reciprocal','zeta']}},} satisfies Meta<typeof ComplexExplorer>;
+// Stories tagged browser here draw on a canvas: they play in a real browser, not on zen-stories' virtual DOM.
+const meta={title:'Math/Lab/Components/Complex Explorer',component:ComplexExplorer,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{functionKind:'zeta'},argTypes:{functionKind:{control:'select',options:['square','reciprocal','zeta']}}, tags: ['browser'] } satisfies Meta<typeof ComplexExplorer>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const ComplexSquare:Story={args:{functionKind:'square'}};
 export const ComplexReciprocal:Story={args:{functionKind:'reciprocal'}};

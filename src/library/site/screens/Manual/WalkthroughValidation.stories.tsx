@@ -10,6 +10,9 @@ async function evidence(name: string) {
 }
 const meta = {
   title: 'Site/Screens/WalkthroughValidation',
+  // Played by scripts/check-manual-stories.mjs, which serves the evidence and the built manual
+  // they read; no other run can, so they are not tests to Storybook's runners.
+  tags: ['!test'],
   render: () => <p>These scenarios check evidence from the bounded web and native capture runners.</p>,
   parameters: { spec: {
     capability: 'manual-walkthroughs',

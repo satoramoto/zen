@@ -334,8 +334,9 @@ export const plays = {
     ...state({ unfolded: ['d-keys'], banks: { 'd-keys.a': 1 } }),
     act: async ({ canvasElement: c }) => {
       const touch = await down(c, 'encoder-2');
-      cell(c, 'upper-8').dataset.offer = rowTexts(c, 'top')[7];
-      await press(c, 'upper-8');
+      // Map is on the last lower display button, as on the unit.
+      cell(c, 'upper-8').dataset.offer = `${rowTexts(c, 'bottom')[7]}|${rowTexts(c, 'top')[7]}`;
+      await press(c, 'lower-8');
       await touch.up();
       cell(c, 'upper-8').dataset.mode = `${rowTexts(c, 'top')[7]}|${params(c)[3]}`;
       const macro = await down(c, 'encoder-3');
@@ -343,7 +344,7 @@ export const plays = {
     },
     check: (context) => {
       const c = context.canvasElement;
-      expect(cell(c, 'upper-8').dataset.offer).toBe('Map');
+      expect(cell(c, 'upper-8').dataset.offer).toMatch(/^⇤Map\|(?!Map)/);
       expect(cell(c, 'upper-8').dataset.mode).toContain('Done');
       expect(cell(c, 'upper-8').dataset.mode).toContain('Attack');
       expect(all(context, 'map-macro')).toEqual([{ kind: 'edit', action: 'map-macro', track: 't-keys', device: 'd-keys', parameter: 'd-keys.a.cutoff', macro: 3 }]);
@@ -505,6 +506,95 @@ export const plays = {
       expect(intent(context, 'select-track')).toMatchObject({ track: 't-guitar' });
       expect(tab(c, 'bottom', 6)).toHaveAttribute('data-selected', 'true');
       expect(names(c).slice(0, 2)).toEqual(['Tuner', 'EQ Eight']);
+    },
+  },
+
+  HoldingASwitchsButton: {
+    set: keys((set) => void (set.selection.device = 'd-keys.a')),
+    ...state({ unfolded: ['d-keys'], bankList: true }),
+    act: async ({ canvasElement: c }) => {
+      cell(c, 'upper-2').dataset.before = rowTexts(c, 'bottom')[7];
+      await holdDown(c, 'upper-2', async () => {
+        await wait(HOLD);
+        cell(c, 'upper-2').dataset.offered = `${rowTexts(c, 'bottom')[7]}|${tab(c, 'bottom', 8).hasAttribute('data-selected')}`;
+      });
+    },
+    check: (context) => {
+      const c = context.canvasElement;
+      expect(rowTexts(c, 'top')[1]).toBe('■Osc');
+      expect(cell(c, 'upper-2').dataset.before).toBe('');
+      expect(cell(c, 'upper-2').dataset.offered).toBe('⇤Map|true');
+      // Holding it did not switch it, and letting go takes Map away.
+      expect(all(context, 'set-parameter')).toEqual([]);
+      expect(rowTexts(c, 'bottom')[7]).toBe('');
+    },
+  },
+
+  MappingASwitch: {
+    set: keys((set) => void (set.selection.device = 'd-keys.a')),
+    ...state({ unfolded: ['d-keys'], bankList: true }),
+    act: async ({ canvasElement: c }) => {
+      const held = await down(c, 'upper-2');
+      await wait(HOLD);
+      await press(c, 'lower-8');
+      await held.up();
+      cell(c, 'upper-2').dataset.mode = rowTexts(c, 'top')[7];
+      const macro = await down(c, 'encoder-2');
+      await macro.up();
+    },
+    check: (context) => {
+      const c = context.canvasElement;
+      expect(cell(c, 'upper-2').dataset.mode).toContain('Done');
+      expect(all(context, 'map-macro')).toEqual([{ kind: 'edit', action: 'map-macro', track: 't-keys', device: 'd-keys', parameter: 'd-keys.a.oscon', macro: 2 }]);
+      expect(all(context, 'set-parameter')).toEqual([]);
+    },
+  },
+
+  ABanksSwitches: {
+    set: keys((set) => void (set.selection.device = 'd-keys.a')),
+    ...state({ unfolded: ['d-keys'] }),
+    act: async ({ canvasElement: c }) => {
+      cell(c, 'upper-2').dataset.before = names(c).filter(Boolean).join('|');
+      await press(c, 'upper-2');
+    },
+    check: ({ canvasElement: c }) => {
+      // Before: the Rack, its two devices and the delay after it.
+      expect(cell(c, 'upper-2').dataset.before).toBe('Layered Keys|Wavetable|Reverb|Delay');
+      expect(rowTexts(c, 'top')).toEqual(['‹Wavetable', '■Osc', '', '', '', '', '', '']);
+      expect(tab(c, 'top', 1)).toHaveAttribute('data-selected', 'true');
+      expect(tab(c, 'top', 2).querySelector('[role="img"]')).toHaveAccessibleName('on');
+      expect(rowTexts(c, 'bottom').filter(Boolean)).toEqual(['Oscillator', 'Filter', 'Envelope', 'LFO']);
+    },
+  },
+
+  Switching: {
+    set: keys((set) => void (set.selection.device = 'd-keys.a')),
+    ...state({ unfolded: ['d-keys'], bankList: true }),
+    act: async ({ canvasElement: c }) => {
+      await press(c, 'upper-2');
+    },
+    check: async (context) => {
+      const c = context.canvasElement;
+      expect(all(context, 'set-parameter')).toEqual([{ kind: 'edit', action: 'set-parameter', parameter: 'd-keys.a.oscon', track: 't-keys', device: 'd-keys.a', value: 0 }]);
+      await waitFor(() => expect(rowTexts(c, 'top')[1]).toBe('□Osc'));
+      expect(tab(c, 'top', 2)).toHaveAttribute('data-dim', 'true');
+      expect(rowTexts(c, 'bottom')[7]).toBe('');
+      expect(all(context, 'map-macro')).toEqual([]);
+    },
+  },
+
+  BackToTheDevices: {
+    set: keys((set) => void (set.selection.device = 'd-keys.a')),
+    ...state({ unfolded: ['d-keys'], bankList: true }),
+    act: async ({ canvasElement: c }) => {
+      await press(c, 'upper-1');
+    },
+    check: (context) => {
+      const c = context.canvasElement;
+      expect(names(c).filter(Boolean)).toEqual(['Layered Keys', 'Wavetable', 'Reverb', 'Delay']);
+      expect(tab(c, 'top', 2)).toHaveAttribute('data-selected', 'true');
+      expect(rowTexts(c, 'bottom')[0]).toContain('Drums');
+      expect(all(context, 'select-device')).toEqual([]);
     },
   },
 } satisfies Record<string, Play>;

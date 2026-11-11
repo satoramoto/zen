@@ -40,6 +40,7 @@ export const Closed: Story = {
   },
 };
 
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
 /** Open: the menu is a float Layer at least the field's width; the held member is chosen, the pointer's row highlighted. Enter takes the highlight. */
 export const Open: Story = {
   ...story(s.Open),
@@ -57,6 +58,7 @@ export const Open: Story = {
     await expect(args.onChange).toHaveBeenLastCalledWith(2);
     await waitFor(() => expect(field).toHaveAttribute('aria-expanded', 'false'));
   },
+  tags: ['browser'],
 };
 
 /** With a caption (`name`), which also names it when there's no `label`. */

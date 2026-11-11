@@ -8,13 +8,28 @@ import { withLibraryTheme } from '../../../storybook';
 import { withRenderer } from '../../../foundation/stories/story';
 import { Emulator } from '../Emulator/Emulator';
 import { scenarioStory } from '../scenario';
+import { createElement, useState } from 'react';
+import { ThemePicker } from '../../../components/ThemePicker/ThemePicker';
+import { skinFromPack } from '../../../foundation/skins/skin';
+import { packs } from '../../../foundation/themes/packs';
+import { ThemeInspector } from '../../../screens/ThemeInspector/ThemeInspector';
 import { plays } from './Theme.plays';
 
+// Two scenarios are about the theme's own screens, not the device: the picker that offers a pack and
+// the inspector that shows its source and rules. Both are React screens; each story draws the real one.
+const PUSH_3 = packs.find((p) => p.id === 'push-3')!;
+function PickerHost() {
+  const [skin, setSkin] = useState(() => skinFromPack(packs[0]));
+  return createElement(ThemePicker, { value: skin, onChange: setSkin });
+}
+
+// Stories tagged browser here measure layout, draw on a canvas and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   title: 'Push/Screens/Theme',
   component: Emulator,
   decorators: [withRenderer, withLibraryTheme],
   parameters: { layout: 'fullscreen', spec: { capability: 'push-theme', purpose: 'The look of the device: a `push-3` theme pack that reproduces the unit from zen\'s tokens, the lamp colours that pads and buttons light in, and how any other pack recolours the whole device.' } },
+  tags: ['browser'],
 } satisfies Meta<typeof Emulator>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -23,13 +38,26 @@ export const ThePackIsOffered: Story = scenario(
   {
     name: 'The pack is offered',
     when: 'a person opens the theme picker',
-    then: 'push-3 is among the packs, with its source and the rules it keeps',
+    then: 'push-3 is among the packs it lists',
     requirement: 'A push-3 pack reproduces the unit',
     shall: 'Zen SHALL have a theme pack named `push-3` that names the Push 3 manual as its source and the rules it keeps, and under it the device SHALL read as the unit: a matte black body, dark controls with lit legends, translucent pads that glow from within, and a display of coloured type on a black ground.',
     act: plays.ThePackIsOffered.act,
     check: plays.ThePackIsOffered.check,
   },
-  scenarioStory(plays.ThePackIsOffered),
+  { args: scenarioStory(plays.ThePackIsOffered).args, render: () => createElement(PickerHost) },
+);
+
+export const ThePackNamesItsSource: Story = scenario(
+  {
+    name: 'The pack names its source',
+    when: 'a person opens the theme inspector with push-3 chosen',
+    then: 'it shows the manual as the pack\'s source and the rules the pack keeps',
+    requirement: 'A push-3 pack reproduces the unit',
+    shall: 'Zen SHALL have a theme pack named `push-3` that names the Push 3 manual as its source and the rules it keeps, and under it the device SHALL read as the unit: a matte black body, dark controls with lit legends, translucent pads that glow from within, and a display of coloured type on a black ground.',
+    act: plays.ThePackNamesItsSource.act,
+    check: plays.ThePackNamesItsSource.check,
+  },
+  { args: scenarioStory(plays.ThePackNamesItsSource).args, render: () => createElement(ThemeInspector, { pack: PUSH_3, facets: PUSH_3.facets, mode: 'dark' }) },
 );
 
 export const TheDeviceInItsOwnPack: Story = scenario(

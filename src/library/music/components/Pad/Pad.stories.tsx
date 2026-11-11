@@ -213,6 +213,7 @@ export const FillCell: Story = {
 /** New: a whole 4 × 4 bank, every face at once, to judge hierarchy under each theme pack. */
 export const Bank: Story = treeStory(() => ({ tree: padBankSample(BANK) }));
 
+// Stories tagged browser below read computed styles: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * New: `onFace="ring"`, on but not sounding: a bank's pads, Auto Fill on. The raised face stays, its
  * edge and a ring take the pad's colour, and a lit dot sits top-left; the solid fill is left to what
@@ -228,6 +229,7 @@ export const OnRing: Story = {
     await expect(ring).toHaveAttribute('aria-pressed', 'true');
     await expect(getComputedStyle(ring).backgroundColor).not.toBe(getComputedStyle(fill).backgroundColor);
   },
+  tags: ['browser'],
 };
 
 /** New: the Bank's sixteen pads with every pad but the sections on `onFace="ring"`: the playing section and Start / Stop are the only fills. */

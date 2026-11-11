@@ -155,7 +155,7 @@ export const PolyAftertouchHidesTheMPEOptions: Story = scenario(
     when: 'the Expression Mode is Poly Aftertouch',
     then: 'the pitch bend and slide settings are not offered',
     requirement: 'Expression sets how the pads bend and press',
-    shall: 'The Expression tab SHALL set the Expression Mode (MPE, Poly Aftertouch, Mono Aftertouch) and, in MPE, Note Pitch Bend (automatic, On, Off), In Tune Location (Finger, Pad), In Tune Width (0 to 20 mm) and Slide Height (10 to 16 mm).',
+    shall: 'The Expression tab SHALL set the Expression Mode (MPE, Poly Aftertouch, Mono Aftertouch) and, in MPE, Note Pitch Bend (automatic, On, Off), In Tune Location (Finger, Pad) with a picture of the one chosen, In Tune Width (0 to 20 mm) and Slide Height (10 to 16 mm).',
     act: plays.PolyAftertouchHidesTheMPEOptions.act,
     check: plays.PolyAftertouchHidesTheMPEOptions.check,
   },
@@ -168,7 +168,7 @@ export const AWiderInTuneZone: Story = scenario(
     when: 'a person turns In Tune Width to 15 mm',
     then: 'the app is asked to set the in-tune width to 15 mm',
     requirement: 'Expression sets how the pads bend and press',
-    shall: 'The Expression tab SHALL set the Expression Mode (MPE, Poly Aftertouch, Mono Aftertouch) and, in MPE, Note Pitch Bend (automatic, On, Off), In Tune Location (Finger, Pad), In Tune Width (0 to 20 mm) and Slide Height (10 to 16 mm).',
+    shall: 'The Expression tab SHALL set the Expression Mode (MPE, Poly Aftertouch, Mono Aftertouch) and, in MPE, Note Pitch Bend (automatic, On, Off), In Tune Location (Finger, Pad) with a picture of the one chosen, In Tune Width (0 to 20 mm) and Slide Height (10 to 16 mm).',
     act: plays.AWiderInTuneZone.act,
     check: plays.AWiderInTuneZone.check,
   },
@@ -246,7 +246,7 @@ export const ClockOut: Story = scenario(
     when: 'a person selects a port\'s Output and presses the display button at Sync',
     then: 'the app is asked to send MIDI clock to that port',
     requirement: 'MIDI sets each port',
-    shall: 'The MIDI tab SHALL list the ports the app reports (the MIDI In and Out jacks and each USB device), switch between a port\'s Input and Output with an encoder, and offer Track, Sync, Remote and (for inputs) MPE as switches, with External Sync and Sync Delay available when an input\'s Sync is on.',
+    shall: 'The MIDI tab SHALL list the ports the app reports (the MIDI In and Out jacks and each USB device), switch between a port\'s Input and Output with an encoder and show the sign of the one chosen, and offer Track, Sync, Remote and (for inputs) MPE as switches, with External Sync and Sync Delay available when an input\'s Sync is on.',
     act: plays.ClockOut.act,
     check: plays.ClockOut.check,
   },
@@ -259,7 +259,7 @@ export const ExternalSync: Story = scenario(
     when: 'no input has Sync on',
     then: 'External Sync is greyed',
     requirement: 'MIDI sets each port',
-    shall: 'The MIDI tab SHALL list the ports the app reports (the MIDI In and Out jacks and each USB device), switch between a port\'s Input and Output with an encoder, and offer Track, Sync, Remote and (for inputs) MPE as switches, with External Sync and Sync Delay available when an input\'s Sync is on.',
+    shall: 'The MIDI tab SHALL list the ports the app reports (the MIDI In and Out jacks and each USB device), switch between a port\'s Input and Output with an encoder and show the sign of the one chosen, and offer Track, Sync, Remote and (for inputs) MPE as switches, with External Sync and Sync Delay available when an input\'s Sync is on.',
     act: plays.ExternalSync.act,
     check: plays.ExternalSync.check,
   },
@@ -420,4 +420,57 @@ export const CueVolume: Story = scenario(
     check: plays.CueVolume.check,
   },
   scenarioStory(plays.CueVolume),
+);
+
+export const WhereInTuneIs: Story = scenario(
+  {
+    name: 'Where in tune is',
+    when: 'In Tune Location is Finger',
+    then: 'a finger is drawn under it, and a pad once it is Pad',
+    requirement: 'Expression sets how the pads bend and press',
+    shall: 'The Expression tab SHALL set the Expression Mode (MPE, Poly Aftertouch, Mono Aftertouch) and, in MPE, Note Pitch Bend (automatic, On, Off), In Tune Location (Finger, Pad) with a picture of the one chosen, In Tune Width (0 to 20 mm) and Slide Height (10 to 16 mm).',
+    act: plays.WhereInTuneIs.act,
+    check: plays.WhereInTuneIs.check,
+  },
+  scenarioStory(plays.WhereInTuneIs),
+);
+
+export const InputOrOutput: Story = scenario(
+  {
+    name: 'Input or output',
+    when: 'a person turns the encoder from a port\'s Input to its Output',
+    then: 'the sign under it changes from the input\'s to the output\'s',
+    requirement: 'MIDI sets each port',
+    shall: 'The MIDI tab SHALL list the ports the app reports (the MIDI In and Out jacks and each USB device), switch between a port\'s Input and Output with an encoder and show the sign of the one chosen, and offer Track, Sync, Remote and (for inputs) MPE as switches, with External Sync and Sync Delay available when an input\'s Sync is on.',
+    act: plays.InputOrOutput.act,
+    check: plays.InputOrOutput.check,
+  },
+  scenarioStory(plays.InputOrOutput),
+);
+
+// Stories tagged browser below measure the drawn screen: they play in a real browser, not on zen-stories' virtual DOM.
+export const FurtherMaterial: Story = { ...scenario(
+  {
+    name: 'Further material',
+    when: 'a lesson\'s page has a link to further material',
+    then: 'the page shows a code image that reads back as the link\'s address, and the address in text',
+    requirement: 'Learn lists lessons',
+    shall: 'Pressing Learn SHALL show the lessons the app lists, opened with the jog wheel and paged with display buttons, and a code image linking to further material when the app gives one.',
+    act: plays.FurtherMaterial.act,
+    check: plays.FurtherMaterial.check,
+  },
+  scenarioStory(plays.FurtherMaterial),
+), tags: ['browser'] };
+
+export const ALessonWithNoLink: Story = scenario(
+  {
+    name: 'A lesson with no link',
+    when: 'a lesson\'s page has no link',
+    then: 'no code image is shown',
+    requirement: 'Learn lists lessons',
+    shall: 'Pressing Learn SHALL show the lessons the app lists, opened with the jog wheel and paged with display buttons, and a code image linking to further material when the app gives one.',
+    act: plays.ALessonWithNoLink.act,
+    check: plays.ALessonWithNoLink.check,
+  },
+  scenarioStory(plays.ALessonWithNoLink),
 );

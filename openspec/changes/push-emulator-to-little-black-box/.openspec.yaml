@@ -1,0 +1,8 @@
+schema: zen-flow
+created: 2026-11-11
+goal: The Push 3 emulator lives in little-black-box, beside the research into the unit; zen keeps only what any app can use
+affected_areas:
+  - zen
+  - little-black-box
+retire_capabilities: true
+x-review: approve

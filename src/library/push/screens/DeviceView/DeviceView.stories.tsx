@@ -259,7 +259,7 @@ export const MappingACutoff: Story = scenario(
     when: 'a person touches the encoder over a filter\'s frequency, presses Map and touches the third encoder',
     then: 'the app is asked to map that parameter to macro 3',
     requirement: 'A parameter is mapped to a macro by touch',
-    shall: 'Touching a parameter\'s encoder SHALL offer Map; pressing it SHALL enter Macro Map mode, showing the Rack\'s macros in pages of eight, where touching a macro\'s encoder SHALL ask to map the parameter to that macro and Done SHALL leave; and a switch SHALL offer Map when its upper display button is held.',
+    shall: 'Touching a parameter\'s encoder SHALL offer Map on the last lower display button; pressing it SHALL enter Macro Map mode, showing the Rack\'s macros in pages of eight, where touching a macro\'s encoder SHALL ask to map the parameter to that macro and Done SHALL leave; and a switch SHALL offer Map when its upper display button is held.',
     act: plays.MappingACutoff.act,
     check: plays.MappingACutoff.check,
   },
@@ -272,7 +272,7 @@ export const ASecondParameterOnOneMacro: Story = scenario(
     when: 'macro 3 already has a mapping and a person maps another parameter to it',
     then: 'the app is asked to add the mapping, and the macro reads its default name once it holds two',
     requirement: 'A parameter is mapped to a macro by touch',
-    shall: 'Touching a parameter\'s encoder SHALL offer Map; pressing it SHALL enter Macro Map mode, showing the Rack\'s macros in pages of eight, where touching a macro\'s encoder SHALL ask to map the parameter to that macro and Done SHALL leave; and a switch SHALL offer Map when its upper display button is held.',
+    shall: 'Touching a parameter\'s encoder SHALL offer Map on the last lower display button; pressing it SHALL enter Macro Map mode, showing the Rack\'s macros in pages of eight, where touching a macro\'s encoder SHALL ask to map the parameter to that macro and Done SHALL leave; and a switch SHALL offer Map when its upper display button is held.',
     act: plays.ASecondParameterOnOneMacro.act,
     check: plays.ASecondParameterOnOneMacro.check,
   },
@@ -394,4 +394,69 @@ export const AnotherTrack: Story = scenario(
     check: plays.AnotherTrack.check,
   },
   scenarioStory(plays.AnotherTrack),
+);
+
+export const HoldingASwitchsButton: Story = scenario(
+  {
+    name: 'Holding a switch\'s button',
+    when: 'a device in a Rack shows its banks and a person holds the display button at one of its switches',
+    then: 'Map is offered on the last lower display button',
+    requirement: 'A parameter is mapped to a macro by touch',
+    shall: 'Touching a parameter\'s encoder SHALL offer Map on the last lower display button; pressing it SHALL enter Macro Map mode, showing the Rack\'s macros in pages of eight, where touching a macro\'s encoder SHALL ask to map the parameter to that macro and Done SHALL leave; and a switch SHALL offer Map when its upper display button is held.',
+    act: plays.HoldingASwitchsButton.act,
+    check: plays.HoldingASwitchsButton.check,
+  },
+  scenarioStory(plays.HoldingASwitchsButton),
+);
+
+export const MappingASwitch: Story = scenario(
+  {
+    name: 'Mapping a switch',
+    when: 'a person holds a switch\'s button, presses Map and touches the second encoder',
+    then: 'the app is asked to map that switch to macro 2',
+    requirement: 'A parameter is mapped to a macro by touch',
+    shall: 'Touching a parameter\'s encoder SHALL offer Map on the last lower display button; pressing it SHALL enter Macro Map mode, showing the Rack\'s macros in pages of eight, where touching a macro\'s encoder SHALL ask to map the parameter to that macro and Done SHALL leave; and a switch SHALL offer Map when its upper display button is held.',
+    act: plays.MappingASwitch.act,
+    check: plays.MappingASwitch.check,
+  },
+  scenarioStory(plays.MappingASwitch),
+);
+
+export const ABanksSwitches: Story = scenario(
+  {
+    name: 'A bank\'s switches',
+    when: 'a person presses the selected device\'s button',
+    then: 'the top row shows that device alone, then the bank\'s switches, and the bottom row its banks',
+    requirement: 'A bank\'s switches sit over the upper display buttons',
+    shall: 'While a device\'s banks are shown, the top row SHALL show that device alone over the first upper display button and the bank\'s switches over the others; pressing a switch\'s button SHALL ask to switch it, and pressing the device\'s SHALL return the top row to the devices.',
+    act: plays.ABanksSwitches.act,
+    check: plays.ABanksSwitches.check,
+  },
+  scenarioStory(plays.ABanksSwitches),
+);
+
+export const Switching: Story = scenario(
+  {
+    name: 'Switching',
+    when: 'a device\'s banks are shown and a person presses the display button at a switch that is on',
+    then: 'the app is asked to switch it off, and Map is not offered',
+    requirement: 'A bank\'s switches sit over the upper display buttons',
+    shall: 'While a device\'s banks are shown, the top row SHALL show that device alone over the first upper display button and the bank\'s switches over the others; pressing a switch\'s button SHALL ask to switch it, and pressing the device\'s SHALL return the top row to the devices.',
+    act: plays.Switching.act,
+    check: plays.Switching.check,
+  },
+  scenarioStory(plays.Switching),
+);
+
+export const BackToTheDevices: Story = scenario(
+  {
+    name: 'Back to the devices',
+    when: 'a device\'s banks are shown and a person presses the first upper display button',
+    then: 'the top row shows the track\'s devices again',
+    requirement: 'A bank\'s switches sit over the upper display buttons',
+    shall: 'While a device\'s banks are shown, the top row SHALL show that device alone over the first upper display button and the bank\'s switches over the others; pressing a switch\'s button SHALL ask to switch it, and pressing the device\'s SHALL return the top row to the devices.',
+    act: plays.BackToTheDevices.act,
+    check: plays.BackToTheDevices.check,
+  },
+  scenarioStory(plays.BackToTheDevices),
 );

@@ -33,10 +33,10 @@ describe('the Setup menu', () => {
     ['Audio', 'encoder-7', 4, { setting: 'output-source', value: 'Cue', output: 'Out 1/2' }],
     ['Audio', 'encoder-8', 4, { setting: 'clock-source', value: 'ADAT In' }],
     ['Pedals & CV', 'encoder-1', 4, { setting: 'jack', jack: 'Pedal 1', value: 'CV Out' }],
-    ['Pedals & CV', 'encoder-3', 4, { setting: 'jack', jack: 'Pedal 2', value: 'CV Out' }],
+    ['Pedals & CV', 'encoder-5', 4, { setting: 'jack', jack: 'Pedal 2', value: 'CV Out' }],
     ['Preferences', 'encoder-1', 4, { setting: 'preference', preference: 'Workflow', value: 'Clip' }],
-    ['Preferences', 'encoder-2', 4, { setting: 'preference', preference: 'Exclusive Arm', value: 'Off' }],
-    ['Preferences', 'encoder-4', 4, { setting: 'preference', preference: 'Select on Launch', value: 'Off' }],
+    ['Preferences', 'encoder-3', 4, { setting: 'preference', preference: 'Exclusive Arm', value: 'Off' }],
+    ['Preferences', 'encoder-6', 4, { setting: 'preference', preference: 'Select on Launch', value: 'Off' }],
   ] as const)('%s: turning %s by %i asks for a setting', (tab, encoder, steps, asked) => {
     const { intents } = play([twist(encoder, steps)], { state: inSetup(tab), host: false });
     expect(intents).toEqual([{ kind: 'setting', action: 'set-setting', ...asked }]);
@@ -176,7 +176,7 @@ describe('the Setup menu', () => {
     expect(play(tap('upper-1'), { state: reset.state, host: false }).intents).toEqual([]);
     expect(play(tap('jog'), { state: reset.state, host: false }).actions).toEqual(['reset-unit']);
     const legal = play([hold('shift'), ...tap('upper-1'), release('shift')], { state: inSetup('Software'), host: false });
-    expect(project(legal.state, sampleSet()).screen.overlays).toEqual([{ type: 'dialog', title: 'Legal Info', address: 'ableton.com/legal' }]);
+    expect(project(legal.state, sampleSet()).screen.overlays).toEqual([{ type: 'dialog', title: 'Legal Info', address: 'ableton.com/legal', image: true }]);
     expect(play(tap('upper-1'), { state: legal.state, host: false }).state.setup.info).toBeUndefined();
   });
 });
@@ -217,14 +217,37 @@ describe('codes, power and Learn', () => {
     ]);
   });
 
+  it('settings are set out as the unit has them: choices from the current one, pictures in place of dials, switches as boxes', () => {
+    const body = (tab: Parameters<typeof inSetup>[0], set = sampleSet()) => project(inSetup(tab), set).screen.body;
+    const at = (cells: ReturnType<typeof body>, col: number) => cells.find((c) => c.col === col);
+    const mpe = sampleSet();
+    mpe.unit.expression.mode = 'mpe';
+    mpe.unit.expression.inTune = 'finger';
+    expect(at(body('Expression', mpe), 1)).toMatchObject({ name: 'Expression Mode', layout: 'stack', span: 2 });
+    expect(at(body('Expression', mpe), 3)).toMatchObject({ name: 'Note Pitch Bend', layout: 'list' });
+    expect([4, 5, 6].map((col) => (at(body('Expression', mpe), col) as { picture?: string }).picture)).toEqual(['finger', 'width', 'height']);
+    expect(at(body('MIDI'), 1)).toMatchObject({ name: 'I/O', value: 'Input', picture: 'input' });
+    expect(at(body('MIDI'), 2)).toMatchObject({ name: 'Port', layout: 'stack', span: 4, value: 'MIDI In/Out' });
+    expect(at(body('MIDI'), 7)).toMatchObject({ name: 'External Sync', picture: 'off', disabled: true });
+    // Pedals & CV: each jack takes half the display. Preferences: the unit's four columns.
+    expect(body('Pedals & CV').filter((c) => c.type === 'param').map((c) => [c.col, (c as { name: string }).name])).toEqual([[1, 'Pedal & CV 1'], [5, 'Pedal & CV 2']]);
+    expect(body('Preferences').map((c) => [c.col, (c as { name: string }).name, (c as { picture?: string }).picture])).toEqual([[1, 'Workflow', 'scene'], [3, 'Exclusive Arm', 'on'], [4, 'Exclusive Solo', 'on'], [6, 'Select on Launch', 'on']]);
+    expect(project(inSetup('MIDI'), sampleSet()).screen.top.slice(1, 5)).toMatchObject([{ label: 'Track', icon: 'switch-on' }, { label: 'Sync', icon: 'switch-off', dim: true }, { label: 'Remote', icon: 'switch-off' }, { label: 'MPE', icon: 'switch-off' }]);
+  });
+
   it('Learn lists the lessons, opens one and pages it within its ends', () => {
     const list = play(tap('learn'));
     expect(list.state.display).toBe('learn');
     const opened = play([...tap('dpad-down'), ...tap('dpad-up'), ...tap('jog')], { state: list.state, host: false });
     expect(opened.intents).toEqual([{ kind: 'navigate', action: 'open-lesson', lesson: 'lesson-1' }]);
-    const text = (state: PushState) => JSON.stringify(project(state, sampleSet()).screen.body);
+    const text = (state: PushState) => JSON.stringify([project(state, sampleSet()).screen.top, project(state, sampleSet()).screen.body]);
     expect(text(opened.state)).toContain('Page 1 of 3');
-    expect(text(opened.state)).toContain('More at ableton.com/learn-push');
+    // Further material: the link as a code, and in text beside it.
+    expect(project(opened.state, sampleSet()).screen.body).toContainEqual({ type: 'code', col: 6, text: 'https://www.ableton.com/learn-push', label: 'Code for more about A tour of Push' });
+    expect(text(opened.state)).toContain('More at https://www.ableton.com/learn-push');
+    // A lesson with no link has neither.
+    const plain = project({ ...opened.state, learn: { highlight: 2, lesson: 'lesson-3', step: 0 } }, sampleSet()).screen.body;
+    expect(plain.some((cell) => cell.type === 'code')).toBe(false);
     const paged = play([...tap('upper-7'), ...tap('upper-8'), ...tap('upper-8'), ...tap('upper-8')], { state: opened.state, host: false });
     expect(paged.state.learn.step).toBe(2);
     expect(text(paged.state)).toContain('The encoders turn without end.');

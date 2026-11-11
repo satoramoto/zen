@@ -79,7 +79,8 @@ export const Hint: Story = {
     await expect(hint).toHaveAttribute('aria-hidden', 'true');
     await expect(hint.textContent).toContain('Sync Start');
     await expect(hint.textContent).toContain('Key Y');
-    await expect(hint.textContent).toContain('Launchkey: Shift + Play');
+    // Each place is its label, then its keycap: "Key Y", "Launchkey Shift + Play".
+    await expect(hint.textContent).toContain('Launchkey Shift + Play');
     await expect(within(canvasElement).queryByRole('button')).toBeNull();
   },
 };

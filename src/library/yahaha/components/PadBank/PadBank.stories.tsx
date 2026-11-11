@@ -89,6 +89,7 @@ const boxed = (fixture: Parameters<typeof story>[0], box: PadBankBox | undefined
   return { ...base, parameters: { ...base.parameters, box } };
 };
 
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 /** The board: the Quick Racks bank, Rack 1 loaded and OTS 1 on. A tab click asks for that bank. */
 export const Board: Story = {
   ...story(s.Board),
@@ -101,6 +102,7 @@ export const Board: Story = {
     await userEvent.click(canvas.getByRole('tab', { name: 'Chord' }));
     await expect(args.onBank).toHaveBeenCalledWith(CHORD);
   },
+  tags: ['browser'],
 };
 
 /**
@@ -117,19 +119,20 @@ export const Sections: Story = {
     await expect(canvas.getByRole('button', { name: /^Start \/ Stop, running/ })).toHaveAttribute('data-tone', 'success');
     await expectSquarePads(canvasElement);
   },
+  tags: ['browser'],
 };
 
 /**
  * A 4 × 4 grid (`columns` 4), as in the golden Stage's pads block: pads 1–4, 5–8, 9–12 and 13–16
  * row by row, in a block about 464 × 232: the pads are squares sized by its height, centred.
  */
-export const FourByFour: Story = boxed(s.FourByFour, padBankBoxes.FourByFour, {
+export const FourByFour: Story = { ...boxed(s.FourByFour, padBankBoxes.FourByFour, {
   play: async ({ canvasElement }) => {
     const grid = canvasElement.querySelector<HTMLElement>('.yh-padbank__pads');
     await expect(grid?.dataset.columns).toBe('4');
     await expectSquarePads(canvasElement);
   },
-});
+}), tags: ['browser'] };
 
 /** The flash's off phase, with Store armed: the rack slots and Store keep ARMED; their wash and ring rest. */
 export const FlashOff: Story = story(s.FlashOff);
@@ -180,11 +183,11 @@ export const At1440: Story = story(s.At1440);
 export const At1217: Story = boxed(s.At1217, padBankBoxes.At1217);
 
 /** New: a wide, short region (552 × 120): the pads stay squares, sized by the height, the row centred. */
-export const ShortRegion: Story = boxed(s.ShortRegion, padBankBoxes.ShortRegion, {
+export const ShortRegion: Story = { ...boxed(s.ShortRegion, padBankBoxes.ShortRegion, {
   play: async ({ canvasElement }) => {
     await expectSquarePads(canvasElement);
   },
-});
+}), tags: ['browser'] };
 
 /**
  * New: the bank's three forms (`PadBank.forms`), the Sections bank in each, each region as tall as
@@ -224,6 +227,7 @@ export const Forms: Story = {
       [...root.querySelectorAll<HTMLElement>('.yh-pad__tag')].some((t) => getComputedStyle(t).display !== 'none');
     await expect(roots.map(tagShown)).toEqual([true, false, true]);
   },
+  tags: ['browser'],
 };
 
 /** New: a working bank: tabs switch bank, a press toggles a pad on and off. Drawn by React only:

@@ -184,6 +184,7 @@ export const Patch: StoryObj = {
   },
 };
 
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 export const Fit: StoryObj<{ fitOnResize: boolean }> = {
   args: { fitOnResize: false },
   render: (args) => <FitHarness {...args} />,
@@ -195,4 +196,5 @@ export const Fit: StoryObj<{ fitOnResize: boolean }> = {
       expect(zoom).toBeLessThan(1);
     });
   },
+  tags: ['browser'],
 };

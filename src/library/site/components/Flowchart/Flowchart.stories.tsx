@@ -34,7 +34,8 @@ export const FollowDirectedStages: Story = scenario({
   },
 });
 
-export const ZoomAndFit: Story = scenario({
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
+export const ZoomAndFit: Story = { ...scenario({
   requirement: 'Authored documentation flowcharts',
   when: 'a reader zooms into a diagram using the keyboard and then fits it',
   then: 'the canvas zoom changes and fit returns every stage to view',
@@ -51,7 +52,7 @@ export const ZoomAndFit: Story = scenario({
     await userEvent.click(canvas.getByRole('button', { name: 'Fit diagram' }));
     await waitFor(() => expect(scale()).toBeCloseTo(initial, 2));
   },
-});
+}), tags: ['browser'] };
 
 export const ReadRelationships: Story = scenario({
   requirement: 'Authored documentation flowcharts',

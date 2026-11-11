@@ -19,7 +19,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AColumnIsAnEighth: Story = scenario(
+// Stories tagged browser below measure SVG geometry, measure layout, draw on a canvas, read computed styles and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const AColumnIsAnEighth: Story = { ...scenario(
   {
     name: 'A column is an eighth',
     when: 'the display is drawn at any size',
@@ -30,9 +31,9 @@ export const AColumnIsAnEighth: Story = scenario(
     check: plays.AColumnIsAnEighth.check,
   },
   scenarioStory(plays.AColumnIsAnEighth),
-);
+), tags: ['browser'] };
 
-export const ScalingKeepsThePixelGrid: Story = scenario(
+export const ScalingKeepsThePixelGrid: Story = { ...scenario(
   {
     name: 'Scaling keeps the pixel grid',
     when: 'the display is drawn at twice its size',
@@ -43,7 +44,7 @@ export const ScalingKeepsThePixelGrid: Story = scenario(
     check: plays.ScalingKeepsThePixelGrid.check,
   },
   scenarioStory(plays.ScalingKeepsThePixelGrid),
-);
+), tags: ['browser'] };
 
 export const AScreenFromJSON: Story = scenario(
   {
@@ -58,7 +59,7 @@ export const AScreenFromJSON: Story = scenario(
   scenarioStory(plays.AScreenFromJSON),
 );
 
-export const TheDisplayAlone: Story = scenario(
+export const TheDisplayAlone: Story = { ...scenario(
   {
     name: 'The display alone',
     when: 'an app draws the display with no surface around it',
@@ -69,7 +70,7 @@ export const TheDisplayAlone: Story = scenario(
     check: plays.TheDisplayAlone.check,
   },
   scenarioStory(plays.TheDisplayAlone),
-);
+), tags: ['browser'] };
 
 export const ATracksButtonWearsItsColour: Story = scenario(
   {
@@ -97,7 +98,7 @@ export const NothingToPress: Story = scenario(
   scenarioStory(plays.NothingToPress),
 );
 
-export const TheSelectedTrack: Story = scenario(
+export const TheSelectedTrack: Story = { ...scenario(
   {
     name: 'The selected track',
     when: 'track 4 is selected',
@@ -108,46 +109,46 @@ export const TheSelectedTrack: Story = scenario(
     check: plays.TheSelectedTrack.check,
   },
   scenarioStory(plays.TheSelectedTrack),
-);
+), tags: ['browser'] };
 
-export const AContinuousParameter: Story = scenario(
+export const AContinuousParameter: Story = { ...scenario(
   {
     name: 'A continuous parameter',
     when: 'a column shows a filter frequency of 20.0 kHz',
     then: 'it reads its name, 20.0 kHz, and an arc filled to its place in the range',
     requirement: 'A parameter cell shows a name, a value and a drawing',
-    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, a list with the current choice marked for a choice, a switch for an on or off, and a bar for a level.',
+    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, the current choice at the large size for a choice, a switch for an on or off, and a bar for a level.',
     act: plays.AContinuousParameter.act,
     check: plays.AContinuousParameter.check,
   },
   scenarioStory(plays.AContinuousParameter),
-);
+), tags: ['browser'] };
 
-export const AChoice: Story = scenario(
+export const AChoice: Story = { ...scenario(
   {
     name: 'A choice',
     when: 'a column shows a parameter with four named choices',
-    then: 'the choices are listed with the current one marked',
+    then: 'the current choice is shown alone at the large size',
     requirement: 'A parameter cell shows a name, a value and a drawing',
-    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, a list with the current choice marked for a choice, a switch for an on or off, and a bar for a level.',
+    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, the current choice at the large size for a choice, a switch for an on or off, and a bar for a level.',
     act: plays.AChoice.act,
     check: plays.AChoice.check,
   },
   scenarioStory(plays.AChoice),
-);
+), tags: ['browser'] };
 
-export const ABipolarValue: Story = scenario(
+export const ABipolarValue: Story = { ...scenario(
   {
     name: 'A bipolar value',
     when: 'a column shows a pan at centre',
     then: 'its arc is empty from the centre and reads C',
     requirement: 'A parameter cell shows a name, a value and a drawing',
-    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, a list with the current choice marked for a choice, a switch for an on or off, and a bar for a level.',
+    shall: 'A parameter in a column SHALL show its name, its value with its unit as the app formats it, and a drawing that fits its kind: an arc for a continuous value, a centred arc for a bipolar one, the current choice at the large size for a choice, a switch for an on or off, and a bar for a level.',
     act: plays.ABipolarValue.act,
     check: plays.ABipolarValue.check,
   },
   scenarioStory(plays.ABipolarValue),
-);
+), tags: ['browser'] };
 
 export const TouchAndRelease: Story = scenario(
   {
@@ -162,7 +163,7 @@ export const TouchAndRelease: Story = scenario(
   scenarioStory(plays.TouchAndRelease),
 );
 
-export const AnOscillatorShapeAcrossFourColumns: Story = scenario(
+export const AnOscillatorShapeAcrossFourColumns: Story = { ...scenario(
   {
     name: 'An oscillator shape across four columns',
     when: 'a device\'s bank gives its oscillator drawing columns 2 to 5',
@@ -173,9 +174,9 @@ export const AnOscillatorShapeAcrossFourColumns: Story = scenario(
     check: plays.AnOscillatorShapeAcrossFourColumns.check,
   },
   scenarioStory(plays.AnOscillatorShapeAcrossFourColumns),
-);
+), tags: ['browser'] };
 
-export const ADeviceOnAGreenTrack: Story = scenario(
+export const ADeviceOnAGreenTrack: Story = { ...scenario(
   {
     name: 'A device on a green track',
     when: 'Device View shows a device on a green track',
@@ -186,9 +187,9 @@ export const ADeviceOnAGreenTrack: Story = scenario(
     check: plays.ADeviceOnAGreenTrack.check,
   },
   scenarioStory(plays.ADeviceOnAGreenTrack),
-);
+), tags: ['browser'] };
 
-export const Setup: Story = scenario(
+export const Setup: Story = { ...scenario(
   {
     name: 'Setup',
     when: 'the Setup menu is shown',
@@ -199,9 +200,9 @@ export const Setup: Story = scenario(
     check: plays.Setup.check,
   },
   scenarioStory(plays.Setup),
-);
+), tags: ['browser'] };
 
-export const AMutedDevice: Story = scenario(
+export const AMutedDevice: Story = { ...scenario(
   {
     name: 'A muted device',
     when: 'a device is muted',
@@ -212,9 +213,9 @@ export const AMutedDevice: Story = scenario(
     check: plays.AMutedDevice.check,
   },
   scenarioStory(plays.AMutedDevice),
-);
+), tags: ['browser'] };
 
-export const ChoosingATab: Story = scenario(
+export const ChoosingATab: Story = { ...scenario(
   {
     name: 'Choosing a tab',
     when: 'the Setup menu shows Status and a person presses the lower display button under Audio',
@@ -225,7 +226,7 @@ export const ChoosingATab: Story = scenario(
     check: plays.ChoosingATab.check,
   },
   scenarioStory(plays.ChoosingATab),
-);
+), tags: ['browser'] };
 
 export const ATabWithNews: Story = scenario(
   {
@@ -383,7 +384,7 @@ export const LowBattery: Story = scenario(
   scenarioStory(plays.LowBattery),
 );
 
-export const CountIn: Story = scenario(
+export const CountIn: Story = { ...scenario(
   {
     name: 'Count-in',
     when: 'a one-bar count-in is running',
@@ -394,9 +395,9 @@ export const CountIn: Story = scenario(
     check: plays.CountIn.check,
   },
   scenarioStory(plays.CountIn),
-);
+), tags: ['browser'] };
 
-export const AnArmedTrack: Story = scenario(
+export const AnArmedTrack: Story = { ...scenario(
   {
     name: 'An armed track',
     when: 'track 5 is armed',
@@ -407,9 +408,9 @@ export const AnArmedTrack: Story = scenario(
     check: plays.AnArmedTrack.check,
   },
   scenarioStory(plays.AnArmedTrack),
-);
+), tags: ['browser'] };
 
-export const APlayingClip: Story = scenario(
+export const APlayingClip: Story = { ...scenario(
   {
     name: 'A playing clip',
     when: 'track 2\'s clip is halfway through its loop',
@@ -420,7 +421,7 @@ export const APlayingClip: Story = scenario(
     check: plays.APlayingClip.check,
   },
   scenarioStory(plays.APlayingClip),
-);
+), tags: ['browser'] };
 
 export const ReturnTracks: Story = scenario(
   {
@@ -435,7 +436,7 @@ export const ReturnTracks: Story = scenario(
   scenarioStory(plays.ReturnTracks),
 );
 
-export const NoLevel: Story = scenario(
+export const NoLevel: Story = { ...scenario(
   {
     name: 'No level',
     when: 'the app gives no level for a track\'s meter',
@@ -446,7 +447,7 @@ export const NoLevel: Story = scenario(
     check: plays.NoLevel.check,
   },
   scenarioStory(plays.NoLevel),
-);
+), tags: ['browser'] };
 
 export const NoClip: Story = scenario(
   {
@@ -473,3 +474,94 @@ export const UserMode: Story = scenario(
   },
   scenarioStory(plays.UserMode),
 );
+
+export const ChoicesBeneathASetting: Story = { ...scenario(
+  {
+    name: 'Choices beneath a setting',
+    when: 'the Expression tab shows Expression Mode at MPE',
+    then: 'MPE is large and lit, with Poly Aftertouch and Mono Aftertouch dim beneath it',
+    requirement: 'A choice shows the choices after it',
+    shall: 'A parameter that takes one of a list of choices SHALL show the current choice lit; a setting SHALL show the choices after it dim beneath it, and a parameter over a drawing SHALL show them dim beside it in a row.',
+    act: plays.ChoicesBeneathASetting.act,
+    check: plays.ChoicesBeneathASetting.check,
+  },
+  scenarioStory(plays.ChoicesBeneathASetting),
+), tags: ['browser'] };
+
+export const ChoicesBesideAParameter: Story = { ...scenario(
+  {
+    name: 'Choices beside a parameter',
+    when: 'Device View shows a Simpler in Classic mode',
+    then: 'Mode reads Classic lit, with One-Shot dim beside it on the same line',
+    requirement: 'A choice shows the choices after it',
+    shall: 'A parameter that takes one of a list of choices SHALL show the current choice lit; a setting SHALL show the choices after it dim beneath it, and a parameter over a drawing SHALL show them dim beside it in a row.',
+    act: plays.ChoicesBesideAParameter.act,
+    check: plays.ChoicesBesideAParameter.check,
+  },
+  scenarioStory(plays.ChoicesBesideAParameter),
+), tags: ['browser'] };
+
+export const TheLastChoice: Story = scenario(
+  {
+    name: 'The last choice',
+    when: 'a setting is at the last of its choices',
+    then: 'it is shown alone',
+    requirement: 'A choice shows the choices after it',
+    shall: 'A parameter that takes one of a list of choices SHALL show the current choice lit; a setting SHALL show the choices after it dim beneath it, and a parameter over a drawing SHALL show them dim beside it in a row.',
+    act: plays.TheLastChoice.act,
+    check: plays.TheLastChoice.check,
+  },
+  scenarioStory(plays.TheLastChoice),
+);
+
+export const ACodeForAnAddress: Story = scenario(
+  {
+    name: 'A code for an address',
+    when: 'the app gives a dialog an address to show as a code',
+    then: 'the display shows a code image that reads back as that address, and the address in text',
+    requirement: 'An address can be shown as a code image',
+    shall: 'The display SHALL be able to show an address as a code image a phone can scan, dark on a light ground with a clear margin in every pack and mode, with the address in text beside it; an address too long to draw SHALL be shown as text alone.',
+    act: plays.ACodeForAnAddress.act,
+    check: plays.ACodeForAnAddress.check,
+  },
+  scenarioStory(plays.ACodeForAnAddress),
+);
+
+export const ScannableInADarkPack: Story = { ...scenario(
+  {
+    name: 'Scannable in a dark pack',
+    when: 'the code image is drawn in the push-3 pack in dark mode',
+    then: 'its marks are dark on a light ground with a clear margin around them',
+    requirement: 'An address can be shown as a code image',
+    shall: 'The display SHALL be able to show an address as a code image a phone can scan, dark on a light ground with a clear margin in every pack and mode, with the address in text beside it; an address too long to draw SHALL be shown as text alone.',
+    act: plays.ScannableInADarkPack.act,
+    check: plays.ScannableInADarkPack.check,
+  },
+  scenarioStory(plays.ScannableInADarkPack),
+), tags: ['browser'] };
+
+export const AnAddressTooLong: Story = scenario(
+  {
+    name: 'An address too long',
+    when: 'the app gives an address longer than the code can hold',
+    then: 'the display shows the address as text and no code image',
+    requirement: 'An address can be shown as a code image',
+    shall: 'The display SHALL be able to show an address as a code image a phone can scan, dark on a light ground with a clear margin in every pack and mode, with the address in text beside it; an address too long to draw SHALL be shown as text alone.',
+    act: plays.AnAddressTooLong.act,
+    check: plays.AnAddressTooLong.check,
+  },
+  scenarioStory(plays.AnAddressTooLong),
+);
+
+export const AValueWithAPicture: Story = { ...scenario(
+  {
+    name: 'A value with a picture',
+    when: 'the app gives a setting\'s value with the picture of a finger',
+    then: 'a finger is drawn under the value, in its colour, where a dial would be',
+    requirement: 'A value may carry a small picture',
+    shall: 'A setting\'s value SHALL be able to name a small picture, drawn under the value in the value\'s colour in place of a dial, and a value that names none SHALL be drawn as before.',
+    act: plays.AValueWithAPicture.act,
+    check: plays.AValueWithAPicture.check,
+  },
+  scenarioStory(plays.AValueWithAPicture),
+), tags: ['browser'] };

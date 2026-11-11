@@ -3,6 +3,7 @@ import { expect, waitFor, within } from 'storybook/test';
 import { scenario } from 'story-spec';
 
 const retiredGroups = ['Overview', 'Thinking with Type', 'Grid Systems', 'Interaction of Color', 'Refactoring UI', 'On Web Typography', 'Practical Typography'];
+// Stories tagged browser here need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   title: 'Core/Screens/Preview catalog',
   render: () => <iframe title="Root preview" style={{ width: '100%', height: 240, border: 0 }} />,
@@ -10,6 +11,7 @@ const meta = {
     capability: 'preview-catalog',
     purpose: 'Keep Zen’s development preview focused on maintained component and application examples after retirement of the original field guide.',
   } },
+  tags: ['browser'],
 } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -31,7 +33,9 @@ export const BrowseTheMaintainedCatalog: Story = scenario({
   },
 });
 
-export const VisitTheOldGuideAddress: Story = scenario({
+// Played by scripts/check-preview-catalog.mjs, which serves the root page it reads (`?rootPreview=`):
+// not a test to Storybook's runners.
+export const VisitTheOldGuideAddress: Story = { ...scenario({
   requirement: 'Root preview retirement',
   shall: 'The root preview SHALL display a minimal retirement notice instead of loading the field guide, without changing the existing preview port configuration.',
   when: 'a reader opens the root preview URL',
@@ -49,4 +53,4 @@ export const VisitTheOldGuideAddress: Story = scenario({
       await expect(body.querySelector('.field-guide, .book-nav, script[src*="/src/main.tsx"]')).toBeNull();
     });
   },
-});
+}), tags: ['!test'] };

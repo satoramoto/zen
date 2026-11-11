@@ -66,11 +66,13 @@ function Canvas({ onPark, onDismiss }: { onPark(at: NodeSheetPlace | null): void
   );
 }
 
+// Stories tagged browser here need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   title: 'Graph/Components/NodeSheet',
   component: Canvas,
   decorators: [withLibraryTheme],
   args: { onPark: fn(), onDismiss: fn() },
+  tags: ['browser'],
 } satisfies Meta<typeof Canvas>;
 
 export default meta;

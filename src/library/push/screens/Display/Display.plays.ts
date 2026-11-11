@@ -1,12 +1,13 @@
 // What each push-display scenario does and checks. The words are in Display.stories.tsx.
 import { lampVar } from '../../../foundation/themes/lamps';
 import { project } from '../../model/project';
-import { param, sampleSet } from '../../model/sample';
+import { param, sampleSet, simplerBanks } from '../../model/sample';
 import { initialState } from '../../model/state';
 import { NOTICE_MS } from '../../model/timing';
 import type { PushSet, PushState, Screen, Track } from '../../model/types';
-import { all, app, asked, bodyTexts, cell, click, column, columns, display, expect, fillOf, given, go, lamp, lampState, lists, onTrack, overlay, paramText, press, rgbOf, rowTexts, screenKind, screenText, tab, tableLamp, touching, wait, waitFor } from '../play';
+import { all, app, asked, bodyTexts, cell, click, column, columns, display, expect, fillOf, given, go, lamp, lampState, lists, onTrack, overlay, paramText, otherChoices, readCode, press, rgbOf, rowTexts, screenKind, screenText, tab, tableLamp, touching, wait, waitFor } from '../play';
 import type { Play } from '../scenario';
+import { wear } from '../Theme/Theme.plays';
 
 const none = async () => {};
 const withState = (more: Partial<PushState>) => ({ args: { initialState: { ...initialState(), ...more } } });
@@ -195,9 +196,13 @@ export const plays = {
       const shape = pcell(c, 1);
       expect(shape).toHaveAttribute('data-style', 'choice');
       expect(shape.querySelector('[data-part="name"]')).toHaveTextContent('Shape');
-      const rows = [...shape.querySelectorAll<HTMLElement>('.yh-folder-list__row')];
-      expect(rows.map((r) => r.textContent?.trim())).toEqual(['Sine', 'Triangle', 'Saw', 'Square']);
-      expect(rows.filter((r) => r.getAttribute('aria-current') === 'true').map((r) => r.textContent?.trim())).toEqual(['Saw']);
+      // The current one alone, at the large size, in the track's colour: no dial and no other choice.
+      const value = shape.querySelector<HTMLElement>('[data-part="value"]')!;
+      expect(value).toHaveTextContent('Saw');
+      expect(value).toHaveAttribute('data-current', 'true');
+      expect(parseFloat(getComputedStyle(value).fontSize)).toBeGreaterThan(parseFloat(getComputedStyle(shape.querySelector('[data-part="name"]')!).fontSize) * 1.8);
+      expect(shape.querySelectorAll('[data-part="choice"]')).toHaveLength(0);
+      expect(shape.querySelector('[data-part="arc"]')).toBeNull();
     },
   },
 
@@ -597,6 +602,139 @@ export const plays = {
       expect(rowTexts(c, 'top').join('')).toBe('');
       expect(rowTexts(c, 'bottom').join('')).toBe('');
       expect(paramCells(c)).toHaveLength(0);
+    },
+  },
+
+  ChoicesBeneathASetting: {
+    ...inSetup(1),
+    set: (set) => void (set.unit.expression.mode = 'mpe'),
+    act: none,
+    check: ({ canvasElement: c }) => {
+      const mode = pcell(c, 1);
+      const value = mode.querySelector<HTMLElement>('[data-part="value"]')!;
+      const others = [...mode.querySelectorAll<HTMLElement>('[data-part="choice"]')];
+      expect(value).toHaveTextContent('MPE');
+      expect(others.map((o) => o.textContent)).toEqual(['Poly Aftertouch', 'Mono Aftertouch']);
+      // Large, each beneath the last, and the others dimmer than the current one.
+      const size = (el: Element) => parseFloat(getComputedStyle(el).fontSize);
+      expect(size(value)).toBeGreaterThan(size(mode.querySelector('[data-part="name"]')!) * 1.8);
+      expect(others.map(size)).toEqual([size(value), size(value)]);
+      const tops = [value, ...others].map((el) => el.getBoundingClientRect().top);
+      expect(tops[1]).toBeGreaterThan(tops[0]);
+      expect(tops[2]).toBeGreaterThan(tops[1]);
+      const light = (el: Element) => rgbOf(getComputedStyle(el).color).reduce((a, b) => a + b, 0);
+      expect(light(others[0])).toBeLessThan(light(value) * 0.75);
+      // All of it inside the screen's body.
+      expect(others[1].getBoundingClientRect().bottom).toBeLessThanOrEqual(tab(c, 'bottom', 1).getBoundingClientRect().top + 1);
+    },
+  },
+
+  ChoicesBesideAParameter: {
+    set: onTrack('t-sampler', (set) => {
+      const device = set.tracks[3].devices[0];
+      device.sampler!.mode = 'classic';
+      device.banks = simplerBanks(device.id, device.sampler!);
+    }),
+    act: none,
+    check: ({ canvasElement: c }) => {
+      expect(paramText(c, 8)).toBe('Mode Classic');
+      expect(otherChoices(c, 8)[0]).toBe('One-Shot');
+      const mode = pcell(c, 8);
+      const value = mode.querySelector('[data-part="value"]')!.getBoundingClientRect();
+      const next = mode.querySelector('[data-part="choice"]')!.getBoundingClientRect();
+      expect(Math.abs(next.top - value.top)).toBeLessThan(2);
+      expect(next.left).toBeGreaterThanOrEqual(value.right);
+      const light = (el: Element) => rgbOf(getComputedStyle(el).color).reduce((a, b) => a + b, 0);
+      expect(light(mode.querySelector('[data-part="choice"]')!)).toBeLessThan(light(mode.querySelector('[data-part="value"]')!));
+    },
+  },
+
+  TheLastChoice: {
+    ...inSetup(5),
+    set: (set) => void (set.unit.jacks['Pedal 1'] = { ...set.unit.jacks['Pedal 1'], job: 'CV Out' }),
+    act: none,
+    check: ({ canvasElement: c }) => {
+      expect(paramText(c, 1)).toBe('Pedal & CV 1 CV Out');
+      expect(otherChoices(c, 1)).toEqual([]);
+      // The other jack, at the first of its two, still shows the one after it.
+      expect(otherChoices(c, 5)).toEqual(['CV Out']);
+    },
+  },
+
+  ACodeForAnAddress: {
+    act: async ({ canvasElement: c }) => {
+      expect(overlay(c, 'dialog')).toBeNull();
+      await given(c, (set) => void (set.unit.software.code = { purpose: 'authorize', code: '481205', address: 'https://push.local/authorize' }));
+    },
+    check: async ({ canvasElement: c }) => {
+      await waitFor(() => expect(overlay(c, 'dialog')).not.toBeNull());
+      const dialog = overlay(c, 'dialog')!;
+      expect(readCode(dialog)).toBe('https://push.local/authorize');
+      expect(dialog.querySelector('[data-part="address"]')).toHaveTextContent('https://push.local/authorize');
+      expect(dialog.querySelector('.lib-codeimage')).toHaveAccessibleName('Code for https://push.local/authorize');
+      // The code, the six digits and the address all fit between the two rows.
+      const box = dialog.getBoundingClientRect();
+      for (const part of dialog.children) expect(part.getBoundingClientRect().bottom).toBeLessThanOrEqual(box.bottom + 1);
+    },
+  },
+
+  ScannableInADarkPack: {
+    ...inSetup(7),
+    act: async ({ canvasElement: c }) => {
+      (c as unknown as { off?: () => void }).off = await wear(c, 'push-3', 'dark');
+      // Legal Info, from the Software tab with Shift held.
+      await touching(c, 'shift', () => press(c, 'upper-1'));
+    },
+    check: async ({ canvasElement: c }) => {
+      await waitFor(() => expect(overlay(c, 'dialog')?.querySelector('.lib-codeimage svg')).not.toBeNull());
+      const code = overlay(c, 'dialog')!.querySelector('.lib-codeimage')!;
+      const fill = (part: string) => rgbOf(getComputedStyle(code.querySelector(`[data-part="${part}"]`)!).fill);
+      expect(Math.min(...fill('ground'))).toBeGreaterThan(215);
+      expect(Math.max(...fill('modules'))).toBeLessThan(60);
+      // The screen around it is dark: the light ground is the code's own.
+      expect(Math.max(...rgbOf(getComputedStyle(overlay(c, 'dialog')!).backgroundColor))).toBeLessThan(60);
+      // A clear margin of four modules on every side.
+      const side = Number(code.querySelector('svg')!.getAttribute('viewBox')!.split(' ')[2]);
+      expect(side).toBe(Number(code.getAttribute('data-modules')) + 8);
+      const starts = [...code.querySelector('[data-part="modules"]')!.getAttribute('d')!.matchAll(/M(\d+) (\d+)h(\d+)/g)].map((m) => [Number(m[1]), Number(m[2]), Number(m[1]) + Number(m[3])]);
+      expect(Math.min(...starts.map((s) => Math.min(s[0], s[1])))).toBe(4);
+      expect(Math.max(...starts.map((s) => Math.max(s[2], s[1] + 1)))).toBe(side - 4);
+      expect(readCode(code.parentElement)).toBe('ableton.com/legal');
+      (c as unknown as { off?: () => void }).off?.();
+    },
+  },
+
+  AnAddressTooLong: {
+    ...withState({ display: 'learn', learn: { highlight: 0, lesson: 'lesson-1', step: 0 } }),
+    set: (set) => void (set.lessons[0].link = `https://www.ableton.com/learn-push/${'a-very-long-path/'.repeat(16)}`),
+    act: none,
+    check: ({ canvasElement: c }) => {
+      expect(screenKind(c)).toBe('lesson');
+      expect(display(c).querySelector('.lib-codeimage svg')).toBeNull();
+      expect(readCode(display(c))).toBeUndefined();
+      expect(screenText(c)).toContain('More at https://www.ableton.com/learn-push/a-very-long-path/');
+    },
+  },
+
+  AValueWithAPicture: {
+    ...inSetup(1),
+    set: (set) => void ((set.unit.expression.mode = 'mpe'), (set.unit.expression.inTune = 'finger')),
+    act: none,
+    check: ({ canvasElement: c }) => {
+      const cell = pcell(c, 4);
+      const picture = cell.querySelector<HTMLElement>('[data-part="picture"]')!;
+      expect(picture).toHaveAttribute('data-picture', 'finger');
+      expect(picture).toHaveAccessibleName('finger');
+      const value = cell.querySelector<HTMLElement>('[data-part="value"]')!;
+      expect(value).toHaveTextContent('Finger');
+      // Under the value, in its colour, with no dial and no other choice listed.
+      expect(picture.getBoundingClientRect().top).toBeGreaterThanOrEqual(value.getBoundingClientRect().bottom - 2);
+      expect(getComputedStyle(picture).color).toBe(getComputedStyle(value).color);
+      expect(picture.getBoundingClientRect().width).toBeGreaterThan(12);
+      expect(cell.querySelector('[data-part="arc"]')).toBeNull();
+      expect(cell.querySelectorAll('[data-part="choice"]')).toHaveLength(0);
+      // A value that names no picture is drawn as before: Display Light on the Status tab keeps its dial.
+      expect(pcell(c, 5).querySelector('[data-picture]')).toHaveAttribute('data-picture', 'width');
     },
   },
 } satisfies Record<string, Play>;

@@ -14,6 +14,7 @@ import type { SurfaceDocument, SurfaceIntent } from './Workspace.types';
 // read exactly what the surface sent. React only: the drags are pointer sequences a play dispatches,
 // and the Workspace's own stories already play both renderers.
 
+// Stories tagged browser here measure layout and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   title: 'Core/Layouts/Workspace/Building',
   component: Workspace,
@@ -29,6 +30,7 @@ const meta = {
     },
   },
   args: { name: 'Panel', document: { version: 2, active: 't', tabs: [] } },
+  tags: ['browser'],
 } satisfies Meta<typeof Workspace>;
 
 export default meta;

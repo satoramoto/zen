@@ -98,6 +98,8 @@ export const convert: Layer = {
 };
 
 const beats = (v: number) => `${Math.floor(v / 4) + 1}.${Math.floor(v % 4) + 1}.${Math.round((v % 1) * 4) + 1}`;
+/** A length as the unit words it: bars, beats and sixteenths, each from nought. */
+const span = (v: number) => `${Math.floor(v / 4)}.${Math.floor(v % 4)}.${Math.round((v % 1) * 4)}`;
 const value = (col: number, name: string, text: string, more: Partial<BodyCell> = {}): BodyCell => ({ type: 'param', col, name, value: text, fraction: 0, style: 'value', ...more }) as BodyCell;
 
 /** The pitches the roll shows, highest first: every note's, and what the pads reach in a sequencer. */
@@ -191,8 +193,8 @@ export const clipView: Layer = {
       if (input.kind !== 'down') return true;
       if (upper === 2) push(ctx, 'set-loop', { ...about, on: !clip.loop.on });
       else if (upper === 3 && clip.kind === 'midi') push(ctx, 'crop-clip', about);
-      else if (upper === 3 && clip.audio) push(ctx, 'set-clip', { ...about, warp: !clip.audio.warp });
-      else if (upper === 4) {
+      else if (upper === 6 && clip.audio) push(ctx, 'set-clip', { ...about, warp: !clip.audio.warp });
+      else if (upper === 8) {
         if (clip.kind === 'midi') c.noteEdit = true;
         else c.audioEdit = clip.position ?? 0;
       }
@@ -219,15 +221,15 @@ export const clipView: Layer = {
       } else if (!clip.loop.on && encoder === 3) {
         push(ctx, 'set-clip', { ...about, end: Math.max(0.25, clip.length + by) });
         c.zoomAt = clip.length + by;
-      } else if (clip.audio && encoder === 5) {
+      } else if (clip.audio && encoder === 6) {
         const moved = gather(state.notes, steps);
         const next = WARP_MODES[clamp(WARP_MODES.indexOf(clip.audio.warpMode ?? 'Beats') + moved, 0, WARP_MODES.length - 1)];
         if (moved && next !== clip.audio.warpMode) push(ctx, 'set-clip', { ...about, warpMode: next });
-      } else if (clip.audio && encoder === 6) {
+      } else if (clip.audio && encoder === 7) {
         // Semitones, between minus 48 and plus 48; cents with Shift.
         if (fine) push(ctx, 'set-clip', { ...about, detune: clamp(clip.audio.detune + steps, -50, 50) });
         else push(ctx, 'set-clip', { ...about, transpose: clamp(clip.audio.transpose + steps, -48, 48) });
-      } else if (clip.audio && encoder === 7) push(ctx, 'set-clip', { ...about, gain: clamp(Math.round((clip.audio.gain + steps * (fine ? 0.1 : 1)) * 10) / 10, -70, 24) });
+      } else if (clip.audio && encoder === 8) push(ctx, 'set-clip', { ...about, gain: clamp(Math.round((clip.audio.gain + steps * (fine ? 0.1 : 1)) * 10) / 10, -70, 24) });
       return true;
     }
     return false;
@@ -303,19 +305,22 @@ export const clipView: Layer = {
       return;
     }
 
+    const box = (label: string, on: boolean): RowCell => ({ label, colour, icon: on ? 'switch-on' : 'switch-off', ...(on ? {} : { dim: true }) });
     const zoom: BodyCell = { type: 'param', col: 1, name: 'Zoom', value: `${Math.round((window.from / length) * 100)} to ${Math.round((window.to / length) * 100)} %`, fraction: (window.to - window.from) / length, style: 'bar', colour, ...touched(1) };
     const loop = clip.loop.on
-      ? [value(2, 'Loop Position', beats(clip.loop.start), { colour, ...touched(2) }), value(3, 'Loop Length', `${clip.loop.end - clip.loop.start} beats`, { colour, ...touched(3) }), value(4, 'Start Offset', beats(clip.startMarker ?? 0), { colour, ...touched(4) })]
+      ? [value(2, 'Loop Position', beats(clip.loop.start), { colour, ...touched(2) }), value(3, 'Loop Length', span(clip.loop.end - clip.loop.start), { colour, ...touched(3) }), value(4, 'Start Offset', beats(clip.startMarker ?? 0), { colour, ...touched(4) })]
       : [value(2, 'Start', beats(clip.startMarker ?? 0), { colour, ...touched(2) }), value(3, 'End', beats(clip.length), { colour, ...touched(3) })];
     const audio = clip.audio
       ? [
-          value(5, 'Warp', clip.audio.warp ? (clip.audio.warpMode ?? 'Beats') : 'Off', { colour, ...(clip.audio.warp ? {} : { disabled: true }), ...touched(5) }),
-          value(6, 'Transpose', `${clip.audio.transpose} st${clip.audio.detune ? ` ${clip.audio.detune} ct` : ''}`, { colour, ...touched(6) }),
-          value(7, 'Gain', `${clip.audio.gain.toFixed(1)} dB`, { colour, ...touched(7) }),
+          // The unit's columns: the three of an audio clip are the last three, under its Warp switch.
+          value(6, 'Warp', clip.audio.warp ? (clip.audio.warpMode ?? 'Beats') : 'Off', { colour, ...(clip.audio.warp ? { choices: [...WARP_MODES], chosen: Math.max(0, WARP_MODES.indexOf(clip.audio.warpMode ?? 'Beats')) } : { disabled: true }), ...touched(6) }),
+          value(7, 'Transpose', `${clip.audio.transpose} st${clip.audio.detune ? ` ${clip.audio.detune} ct` : ''}`, { colour, ...touched(7) }),
+          value(8, 'Gain', `${clip.audio.gain.toFixed(1)} dB`, { colour, ...touched(8) }),
         ]
       : [];
     paint.screen = screen('clip', {
-      top: [name, { label: clip.loop.on ? 'Loop: On' : 'Loop: Off', colour, selected: clip.loop.on }, clip.kind === 'midi' ? { label: 'Crop', colour } : { label: clip.audio?.warp ? 'Warp: On' : 'Warp: Off', colour, selected: !!clip.audio?.warp }, { label: 'Edit', colour }, null, null, null, null],
+      // As on the unit: Loop a switch at the second button, Crop (a MIDI clip) at the third, Warp (an audio clip) a switch over its mode, Edit at the last.
+      top: [name, box('Loop', clip.loop.on), clip.kind === 'midi' ? { label: 'Crop', colour } : null, null, null, clip.audio ? box('Warp', !!clip.audio.warp) : null, null, { label: 'Edit', colour }],
       bottom,
       body: [under, zoom, ...loop, ...audio],
     });

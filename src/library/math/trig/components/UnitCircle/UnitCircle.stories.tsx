@@ -29,6 +29,7 @@ export const ThirdQuadrant: Story = {
   },
 };
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /** Dragging the point by hand: a pointer drag to the top of the circle reads 90°. */
 export const Drag: Story = {
   play: async ({ canvasElement }) => {
@@ -43,6 +44,7 @@ export const Drag: Story = {
     handle.dispatchEvent(new PointerEvent('pointerup', { ...start, clientX: box.x + box.width / 2, clientY: box.y + box.height * 0.1 }));
     await waitFor(() => expect(handle).toHaveAttribute('aria-valuenow', '90'));
   },
+  tags: ['browser'],
 };
 
 /** Snapping lands the point on a special angle; the tangent segment and a sine guide show on request. */

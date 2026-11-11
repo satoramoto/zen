@@ -67,11 +67,12 @@ export const Default: Story = {
     const group = canvas.getByRole('radiogroup', { name: 'Who are you?' });
     await expect(within(group).getAllByRole('radio')).toHaveLength(NAMES.length);
     const key = canvas.getByRole('button', { name: "That's me" });
-    await expect(key).toBeDisabled();
+    // Button stays focusable when it can't be pressed: `aria-disabled`, not `disabled`.
+    await expect(key).toHaveAttribute('aria-disabled', 'true');
 
     await userEvent.click(canvas.getByRole('radio', { name: 'Grace' }));
     await expect(canvas.getByRole('radio', { name: 'Grace' })).toBeChecked();
-    await expect(key).toBeEnabled();
+    await expect(key).not.toHaveAttribute('aria-disabled', 'true');
     await userEvent.keyboard('{ArrowDown}');
     await expect(canvas.getByRole('radio', { name: 'Linus' })).toBeChecked();
     await expect(canvas.getByRole('radio', { name: 'Grace' })).not.toBeChecked();

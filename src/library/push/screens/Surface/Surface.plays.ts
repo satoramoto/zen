@@ -2,7 +2,7 @@
 import { BODY, CONTROLS, REPEAT_INTERVALS, centre, control, displayArea } from '../../model/layout';
 import { initialState } from '../../model/state';
 import type { Lamp, PushSet } from '../../model/types';
-import { actions, app, cell, display, down, expect, face, fillOf, given, inputs, key, kinds, lampState, latch, press, wait, waitFor } from '../play';
+import { actions, app, cell, display, down, expect, face, fillOf, given, inputs, key, kinds, lampState, latch, press, wait, waitFor, litness } from '../play';
 import type { Play, PlayContext } from '../scenario';
 
 /** A device in User Mode, where the app sets every lamp: the way to hand the surface a lamp of our choosing. */
@@ -30,10 +30,8 @@ const setWidth = async (canvas: HTMLElement, px: number) => {
   await wait(60);
 };
 /** How bright an element's fill is. */
-const light = (el: Element) => {
-  const [r, g, b] = fillOf(el);
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-};
+/** How lit a cap looks, in either mode: its distance from an unlit one. */
+const light = (el: Element) => litness(el);
 
 export const plays = {
   TheInventoryIsComplete: {

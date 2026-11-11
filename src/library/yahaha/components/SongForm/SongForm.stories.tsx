@@ -147,6 +147,7 @@ export const At1217: Story = boxed('At1217');
 /** A narrow column (720): the transport under the form, in two rows sharing its width; the steps at body size so the form stays one row. */
 export const Narrow: Story = boxed('Narrow');
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * The form alone (`part="form"`), as the stacked Stage's strip on the 1440 × 900 board: the
  * container is 72 tall and the steps fill it, captions in its top padding; nothing sets SongForm's
@@ -161,6 +162,7 @@ export const FormPart: Story = {
     const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
     await expect(Math.round(form.getBoundingClientRect().height)).toBe(72);
   },
+  tags: ['browser'],
 };
 
 /**
@@ -174,6 +176,7 @@ export const FormPartSmall: Story = {
     const form = canvasElement.querySelector('.yh-songform__form') as HTMLElement;
     await expect(Math.round(form.getBoundingClientRect().height)).toBe(67);
   },
+  tags: ['browser'],
 };
 
 /** The form alone with no height given: the steps take their default, two control heights. */

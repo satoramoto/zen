@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createDevice } from './device';
 import { sampleSet } from './sample';
+import { initialState } from './state';
 import { HOLD_MS, PEDAL_DOUBLE_MS, POWER_HOLD_MS } from './timing';
 import type { PushIntent } from './types';
 
@@ -59,6 +60,23 @@ describe('a device that runs itself', () => {
     expect(intents).toEqual([]);
     advance(PEDAL_DOUBLE_MS);
     expect(intents.map((i) => i.action)).toEqual(['record']);
+  });
+
+  it('plays what was due before an input when its timer fires late', () => {
+    const set = sampleSet();
+    set.transport.tempo = 120;
+    const hats = (late: boolean) => {
+      const intents: PushIntent[] = [];
+      const state = { ...initialState(), repeats: { 't-drums': { on: true, interval: 3 } } };
+      const device = createDevice({ set, state, now: () => time, onIntent: (i) => intents.push(i) });
+      device.input({ control: 'pad-7-3', kind: 'down', time: 0 });
+      // A sixteenth at 120 BPM is 125 ms. Late, the page was busy and the timer never ran before the release.
+      if (!late) for (let ms = 0; ms < 410; ms++) advance(1);
+      device.input({ control: 'pad-7-3', kind: 'up', time: 410 });
+      device.destroy();
+      return intents.filter((i) => i.action === 'note-on').length;
+    };
+    expect([hats(false), hats(true)]).toEqual([4, 4]);
   });
 
   it('asks to switch off once the power button has been held for its time, and on again from off', () => {

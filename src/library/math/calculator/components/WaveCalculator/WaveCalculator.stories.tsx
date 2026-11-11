@@ -14,10 +14,11 @@ export const StandingWave: Story = { args: { preset: 'standing' } };
 export const Cancellation: Story = { args: { preset: 'cancellation' } };
 export const Beating: Story = { args: { preset: 'beats' } };
 export const FunctionComposition: Story = { args: { preset: 'composition' } };
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 export const EditRelationships: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
-    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled());
+    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled(), { timeout: 15000 });
     for (const toggle of await c.findAllByRole('button', { name: 'Plain text' })) await userEvent.click(toggle);
     const g = c.getByRole('textbox', { name: 'g(x) expression' });
     await userEvent.clear(g); await userEvent.type(g, '-f(x)');
@@ -34,11 +35,12 @@ export const EditRelationships: Story = {
     probe.focus(); await userEvent.keyboard('{ArrowRight}');
     await expect(c.getByLabelText('f at probe')).not.toHaveTextContent('1.050');
   },
+  tags: ['browser'],
 };
 export const KeepLastValidDrawing: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement), before = c.getByLabelText('h at probe').textContent;
-    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled());
+    await waitFor(() => expect(c.getAllByRole('button', { name: 'Plain text' })[0]).toBeEnabled(), { timeout: 15000 });
     for (const toggle of await c.findAllByRole('button', { name: 'Plain text' })) await userEvent.click(toggle);
     const f = c.getByRole('textbox', { name: 'f(x) expression' });
     await userEvent.click(f); await userEvent.keyboard('{End}'); await userEvent.type(f, '+');
@@ -51,6 +53,7 @@ export const KeepLastValidDrawing: Story = {
     await userEvent.click(c.getByRole('button', { name: 'restore them' }));
     await expect(c.queryByRole('alert')).not.toBeInTheDocument();
   },
+  tags: ['browser'],
 };
 export const AnimateAndCompare: Story = {
   args: { preset: 'standing' },

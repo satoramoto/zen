@@ -2,7 +2,8 @@
 // Racks, macros and a device's own drawing (openspec: push-device-view).
 import { indexOf } from '../layout';
 import { clamp, deviceById, everyDevice, selectedTrack } from '../state';
-import { holdJob, isDown, isUp, push, screen, use, type Combo, type Ctx, type Layer } from '../engine';
+import { FINE, TURN_STEP } from '../timing';
+import { holdJob, isDown, isUp, push, screen, shift, use, type Combo, type Ctx, type Layer } from '../engine';
 import type { Bank, BodyCell, Device, Drawing, ListItem, Parameter, PushSet, PushState, RowCell, Track } from '../types';
 import { gather, paramCell, turnParameter } from './params';
 
@@ -98,7 +99,7 @@ export function columns(state: PushState, set: PushSet): (Parameter | null)[] {
 /** The Rack a parameter's device sits in, by the parameter's id. */
 function rackFor(state: PushState, set: PushSet, parameter: string): Device | undefined {
   const track = selectedTrack(set);
-  const holds = (d: Device) => banksOf(d).some((b) => b.parameters.some((p) => p?.id === parameter));
+  const holds = (d: Device) => banksOf(d).some((b) => [...b.parameters, ...(b.switches ?? [])].some((p) => p?.id === parameter));
   const inside = (rack: Device): boolean => [...(rack.chains ?? []).flatMap((c) => c.devices), ...(rack.pads ?? []).flatMap((p) => p.devices ?? [])].some((d) => holds(d) || (isRack(d) && inside(d)));
   return everyDevice(track.devices).filter((d) => hasMacros(d) && inside(d)).at(-1);
 }
@@ -144,8 +145,32 @@ function offers(state: PushState, set: PushSet): Partial<Record<number, { label:
       8: { label: 'Unmap', run: (ctx) => push(ctx, 'unmap-macro', { device: rack.id, macro }) },
     };
   }
-  if (rackFor(state, set, touched.p.id)) return { 8: { label: 'Map', run: (ctx) => void (ctx.state.device.macroMap = { parameter: touched.p.id, page: 0 }) } };
   return {};
+}
+
+/** Whether the shown device's banks are along the bottom row, with its switches and options along the top. */
+const banksShown = (state: PushState) => !!(state.device.bankList || state.device.edit) && !state.device.macroMap && state.device.macroEdit === undefined;
+
+/** The switch or pair of options over an upper display button while the device's banks are shown. */
+function switchAt(state: PushState, set: PushSet, col: number): Parameter | undefined {
+  const item = banksShown(state) ? shownDevice(state, set) : undefined;
+  return (item && shownBank(state, item.device)?.switches?.[col - 1]) || undefined;
+}
+
+/**
+ * Map, on the last lower display button: offered for a parameter whose encoder is touched, and for
+ * a switch whose display button is held, when its device sits in a Rack with macros.
+ */
+function mapOffer(state: PushState, set: PushSet): { parameter: string; holding?: string } | undefined {
+  const d = state.device;
+  if (d.macroMap || d.macroEdit !== undefined || d.marked?.length || macroRack(state, set)) return undefined;
+  for (const id of Object.keys(state.held)) {
+    const col = indexOf(id, 'upper');
+    const p = col !== undefined && holdJob(state, id) ? switchAt(state, set, col) : undefined;
+    if (p && rackFor(state, set, p.id)) return { parameter: p.id, holding: id };
+  }
+  const touched = touchedParameter(state, set);
+  return touched && rackFor(state, set, touched.p.id) ? { parameter: touched.p.id } : undefined;
 }
 
 function variationItems(rack: Device): ListItem[] {
@@ -239,7 +264,10 @@ function encoderStep(ctx: Ctx, col: number): boolean {
   const p = columns(state, set)[col - 1];
   if (!p) return true; // an empty column: nothing to change
   const about = { track: track.id, device: item.device.id };
-  if (input.kind === 'turn') turnParameter(ctx, p, input.value ?? 0, about);
+  // Nudge moves the selected slice's marker, finer with Shift.
+  const sampler = item.device.sampler;
+  if (input.kind === 'turn' && sampler?.mode === 'slicing' && p.id === `${item.device.id}.nudge`) push(ctx, 'slice', { ...about, move: sampler.selectedSlice ?? 0, by: (input.value ?? 0) * TURN_STEP * (shift(ctx) ? FINE : 1), ...(shift(ctx) ? { fine: true } : {}) });
+  else if (input.kind === 'turn') turnParameter(ctx, p, input.value ?? 0, about);
   else if (input.kind === 'touch') push(ctx, 'touch-parameter', { parameter: p.id, ...about });
   else if (input.kind === 'release') push(ctx, 'release-parameter', { parameter: p.id, ...about });
   return true;
@@ -286,18 +314,22 @@ function devicePress(ctx: Ctx, item: DeviceItem): void {
   else d.bankList = !d.bankList;
 }
 
-/** Simpler's sample actions, for its mode: what Edit Mode puts on the upper display buttons after the device's own. */
-export function sampleActions(device: Device): { id: string; label: string }[] {
+/**
+ * Simpler's sample actions, for its mode, each with the upper display button it sits at in Edit
+ * Mode, as on the unit. The second button is Loop in Classic; in the other modes it is the bank's
+ * own pair, Trigger and Gate.
+ */
+export function sampleActions(device: Device): { id: string; label: string; col: number }[] {
   const sampler = device.sampler;
   if (!sampler) return [];
   return [
-    ...(sampler.mode === 'classic' ? [{ id: 'loop', label: sampler.loop?.on ? 'Loop: On' : 'Loop: Off' }] : []),
-    { id: 'warp-as', label: `Warp as ${sampler.warpBars ?? 1} Bar${(sampler.warpBars ?? 1) === 1 ? '' : 's'}` },
-    { id: 'halve', label: ':2' },
-    { id: 'double', label: 'x2' },
-    // A sliced sample is not cropped: its slices would go with what is cut. It can be split at the selected slice instead.
-    sampler.mode === 'slicing' ? { id: 'split-slice', label: 'Split Slice' } : { id: 'crop', label: 'Crop' },
-    { id: 'reverse', label: sampler.reversed ? 'Reverse: On' : 'Reverse' },
+    ...(sampler.mode === 'classic' ? [{ id: 'loop', label: sampler.loop?.on ? 'Loop On' : 'Loop Off', col: 2 }] : []),
+    { id: 'warp-as', label: `Warp as ${sampler.warpBars ?? 1} Bar${(sampler.warpBars ?? 1) === 1 ? '' : 's'}`, col: 3 },
+    { id: 'halve', label: ':2', col: 4 },
+    { id: 'double', label: 'x2', col: 5 },
+    // A sliced sample is not cropped: its slices would go with what is cut. Its slices are reset, or the selected one split.
+    ...(sampler.mode === 'slicing' ? [{ id: 'reset-slices', label: 'Reset Slices', col: 6 }, { id: 'split-slice', label: 'Split Slice', col: 7 }] : [{ id: 'crop', label: 'Crop', col: 7 }]),
+    { id: 'reverse', label: sampler.reversed ? 'Reverse On' : 'Reverse', col: 8 },
   ];
 }
 
@@ -408,16 +440,30 @@ export const deviceView: Layer = {
         return true;
       }
       if (d.macroMap || d.macroEdit !== undefined) return true;
-      // Simpler's Edit Mode: its own button leaves, the ones after it are its sample actions.
-      const editing = d.edit ? shownDevice(state, set) : undefined;
-      if (editing?.device.kind === 'simpler') {
-        if (input.kind !== 'down') return true;
-        const action = sampleActions(editing.device)[upper - 2];
-        // Leaving is this press's whole job: when the button comes up it does not open Edit Mode again.
+      // The device's banks are shown: the first button is the device and leaves, the others are the
+      // bank's switches and options, and after them a Simpler's sample actions (its Edit Mode).
+      const entered = banksShown(state) ? shownDevice(state, set) : undefined;
+      if (entered) {
+        const about = { track: track.id, device: entered.device.id };
+        const p = switchAt(state, set, upper);
         if (upper === 1) {
-          delete d.edit;
-          use(ctx, target.id);
-        } else if (action) push(ctx, 'sample-action', { track: track.id, device: editing.device.id, what: action.id });
+          // Leaving is this press's whole job: when the button comes up it does not open the banks again.
+          if (input.kind === 'down') {
+            delete d.edit;
+            delete d.bankList;
+            use(ctx, target.id);
+          }
+        } else if (p) {
+          // Acting on release leaves room for the hold that offers Map.
+          if (isUp(ctx) && state.held[target.id] && !state.held[target.id].used && !state.held[target.id].holding) {
+            const count = p.kind === 'choice' ? Math.max(2, p.choices?.length ?? 2) : 2;
+            const at = p.kind === 'choice' ? Math.round(p.value * (count - 1)) : p.value >= 0.5 ? 1 : 0;
+            push(ctx, 'set-parameter', { parameter: p.id, ...about, value: ((at + 1) % count) / (count - 1) });
+          }
+        } else if (input.kind === 'down') {
+          const action = entered.device.kind === 'simpler' ? sampleActions(entered.device).find((a) => a.col === upper) : undefined;
+          if (action) push(ctx, 'sample-action', { ...about, what: action.id });
+        }
         return true;
       }
       const item = topItems(state, set)[upper - 1];
@@ -429,6 +475,14 @@ export const deviceView: Layer = {
 
     const lower = indexOf(target.id, 'lower');
     if (lower !== undefined) {
+      const map = lower === 8 ? mapOffer(state, set) : undefined;
+      if (map) {
+        if (input.kind === 'down') {
+          if (map.holding) use(ctx, map.holding);
+          d.macroMap = { parameter: map.parameter, page: 0 };
+        }
+        return true;
+      }
       // A Rack's button held: the lower buttons choose among its chains.
       const holding = Object.keys(state.held).find((id) => indexOf(id, 'upper') !== undefined && holdJob(state, id));
       const held = holding ? topItems(state, set)[indexOf(holding, 'upper')! - 1] : undefined;
@@ -479,6 +533,18 @@ export const deviceView: Layer = {
         ...(d.marked?.includes(device.id) ? { lamp: { state: 'blink' as const, colour } } : {}),
       };
     });
+    // With the device's banks shown the top row is the device alone, then the bank's switches and options.
+    if (banksShown(state)) {
+      const actions = shown.device.kind === 'simpler' ? sampleActions(shown.device) : [];
+      paint.screen.top = Array.from({ length: 8 }, (_, i): RowCell | null => {
+        if (i === 0) return { label: shown.device.name, icon: 'left', colour, selected: true, ...(shown.device.on ? {} : { dim: true }) };
+        const p = switchAt(state, set, i + 1);
+        if (p?.kind === 'choice') return { label: p.name, options: p.choices ?? [], chosen: Math.round(p.value * Math.max(1, (p.choices?.length ?? 2) - 1)), colour };
+        if (p) return { label: p.name, icon: p.value >= 0.5 ? 'switch-on' : 'switch-off', colour, ...(p.value >= 0.5 ? {} : { dim: true }) };
+        const action = actions.find((a) => a.col === i + 1);
+        return action ? { label: action.label, colour } : null;
+      });
+    }
     for (const [col, offer] of Object.entries(offers(state, set))) if (offer) paint.screen.top[Number(col) - 1] = { label: offer.label, selected: true };
 
     // The bottom row: the tracks, or the shown device's banks, or a held Rack's chains.
@@ -494,6 +560,8 @@ export const deviceView: Layer = {
       const banks = banksOf(shown.device);
       paint.screen.bottom = Array.from({ length: 8 }, (_, i) => (banks[i] ? { label: banks[i].name, colour, selected: i === bankAt(state, shown.device) } : null));
     }
+    // Map sits on the last lower display button, as on the unit.
+    if (mapOffer(state, set)) paint.screen.bottom = Object.assign([...paint.screen.bottom], { 7: { label: 'Map', icon: 'map' as const, selected: true } });
 
     // The body.
     const off = !shown.device.on;
@@ -537,7 +605,6 @@ export const deviceView: Layer = {
       return;
     }
     if (sampler) {
-      if (d.edit) paint.screen.top = [{ label: shown.device.name, colour, selected: true }, ...sampleActions(shown.device).map((a): RowCell => ({ label: a.label, colour })), null, null].slice(0, 8);
       const window = sampleWindow(shown.device);
       paint.screen.body = [
         {
@@ -560,7 +627,8 @@ export const deviceView: Layer = {
     const under = (col: number) => !!drawing && drawing.kind !== 'gain-reduction' && drawing.kind !== 'tuner' && col >= drawing.col && col < drawing.col + drawing.span;
     paint.screen.body = [
       ...(drawing ? drawingCells(drawing, colour, off) : []),
-      ...params.flatMap((p, i) => cell(p, i, under(i + 1) ? { style: 'value' } : {})),
+      // A choice in a column of its own shows its current one, large; over a drawing, the ones after it beside it.
+      ...params.flatMap((p, i) => cell(p, i, under(i + 1) ? { style: 'value' } : p?.kind === 'choice' ? { layout: 'single' } : {})),
     ];
   },
 };

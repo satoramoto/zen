@@ -138,6 +138,7 @@ export const Meta_: StoryObj<{ start: ShaderMaterialName }> = {
   },
 };
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 export const Playground: StoryObj = {
   render: () => (
     <MaterialLab
@@ -161,4 +162,5 @@ export const Playground: StoryObj = {
     const surface = canvasElement.querySelector('[data-testid="material-surface"]')!;
     if (surface.querySelector('canvas')) expect(surface).toHaveAttribute('data-shader');
   },
+  tags: ['browser'],
 };
