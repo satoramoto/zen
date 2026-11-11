@@ -378,6 +378,18 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
     }
   }
 
+  /**
+   * What is not on the face (the two pedals), or what a page drives from elsewhere (a footswitch
+   * over Web MIDI, a script): a `pushinput` event on the surface whose detail names the control
+   * and the kind is reported like any other input, with the time it arrived.
+   */
+  function onPushInput(event: Event): void {
+    const detail = (event as CustomEvent<Partial<PushInput> | undefined>).detail;
+    if (!detail || typeof detail.control !== 'string' || typeof detail.kind !== 'string') return;
+    const { control, kind, time: _time, ...more } = detail;
+    emit(control, kind, more);
+  }
+
   // Capture, so a rotary control's touch is reported before its own store reports the turn.
   node.addEventListener('pointerdown', onPointerDown, true);
   node.addEventListener('pointermove', onPointerMove);
@@ -388,6 +400,7 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
   node.addEventListener('keydown', onKeyDown, true);
   node.addEventListener('keyup', onKeyUp, true);
   node.addEventListener('focusout', onFocusOut);
+  node.addEventListener('pushinput', onPushInput);
   runLamps();
 
   return {
@@ -405,6 +418,7 @@ export function bindSurface(node: HTMLElement, initial: SurfaceInputParams): Sur
       node.removeEventListener('keydown', onKeyDown, true);
       node.removeEventListener('keyup', onKeyUp, true);
       node.removeEventListener('focusout', onFocusOut);
+      node.removeEventListener('pushinput', onPushInput);
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
       for (const { timer } of wheelTouch.values()) clearTimeout(timer);

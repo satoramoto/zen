@@ -58,6 +58,7 @@ export const GESTURES: readonly (readonly [string, string])[] = [
   ['Nudge the jog wheel', 'The arrows at its sides'],
   ['Play from the keys', 'Focus a pad, then the rows 1 to 8, Q to I, A to K and Z to comma'],
   ['Move between pads', 'The arrow keys'],
+  ['The pedals', 'Not on the face: a page reports one as a pushinput event on the surface (docs/push.md)'],
 ];
 
 const KEEP = 40;

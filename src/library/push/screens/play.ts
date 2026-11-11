@@ -114,6 +114,20 @@ export async function key(canvas: HTMLElement, id: string, name: string, more: R
   await fireEvent.keyUp(el, { key: name, code, bubbles: true, ...more });
 }
 
+/** Report an input the face has no control for (a pedal), the way a page does: a `pushinput` event on the surface. */
+export async function report(canvas: HTMLElement, control: string, kind: PushInput['kind'], more: Partial<PushInput> = {}): Promise<void> {
+  const surface = canvas.querySelector('.push-surface');
+  if (!surface) throw new Error('No surface on the page');
+  surface.dispatchEvent(new CustomEvent('pushinput', { detail: { control, kind, ...more } }));
+  await wait(20);
+}
+/** Tap a footswitch: 1 or 2. */
+export async function pedal(canvas: HTMLElement, n: 1 | 2, hold = 0): Promise<void> {
+  await report(canvas, `pedal-${n}`, 'down');
+  if (hold) await wait(hold);
+  await report(canvas, `pedal-${n}`, 'up');
+}
+
 /* ---------- reading ---------- */
 
 /** A control's lamp as drawn: its state, and the colour it was given (a `--push-lamp-N` or a meaning's variable). */
