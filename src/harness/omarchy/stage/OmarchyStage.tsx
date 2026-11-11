@@ -123,7 +123,11 @@ export function OmarchyStage({ plugin, state, roles, width = 1100, height = 760,
       while (!cancelled) {
         let res: Response;
         try { res = await fetch(`${server}/sessions/${c.id}/frame?after=${n}`); } catch { break; }
-        if (res.status === 410) { if (!cancelled) setFailure('This story\'s session has ended. Reload the story.'); break; }
+        if (res.status === 410) {
+          const why = await res.json().then((d) => d.error as string, () => '');
+          if (!cancelled) setFailure(why && why.startsWith('Quickshell crashed') ? why : 'This story\'s session has ended. Reload the story.');
+          break;
+        }
         if (res.status !== 200) continue;
         n = Number(res.headers.get('x-frame'));
         const src = URL.createObjectURL(await res.blob());

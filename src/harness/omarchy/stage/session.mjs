@@ -384,6 +384,7 @@ export class Session {
     qtLog(this.proc.stderr);
     this.exited = new Promise((resolve) => this.proc.on('exit', (code, signal) => {
       this.note('exit', { code, signal });
+      if (!this.closed) this.crash(code, signal);
       resolve({ code, signal });
     }));
 
@@ -540,7 +541,31 @@ export class Session {
   }
 
   /** Sends one request to the stage and waits for its reply. */
+  /**
+   * Quickshell went away by itself. Everything waiting on it fails now, with
+   * Qt's last words and Quickshell's crash report, instead of timing out.
+   */
+  crash(code, signal) {
+    const report = [];
+    const crashes = path.join(this.home, '.cache', 'quickshell', 'crashes');
+    try {
+      for (const dir of fs.readdirSync(crashes)) {
+        const file = path.join(crashes, dir, 'report.txt');
+        if (fs.existsSync(file)) report.push(...fs.readFileSync(file, 'utf8').split('\n').filter((l) => /^(Signal|#\d)/.test(l)).slice(0, 25));
+      }
+    } catch { /* no report */ }
+    const message = `Quickshell crashed (${signal ?? `exit ${code}`}) while the story ran${report.length ? `:\n${report.join('\n')}` : ''}\n${this.qtErrors()}`;
+    this.crashed = message;
+    this.note('crash', { errors: [message] });
+    for (const { reject } of this.pending.values()) reject(new Error(message));
+    this.pending.clear();
+    const waiters = this.frameWaiters;
+    this.frameWaiters = [];
+    for (const w of waiters) w(this.frame);
+  }
+
   call(request, timeout = 15000) {
+    if (this.crashed) return Promise.reject(new Error(this.crashed));
     if (this.closed) return Promise.reject(new Error('the session has ended'));
     this.lastSeen = Date.now();
     const id = this.nextId++;

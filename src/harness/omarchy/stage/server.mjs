@@ -175,6 +175,7 @@ export function omarchyStage(options) {
       const s = sessions.get(parts[1]);
       if (!s) return json(res, 410, { error: 'this story\'s session has ended; reload the story' });
       const what = parts[2];
+      if (s.crashed && what !== 'log' && what !== 'close' && req.method !== 'DELETE') return json(res, 410, { error: s.crashed });
       if (req.method === 'DELETE' || what === 'close') { await close(s.key); return json(res, 200, { closed: true }); }
       if (what === 'frame') {
         const after = Number(url.searchParams.get('after') ?? 0);
