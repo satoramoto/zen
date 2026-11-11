@@ -33,7 +33,9 @@ export const BrowseTheMaintainedCatalog: Story = scenario({
   },
 });
 
-export const VisitTheOldGuideAddress: Story = scenario({
+// Played by scripts/check-preview-catalog.mjs, which serves the root page it reads (`?rootPreview=`):
+// not a test to Storybook's runners.
+export const VisitTheOldGuideAddress: Story = { ...scenario({
   requirement: 'Root preview retirement',
   shall: 'The root preview SHALL display a minimal retirement notice instead of loading the field guide, without changing the existing preview port configuration.',
   when: 'a reader opens the root preview URL',
@@ -51,4 +53,4 @@ export const VisitTheOldGuideAddress: Story = scenario({
       await expect(body.querySelector('.field-guide, .book-nav, script[src*="/src/main.tsx"]')).toBeNull();
     });
   },
-});
+}), tags: ['!test'] };

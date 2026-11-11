@@ -53,14 +53,14 @@ function ThemeHost({ globals }: { globals: Record<string, unknown> }) {
           <p>Paused measured data — edit a source, deck or spectral swatch. The same canvases repaint; no clock or remount is involved.</p>
           <div className="music-theme-story__controls">
             <Knob param={level} value={sourceLevel} onChange={setSourceLevel} name="Source 1" label="Source monitor" ink="var(--stem-drums)" />
-            <Knob param={level} value={deckLevel} onChange={setDeckLevel} name="Deck B" label="Deck monitor" ink="var(--deck-b)" />
+            <Knob param={level} value={deckLevel} onChange={setDeckLevel} name="Deck A" label="Deck monitor" ink="var(--deck-a)" />
             <Toggle on={held} onChange={setHeld} name="Face" label="Material face">Hold</Toggle>
             <Slider param={level} value={deckLevel} onChange={setDeckLevel} name="Handle" label="Material handle" length={76} />
             <NumberField param={level} value={sourceLevel} onChange={setSourceLevel} name="Screen" label="Material readout" showFill={false} />
             <Meter value={sourceLevel / 100} name="Well" label="Material well" length={80} />
           </div>
           <div className="music-theme-story__wave"><span>Source 1 paint</span><Waveform peaks={waveformPeaks} ink="var(--stem-drums)" height={64} label="Paused source waveform" /></div>
-          <div className="music-theme-story__wave"><span>Deck B paint</span><Waveform peaks={waveformPeaks} ink="var(--deck-b-waveform)" height={64} label="Paused deck waveform" /></div>
+          <div className="music-theme-story__wave"><span>Deck A paint</span><Waveform peaks={waveformPeaks} ink="var(--deck-a-waveform)" height={64} label="Paused deck waveform" /></div>
           <div className="music-theme-story__wave"><span>Low / mid / high spectral paint</span><Waveform peaks={waveformPeaks} spectrum={waveformSpectrum} ink="var(--instrument-waveform-base)" height={64} label="Paused spectral waveform" /></div>
         </section>
       </div>
@@ -98,7 +98,8 @@ export const LiveEditor: Story = {
     let saved = '';
     const images = new Map<HTMLCanvasElement, string>();
     await step('source, deck and spectral edits repaint paused canvases without remounting', async () => {
-      for (const [name, node] of [['Source 1', source], ['Deck B', deck], ['Low frequencies', spectral]] as const) {
+      // A deck whose colour the editor can turn by hue: Deck B's is a mix in the default skin, edited by its hex.
+      for (const [name, node] of [['Source 1', source], ['Deck A', deck], ['Low frequencies', spectral]] as const) {
         const before = node.toDataURL();
         canvas.getByRole('slider', { name: `${name} hue` }).focus();
         await userEvent.keyboard('{PageUp}');
@@ -116,11 +117,14 @@ export const LiveEditor: Story = {
       const before = monitor.getBoundingClientRect().width;
       const generalHeight = getComputedStyle(specimen).getPropertyValue('--control-h');
       await userEvent.click(canvas.getByRole('tab', { name: /^Scale(, changed)?$/ }));
-      canvas.getByRole('slider', { name: 'Instrument control height' }).focus();
+      const height = canvas.getByRole('slider', { name: 'Instrument control height' });
+      // One step up from the skin's own height, whatever it is.
+      const from = Number(height.getAttribute('aria-valuenow'));
+      height.focus();
       await userEvent.keyboard('{ArrowUp}');
       await waitFor(() => expect(monitor.getBoundingClientRect().width).toBeGreaterThan(before));
       await expect(getComputedStyle(specimen).getPropertyValue('--control-h')).toBe(generalHeight);
-      await expect(JSON.parse(text()).overrides.scale.instrument.control).toBe(23);
+      await expect(JSON.parse(text()).overrides.scale.instrument.control).toBe(from + 1);
       stable();
     });
     await step('wear legacy facets while keeping instrument edits and finish overrides', async () => {

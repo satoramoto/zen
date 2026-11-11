@@ -104,7 +104,8 @@ export function bindParamGesture(node: HTMLElement, initial: ParamGestureParams)
     sent = params.value;
     keyed = null;
     const box = node.getBoundingClientRect();
-    const scale = node.offsetWidth > 0 ? box.width / node.offsetWidth : 1;
+    // offsetWidth is rounded to a whole pixel: a difference rounding can make is no zoom.
+    const scale = node.offsetWidth > 0 && Math.abs(box.width - node.offsetWidth) > 1 ? box.width / node.offsetWidth : 1;
     const axis = params.axis ?? 'vertical';
     let fraction = fractionOf(params.param, params.value);
     if (params.anchor === 'pointer') {

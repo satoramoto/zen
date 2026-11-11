@@ -70,7 +70,6 @@ export const Clears: Story = {
   },
 };
 
-// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /** A hovered control's tooltip in the line's place: the title, what it does, its key and Launchkey place. */
 export const Hint: Story = {
   ...story(s.Hint),
@@ -80,10 +79,10 @@ export const Hint: Story = {
     await expect(hint).toHaveAttribute('aria-hidden', 'true');
     await expect(hint.textContent).toContain('Sync Start');
     await expect(hint.textContent).toContain('Key Y');
-    await expect(hint.textContent).toContain('Launchkey: Shift + Play');
+    // Each place is its label, then its keycap: "Key Y", "Launchkey Shift + Play".
+    await expect(hint.textContent).toContain('Launchkey Shift + Play');
     await expect(within(canvasElement).queryByRole('button')).toBeNull();
   },
-  tags: ['browser'],
 };
 
 /** A hint over an error: the hint shows; the error stays in the live region, not drawn. */

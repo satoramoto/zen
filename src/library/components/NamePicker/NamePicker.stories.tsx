@@ -57,7 +57,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * Nothing chosen: the key waits. A click chooses a name, the arrows move the choice, and Enter on
  * the list picks it.
@@ -68,11 +67,12 @@ export const Default: Story = {
     const group = canvas.getByRole('radiogroup', { name: 'Who are you?' });
     await expect(within(group).getAllByRole('radio')).toHaveLength(NAMES.length);
     const key = canvas.getByRole('button', { name: "That's me" });
-    await expect(key).toBeDisabled();
+    // Button stays focusable when it can't be pressed: `aria-disabled`, not `disabled`.
+    await expect(key).toHaveAttribute('aria-disabled', 'true');
 
     await userEvent.click(canvas.getByRole('radio', { name: 'Grace' }));
     await expect(canvas.getByRole('radio', { name: 'Grace' })).toBeChecked();
-    await expect(key).toBeEnabled();
+    await expect(key).not.toHaveAttribute('aria-disabled', 'true');
     await userEvent.keyboard('{ArrowDown}');
     await expect(canvas.getByRole('radio', { name: 'Linus' })).toBeChecked();
     await expect(canvas.getByRole('radio', { name: 'Grace' })).not.toBeChecked();
@@ -83,7 +83,6 @@ export const Default: Story = {
     await expect(args.onPick).toHaveBeenCalledWith('Linus');
     await expect(await canvas.findByText('Hello, Linus')).toBeInTheDocument();
   },
-  tags: ['browser'],
 };
 
 /** A remembered name starts chosen; the key picks it, with the app's own label. */
