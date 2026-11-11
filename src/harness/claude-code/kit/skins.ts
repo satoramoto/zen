@@ -129,6 +129,48 @@ export const SKINS = {
       "#3ff4ff"
     ]
   },
+  "push-3": {
+    label: "Push 3",
+    ok: "#5fdc4a",
+    warn: "#ffd60a",
+    bad: "#e5534b",
+    blue: "#3b8eff",
+    purple: "#a58cff",
+    cyan: "#3ff4ff",
+    slate: "#b1c6e2",
+    orchid: "#bd39ec",
+    ramp: {
+      blue: [
+        "#3b8eff",
+        "#2c6bbf",
+        "#80b6ff",
+        "#204e8c"
+      ],
+      slate: [
+        "#b1c6e2",
+        "#8595aa",
+        "#ccdaec",
+        "#616d7c"
+      ]
+    },
+    muted: "#8f8f92",
+    gray: {
+      light: "#d8d8d8",
+      mid: "#8f8f92",
+      dark: "#4c4c50"
+    },
+    hues: [
+      "#3b8eff",
+      "#ff4f9e",
+      "#ff9a2e",
+      "#16c7a6",
+      "#bd39ec"
+    ],
+    roles: [
+      "#f57aff",
+      "#3ff4ff"
+    ]
+  },
   visuals: {
     label: "visual[flow] (glass)",
     ok: "#51cd85",

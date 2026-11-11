@@ -177,4 +177,23 @@ const blueprintFaces: Faces = {
   labelCase: 'none',
 };
 
-export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument, mixflowFaces, consoleFaces, blueprintFaces];
+// The Push 3 unit: a neutral grotesque for the printed legends and the display, numerals in
+// tabular figures. The manual names no typeface, so the family and every weight are added.
+const push3: Faces = {
+  id: 'push-3',
+  label: 'Push 3 (Inter)',
+  sans: "'Inter', 'Helvetica Neue', Arial, sans-serif", // added
+  display: "'Inter', 'Helvetica Neue', Arial, sans-serif", // added
+  mono: "'JetBrains Mono', ui-monospace, monospace", // added
+  readout: "'Inter', 'Helvetica Neue', Arial, sans-serif", // added
+  math: MATH, // added
+  weightBody: 400, // added
+  weightStrong: 600, // added
+  weightDisplay: 500, // added
+  weightNumeral: 500, // added
+  tracking: '0em', // added
+  trackingDisplay: '0em', // added
+  labelCase: 'none', // added: the legends are printed in mixed case
+};
+
+export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument, mixflowFaces, consoleFaces, blueprintFaces, push3];
