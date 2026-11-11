@@ -6,13 +6,13 @@ both renderers. Each group ends by running the while-building checks from the pr
 
 ## 1. Ground: the area, the checks and the pack
 
-- [ ] 1.1 Declare the `push` area in `structure.ts` (`AREAS`, sidebar `Push`) in its own commit; `npx vitest run src/library/structure.test.ts` passes with an empty `src/library/push/index.ts`
-- [ ] 1.2 Add `push` to the tier scan, the contract scan (`library.test.tsx`) and the bindings-only scan, each with a baseline of zero, one commit each; the three tests pass and a deliberately literal colour in a scratch file fails the contract test (then remove it)
-- [ ] 1.3 Add the `push-3` palette, face and material and the `push-3` pack (source: the manual's URL; `keep` rules from design D9) in `foundation/themes/`, values not in the source marked `// added`; the pack appears in the theme picker story and `npx vitest run src/library` passes
-- [ ] 1.4 Add `foundation/themes/lamps.ts`: the indexed lamp table, the neutral fallback and the derived-shade rules, with unit tests for an unknown index and for each derived shade of every entry
-- [ ] 1.5 Write `docs/push.md` (what the area is, the three shapes, the sources) and add the area's paragraph to `AGENTS.md`; both name only files that exist
-- [ ] 1.6 Run `npm run typecheck` and `npx vitest run src/library/structure.test.ts src/library/tiers.test.ts`; both exit 0
-- [ ] 1.7 Fit review (design D10): in a scratch story, draw every row of D10's table from its existing component in the `push-3` pack at the unit's size, in both renderers; record in `docs/push.md` one verdict per part (as it is, one named prop, or new) with its reason; no part in groups 3 and 4 is built before its verdict is written, and a part that would need more than one prop on a component is brought back to the person as a new-component decision
+- [x] 1.1 Declare the `push` area in `structure.ts` (`AREAS`, sidebar `Push`) in its own commit; `npx vitest run src/library/structure.test.ts` passes with an empty `src/library/push/index.ts`
+- [x] 1.2 Add `push` to the tier scan, the contract scan (`library.test.tsx`) and the bindings-only scan, each with a baseline of zero, one commit each; the three tests pass and a deliberately literal colour in a scratch file fails the contract test (then remove it)
+- [x] 1.3 Add the `push-3` palette, face and material and the `push-3` pack (source: the manual's URL; `keep` rules from design D9) in `foundation/themes/`, values not in the source marked `// added`; the pack appears in the theme picker story and `npx vitest run src/library` passes
+- [x] 1.4 Add `foundation/themes/lamps.ts`: the indexed lamp table, the neutral fallback and the derived-shade rules, with unit tests for an unknown index and for each derived shade of every entry
+- [x] 1.5 Write `docs/push.md` (what the area is, the three shapes, the sources) and add the area's paragraph to `AGENTS.md`; both name only files that exist
+- [x] 1.6 Run `npm run typecheck` and `npx vitest run src/library/structure.test.ts src/library/tiers.test.ts`; both exit 0
+- [x] 1.7 Fit review (design D10): in a scratch story, draw every row of D10's table from its existing component in the `push-3` pack at the unit's size, in both renderers; record in `docs/push.md` one verdict per part (as it is, one named prop, or new) with its reason; no part in groups 3 and 4 is built before its verdict is written, and a part that would need more than one prop on a component is brought back to the person as a new-component decision
 
 ## 2. The model's core
 
