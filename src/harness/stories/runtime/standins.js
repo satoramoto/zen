@@ -31,3 +31,12 @@ if (jsdomWindow && jsdomWindow !== globalThis) {
     globalThis[name] = fixed;
   }
 }
+
+// Also a correction of the environment: Node puts a `localStorage` and `sessionStorage` of its own
+// on the global object, which are undefined unless Node is started with a storage file, and with
+// `window` the global object they hide jsdom's. The global gets jsdom's.
+if (jsdomWindow && jsdomWindow !== globalThis) {
+  for (const name of ['localStorage', 'sessionStorage']) {
+    if (globalThis[name] == null && jsdomWindow[name]) Object.defineProperty(globalThis, name, { value: jsdomWindow[name], configurable: true, writable: true });
+  }
+}

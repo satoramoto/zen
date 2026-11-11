@@ -35,7 +35,9 @@ function observe() {
 
 const FAILING = new Set(['storyThrewException', 'storyErrored', 'playFunctionThrewException', 'unhandledErrorsWhilePlaying', 'storyMissing']);
 
-async function play(context, base, story, timeout) {
+// Each story gets a context of its own: storage one story leaves would otherwise reach the next.
+async function play(browser, viewport, base, story, timeout) {
+  const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
@@ -61,7 +63,7 @@ async function play(context, base, story, timeout) {
   } finally {
     // Leaving the story unmounts it, which ends whatever it started.
     await page.goto('about:blank').catch(() => {});
-    await page.close().catch(() => {});
+    await context.close().catch(() => {});
   }
 }
 
@@ -92,13 +94,11 @@ export async function playInBrowser({ base, stories, workers, timeout, gpu = fal
   const queue = [...stories];
   try {
     await Promise.all(Array.from({ length: Math.max(1, workers) }, async () => {
-      const context = await browser.newContext({ viewport });
       for (let s = queue.shift(); s; s = queue.shift()) {
-        let r = await play(context, base, s, timeout);
-        for (let again = 0; !r.ok && cutShort(r) && again < 2; again++) r = await play(context, base, s, timeout);
+        let r = await play(browser, viewport, base, s, timeout);
+        for (let again = 0; !r.ok && cutShort(r) && again < 2; again++) r = await play(browser, viewport, base, s, timeout);
         report({ story: r.story, ok: r.ok, ms: r.ms, problems: r.problems });
       }
-      await context.close();
     }));
   } finally { await browser.close(); }
   return null;

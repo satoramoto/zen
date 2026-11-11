@@ -122,6 +122,17 @@ describe('zen-stories', () => {
     expect(r.code).toBe(0);
   }, 60000);
 
+  it('lets no story find the storage the one before it left, on the virtual DOM', async () => {
+    const r = await stories(['--no-browser', '--workers', '1', 'fixture-storage']);
+    expect(last(r)).toBe('2 passed on the virtual DOM, 0 in the browser, 0 skipped, 0 failed');
+  }, 60000);
+
+  it('lets no story find the storage the one before it left, in the browser', async ({ skip }) => {
+    if (!shell) skip();
+    const r = await stories(['--browser-all', '--static', built, '--workers', '1', 'fixture-storage']);
+    expect(last(r)).toBe('0 passed on the virtual DOM, 2 in the browser, 0 skipped, 0 failed');
+  }, 90000);
+
   it('plays at most two stories at a time by default', async () => {
     const dir = mkdtempSync(join(scratch, 'busy-'));
     const r = await stories(['--no-browser', 'fixture-plain', 'fixture-measured', 'fixture-real', 'fixture-failing'], { ZEN_FIXTURE_BUSY_DIR: dir });

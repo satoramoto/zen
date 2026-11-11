@@ -18,4 +18,6 @@ const nothing = composeStory({ render: () => null }, { title: 'zen-stories/nothi
 afterEach(async () => {
   await nothing.run().catch(() => {});
   await Promise.allSettled([...globalThis.__OMARCHY_STAGE__.closing]);
+  // Storage one story leaves would otherwise reach the next.
+  for (const name of ['localStorage', 'sessionStorage']) { try { globalThis[name]?.clear(); } catch { /* none */ } }
 });
