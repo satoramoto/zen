@@ -18,7 +18,7 @@ const userLamps = (lamps: Record<string, Lamp>): Pick<Play, 'set' | 'args'> => (
   },
   args: { initialState: { ...initialState(), user: true } },
 });
-const rgb = fillOf;
+
 
 export const plays = {
   APenPress: {
@@ -307,10 +307,10 @@ export const plays = {
     check: ({ canvasElement: c }) => {
       expect(lamp(c, 'pad-4-4')).toEqual({ state: 'lit', colour: lampVar(20) });
       // The table's colour 20 is a teal: far more green and blue than red, and far from the unlit pad beside it.
-      const [r, g, b] = rgb(face(c, 'pad-4-4'));
+      const [r, g, b] = fillOf(face(c, 'pad-4-4'));
       expect(g).toBeGreaterThan(r * 3 + 60);
       expect(b).toBeGreaterThan(r * 3 + 60);
-      const dark = rgb(face(c, 'pad-4-5'));
+      const dark = fillOf(face(c, 'pad-4-5'));
       expect(g - dark[1]).toBeGreaterThan(100);
     },
   },
@@ -319,8 +319,8 @@ export const plays = {
     ...userLamps({ 'pad-4-4': { state: 'lit', colour: 20 }, 'pad-4-5': { state: 'dim', colour: 20 } }),
     act: async () => {},
     check: ({ canvasElement: c }) => {
-      const full = rgb(face(c, 'pad-4-4'));
-      const dim = rgb(face(c, 'pad-4-5'));
+      const full = fillOf(face(c, 'pad-4-4'));
+      const dim = fillOf(face(c, 'pad-4-5'));
       // Plainly darker, and still the same teal: green and blue over red.
       expect(dim[1]).toBeLessThan(full[1] * 0.75);
       expect(dim[1]).toBeGreaterThan(dim[0] * 2);
