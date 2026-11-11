@@ -204,6 +204,24 @@ export const pads = (canvas: HTMLElement): HTMLElement[] => [...canvas.querySele
 /** A pad's feel element: where the input store writes a held pad's pressure and touch. */
 export const feel = (canvas: HTMLElement, id: string): HTMLElement => cell(canvas, id).querySelector<HTMLElement>('.push-surface__feel')!;
 
+/** The colour seen at an element: every ground from `root` (default: the theme scope) down to it, one over the other, so a see-through fill reads as it looks. */
+export function groundOf(el: Element, root: Element | null = el.closest('[data-mode]')): [number, number, number] {
+  const chain: Element[] = [];
+  for (let at: Element | null = el; at; at = at.parentElement) {
+    chain.unshift(at);
+    if (at === root) break;
+  }
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 1;
+  const context = canvas.getContext('2d', { willReadFrequently: true })!;
+  for (const at of chain) {
+    context.fillStyle = getComputedStyle(at).backgroundColor;
+    context.fillRect(0, 0, 1, 1);
+  }
+  const [r, g, b] = context.getImageData(0, 0, 1, 1).data;
+  return [r, g, b];
+}
+
 /** A computed colour as red, green and blue, 0 to 255, whatever format the browser words it in. */
 export function rgbOf(colour: string): [number, number, number] {
   const canvas = document.createElement('canvas');

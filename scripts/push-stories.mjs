@@ -1,11 +1,11 @@
 // Plays the Push area's stories in a real browser, with each renderer, against a Storybook that is
 // already served. A story passes when Storybook says it finished without an error.
 //
-//   node scripts/push-stories.mjs [title-or-id-prefix ...] [--url http://localhost:6006] [--renderer both|react|svelte] [--workers 4] [--theme push-3] [--mode dark]
+//   node scripts/push-stories.mjs [title-or-id-prefix ...] [--url http://localhost:6006] [--renderer both|react|svelte] [--workers 4] [--theme push-3] [--mode dark] [--reduced-motion]
 import { chromium } from 'playwright';
 import { parseArgs } from 'node:util';
 
-const { values, positionals } = parseArgs({ allowPositionals: true, options: { url: { type: 'string' }, renderer: { type: 'string' }, workers: { type: 'string' }, theme: { type: 'string' }, mode: { type: 'string' }, timeout: { type: 'string' }, list: { type: 'boolean' } } });
+const { values, positionals } = parseArgs({ allowPositionals: true, options: { url: { type: 'string' }, renderer: { type: 'string' }, workers: { type: 'string' }, theme: { type: 'string' }, mode: { type: 'string' }, 'reduced-motion': { type: 'boolean' }, timeout: { type: 'string' }, list: { type: 'boolean' } } });
 const base = values.url ?? process.env.PUSH_PREVIEW_URL ?? 'http://localhost:6006';
 const renderers = (values.renderer ?? 'both') === 'both' ? ['react', 'svelte'] : [values.renderer];
 const workers = Number(values.workers ?? 4);
@@ -30,7 +30,7 @@ function observe() {
 
 const browser = await chromium.launch();
 async function play(story, renderer) {
-  const context = await browser.newContext({ viewport: { width: 1400, height: 1250 }, colorScheme: 'dark' });
+  const context = await browser.newContext({ viewport: { width: 1400, height: 1250 }, colorScheme: mode === 'light' ? 'light' : 'dark', reducedMotion: values['reduced-motion'] ? 'reduce' : 'no-preference' });
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));

@@ -28,7 +28,7 @@ export const plays = {
       const texts = Object.fromEntries([...display(c).querySelectorAll<HTMLElement>('[data-type="param"]')].map((el) => [Number(el.dataset.col), el.textContent ?? '']));
       expect(texts[1]).toContain('Shape');
       expect(texts[8]).toContain('Level');
-      expect(texts[8]).toContain('-3.0 dB');
+      expect(texts[8]).toMatch(/-3\.0\s*dB/);
     },
   },
 

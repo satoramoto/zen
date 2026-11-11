@@ -34,9 +34,16 @@
       <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
         <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.35 hue=1 label="Resonance" name="Resonance 35 %" unit=" %" value="35" @onstep=turn:6>
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="" value="2.4 dB" @onstep=turn:7>
+        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="dB" value="2.4" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
         <KnobReadout fraction=0.7 hue=1 label="Env Amount" name="Env Amount 40" origin="center" unit="" value="40" @onstep=turn:8>
         <span class="push-display__dot" data-part="automation">
@@ -107,11 +114,11 @@
       <div class="push-display__cell" data-col="2" data-span="4" data-type="trace" style="grid-column: 2 / span 4; --push-lamp: var(--push-lamp-20)">
         <PushTrace fill=false hue=1 markers=[] name="Oscillator shape" points=[[0,0],[0.03125,0.0625],[0.0625,0.125],[0.09375,0.1875],[0.125,0.25],[0.15625,0.3125],[0.1875,0.375],[0.21875,0.4375],[0.25,0.5],[0.28125,0.5625],[0.3125,0.625],[0.34375,0.6875],[0.375,0.75],[0.40625,0.8125],[0.4375,0.875],[0.46875,0.9375],[0.5,0],[0.53125,0.0625],[0.5625,0.125],[0.59375,0.1875],[0.625,0.25],[0.65625,0.3125],[0.6875,0.375],[0.71875,0.4375],[0.75,0.5],[0.78125,0.5625],[0.8125,0.625],[0.84375,0.6875],[0.875,0.75],[0.90625,0.8125],[0.9375,0.875],[0.96875,0.9375],[1,0]]>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-20)">
-        <KnobReadout fraction=0.1 hue=1 label="Noise" name="Noise 10 %" unit="" value="10 %" @onstep=turn:6>
+        <KnobReadout fraction=0.1 hue=1 label="Noise" name="Noise 10 %" unit="%" value="10" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-20)">
-        <KnobReadout fraction=0.4 hue=1 label="Sub" name="Sub 40 %" unit="" value="40 %" @onstep=turn:7>
+        <KnobReadout fraction=0.4 hue=1 label="Sub" name="Sub 40 %" unit="%" value="40" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="arc" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-20)">
-        <KnobReadout fraction=0.8 hue=1 label="Level" name="Level -3.0 dB" unit="" value="-3.0 dB" @onstep=turn:8>
+        <KnobReadout fraction=0.8 hue=1 label="Level" name="Level -3.0 dB" unit="dB" value="-3.0" @onstep=turn:8>
     <div class="push-display__row" data-row="bottom">
       <div class="push-display__tab" data-col="1" data-icon="drum-rack" data-row="bottom" style="--push-lamp: var(--push-lamp-14)">
         <span aria-label="Drum Rack" class="lib-text lib-tone" data-part="icon" data-role="label" data-text-leading="tight" role="img">
@@ -320,9 +327,16 @@
       <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
         <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.35 hue=1 label="Resonance" name="Resonance 35 %" unit=" %" value="35" @onstep=turn:6>
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="" value="2.4 dB" @onstep=turn:7>
+        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="dB" value="2.4" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
         <KnobReadout fraction=0.7 hue=1 label="Env Amount" name="Env Amount 40" origin="center" unit="" value="40" @onstep=turn:8>
         <span class="push-display__dot" data-part="automation">
@@ -413,9 +427,16 @@
       <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
         <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.35 hue=1 label="Resonance" name="Resonance 35 %" unit=" %" value="35" @onstep=turn:6>
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="" value="2.4 dB" @onstep=turn:7>
+        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="dB" value="2.4" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
         <KnobReadout fraction=0.7 hue=1 label="Env Amount" name="Env Amount 40" origin="center" unit="" value="40" @onstep=turn:8>
         <span class="push-display__dot" data-part="automation">
@@ -508,9 +529,16 @@
       <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
         <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.35 hue=1 label="Resonance" name="Resonance 35 %" unit=" %" value="35" @onstep=turn:6>
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="" value="2.4 dB" @onstep=turn:7>
+        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="dB" value="2.4" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
         <KnobReadout fraction=0.7 hue=1 label="Env Amount" name="Env Amount 40" origin="center" unit="" value="40" @onstep=turn:8>
         <span class="push-display__dot" data-part="automation">
@@ -724,9 +752,16 @@
       <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
         <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.35 hue=1 label="Resonance" name="Resonance 35 %" unit=" %" value="35" @onstep=turn:6>
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="" value="2.4 dB" @onstep=turn:7>
+        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="dB" value="2.4" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
         <KnobReadout fraction=0.7 hue=1 label="Env Amount" name="Env Amount 40" origin="center" unit="" value="40" @onstep=turn:8>
         <span class="push-display__dot" data-part="automation">
@@ -822,9 +857,16 @@
       <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
         <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.35 hue=1 label="Resonance" name="Resonance 35 %" unit=" %" value="35" @onstep=turn:6>
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="" value="2.4 dB" @onstep=turn:7>
+        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="dB" value="2.4" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
         <KnobReadout fraction=0.7 hue=1 label="Env Amount" name="Env Amount 40" origin="center" unit="" value="40" @onstep=turn:8>
         <span class="push-display__dot" data-part="automation">
@@ -909,9 +951,16 @@
       <div class="push-display__cell" data-col="5" data-span="1" data-style="bar" data-type="param" style="grid-column: 5 / span 1; --push-lamp: var(--push-lamp-26)">
         <Slider display="-6.0 dB" ink="var(--push-lit)" label="Level -6.0 dB" layout="stacked" length="auto" name="Level" orientation="horizontal" param={"kind":"float","min":0,"max":1,"defaultValue":0} showValue=true value=0.75 @onChange=none>
       <div class="push-display__cell" data-col="6" data-span="1" data-style="arc" data-touched="true" data-type="param" style="grid-column: 6 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.35 hue=1 label="Resonance" name="Resonance 35 %" unit=" %" value="35" @onstep=turn:6>
+        <span class="lib-text lib-tone" data-part="name" data-role="caption" data-text-leading="tight" data-text-weight="strong" data-truncate="">
+          "Resonance"
+        <div class="push-display__reading" data-part="reading">
+          <span class="lib-text lib-tone" data-part="value" data-role="display" data-text-leading="tight">
+            "35"
+          <span class="lib-text lib-tone" data-part="unit" data-role="label" data-text-leading="tight">
+            " %"
+        <KnobReadout fraction=0.35 hue=1 label="" name="Resonance 35 %" unit="" value="" @onstep=turn:6>
       <div class="push-display__cell" data-col="7" data-disabled="true" data-span="1" data-style="arc" data-type="param" style="grid-column: 7 / span 1; --push-lamp: var(--push-lamp-26)">
-        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="" value="2.4 dB" @onstep=turn:7>
+        <KnobReadout fraction=0.2 hue=1 label="Drive" name="Drive 2.4 dB" unit="dB" value="2.4" @onstep=turn:7>
       <div class="push-display__cell" data-col="8" data-span="1" data-style="bipolar" data-type="param" style="grid-column: 8 / span 1; --push-lamp: var(--push-lamp-26)">
         <KnobReadout fraction=0.7 hue=1 label="Env Amount" name="Env Amount 40" origin="center" unit="" value="40" @onstep=turn:8>
         <span class="push-display__dot" data-part="automation">

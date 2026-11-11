@@ -170,7 +170,8 @@ export const plays = {
       const knob = pcell(c, 4).querySelector('[aria-roledescription="knob"]')!;
       expect(knob).toHaveAccessibleName('Frequency 20.0 kHz');
       expect(knob.querySelector('[data-part="label"]')).toHaveTextContent('Frequency');
-      expect(knob.querySelector('[data-part="value"]')).toHaveTextContent('20.0 kHz');
+      // The number at the value size, and its unit small beside it.
+      expect(knob.querySelector('[data-part="value"]')).toHaveTextContent(/^20\.0\s*kHz$/);
       // At the top of its range the arc is whole: twice the one at half way.
       expect(arcLength(c, 4)).toBeGreaterThan(0);
       expect(arcLength(c, 4) / arcLength(c, 5)).toBeCloseTo(2, 1);

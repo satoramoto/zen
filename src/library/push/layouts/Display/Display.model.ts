@@ -72,6 +72,7 @@ function tab(cell: RowCell | null, row: 'top' | 'bottom', col: number): Node {
   );
 }
 
+const TEXT_ROLE = { label: 'label', value: 'numeral', large: 'display' } as const;
 const LEVEL = { kind: 'float', min: 0, max: 1, defaultValue: 0 } as const;
 
 /** A parameter: an arc, a centred arc, a switch, a bar, or a list of choices with the current one marked. */
@@ -98,11 +99,25 @@ function param(cell: ParamCell & { col: number }): ChildArg {
   if (cell.style === 'bar') {
     return component('Slider', { param: LEVEL, value: cell.fraction, name: cell.name, label: name, display: `${cell.value}${cell.unit ?? ''}`, layout: 'stacked', orientation: 'horizontal', length: 'auto', showValue: true, disabled: cell.disabled, ink: 'var(--push-lit)' }, { on: { onChange: 'none' } });
   }
-  return component(
-    'KnobReadout',
-    { label: cell.name, value: cell.value, unit: cell.unit ?? '', fraction: cell.fraction, name, ...(cell.style === 'bipolar' ? { origin: 'center' } : {}), ...hue },
-    { on: { onstep: `turn:${cell.col}` } },
-  );
+  const dial = { fraction: cell.fraction, name, ...(cell.style === 'bipolar' ? { origin: 'center' } : {}), ...hue };
+  const on = { on: { onstep: `turn:${cell.col}` } };
+  // The number at its size and its unit small beside it, so both fit the column.
+  const reading = cell.unit ? ([cell.value, cell.unit] as const) : splitUnit(cell.value);
+  // Touched, the reading leaves the dial for a line of its own, at the large size.
+  if (cell.touched) {
+    return [
+      textNode({ role: 'caption', weight: 'strong', truncate: true, leading: 'tight' }, { 'data-part': 'name' }, cell.name),
+      h('div', { class: 'push-display__reading', 'data-part': 'reading' }, textNode({ role: TEXT_ROLE.large, leading: 'tight' }, { 'data-part': 'value' }, reading[0]), reading[1] ? textNode({ role: 'label', leading: 'tight' }, { 'data-part': 'unit' }, reading[1]) : null),
+      component('KnobReadout', { label: '', value: '', unit: '', ...dial }, on),
+    ];
+  }
+  return component('KnobReadout', { label: cell.name, value: reading[0], unit: reading[1], ...dial }, on);
+}
+
+/** "-3.0 dB" as its number and its unit; a reading that is not one number and a unit ("C", "1/8", "Off", "90 to 110") is all value. */
+export function splitUnit(reading: string): [string, string] {
+  const parts = /^([-+−]?\d[\d.,]*)\s*([^\d\s/][^\d]*)$/.exec(reading);
+  return parts ? [parts[1], parts[2]] : [reading, ''];
 }
 
 function list(cell: ListCell): ChildArg {
@@ -115,7 +130,6 @@ function list(cell: ListCell): ChildArg {
   ];
 }
 
-const TEXT_ROLE = { label: 'label', value: 'numeral', large: 'display' } as const;
 
 function content(cell: BodyCell): ChildArg {
   switch (cell.type) {

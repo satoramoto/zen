@@ -4,7 +4,7 @@ import { lampVar } from '../../../foundation/themes/lamps';
 import { padPitch } from '../../model/scales';
 import { initialState } from '../../model/state';
 import type { Lamp, PushSet } from '../../model/types';
-import { all, cell, down, expect, face, feel, fillOf, forget, given, intent, lamp, onTrack, pads, press, wait, wheel } from '../play';
+import { all, cell, down, expect, face, feel, fillOf, forget, given, intent, lamp, onTrack, pads, press, wait, wheel, groundOf } from '../play';
 import type { Play } from '../scenario';
 
 const bass = (more: (set: PushSet) => void = () => {}) => onTrack('t-bass', more);
@@ -310,7 +310,8 @@ export const plays = {
       const [r, g, b] = fillOf(face(c, 'pad-4-4'));
       expect(g).toBeGreaterThan(r * 3 + 60);
       expect(b).toBeGreaterThan(r * 3 + 60);
-      const dark = fillOf(face(c, 'pad-4-5'));
+      // The unlit pad is see-through: it is read as it looks over the body.
+      const dark = groundOf(face(c, 'pad-4-5'));
       expect(g - dark[1]).toBeGreaterThan(100);
     },
   },

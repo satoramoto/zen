@@ -82,6 +82,8 @@
 .push-surface__cell[data-cap='fill'] {
   --hue-1: var(--push-lit);
 }
+/* A pad is translucent: unlit, the body shows through it, whatever the pack's body is. */
+.push-surface__cell[data-kind='pad'] { --mat-key-fill: color-mix(in oklab, var(--push-white) 10%, transparent); }
 /* A legend takes its lamp: barely there unlit, plain when it can be pressed, bright when lit. */
 .push-surface__cell[data-cap='legend'] {
   --border-strong: var(--border);

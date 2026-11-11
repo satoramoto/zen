@@ -140,7 +140,7 @@ export const plays = {
       expect(texts[2]).toContain('Pan');
       expect(texts[3]).toContain('A Reverb');
       expect(texts[4]).toContain('B Delay');
-      expect(texts[3]).toContain('-24 dB');
+      expect(texts[3]).toMatch(/-24\s*dB/);
     },
   },
 
