@@ -57,6 +57,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * Nothing chosen: the key waits. A click chooses a name, the arrows move the choice, and Enter on
  * the list picks it.
@@ -82,6 +83,7 @@ export const Default: Story = {
     await expect(args.onPick).toHaveBeenCalledWith('Linus');
     await expect(await canvas.findByText('Hello, Linus')).toBeInTheDocument();
   },
+  tags: ['browser'],
 };
 
 /** A remembered name starts chosen; the key picks it, with the app's own label. */

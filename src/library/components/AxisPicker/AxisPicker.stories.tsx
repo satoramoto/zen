@@ -63,6 +63,7 @@ export const Horizontal: Story = {
   },
 };
 
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
 /** Along a plot's left edge: "bright" at the top, "dark" at the bottom, the measure reading bottom to top. */
 export const Vertical: Story = {
   args: { orientation: 'vertical', label: 'Up', low: 'dark', high: 'bright', index: 1 },
@@ -81,6 +82,7 @@ export const Vertical: Story = {
     await expect(args.onChange).toHaveBeenLastCalledWith(2);
     await waitFor(() => expect(chip).toHaveAttribute('aria-expanded', 'false'));
   },
+  tags: ['browser'],
 };
 
 /** In a title row: no ends, just the chip, its own width, beside the title. */

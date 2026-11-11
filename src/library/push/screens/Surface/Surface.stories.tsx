@@ -58,7 +58,8 @@ export const TheEightColumnsLineUp: Story = scenario(
   scenarioStory(plays.TheEightColumnsLineUp),
 );
 
-export const TheClustersMatchTheFigure: Story = scenario(
+// Stories tagged browser below measure layout and draw on a canvas: they play in a real browser, not on zen-stories' virtual DOM.
+export const TheClustersMatchTheFigure: Story = { ...scenario(
   {
     name: 'The clusters match the figure',
     when: 'the surface is laid over the manual\'s control figure at the same width',
@@ -69,9 +70,9 @@ export const TheClustersMatchTheFigure: Story = scenario(
     check: plays.TheClustersMatchTheFigure.check,
   },
   scenarioStory(plays.TheClustersMatchTheFigure),
-);
+), tags: ['browser'] };
 
-export const TheLeftColumnReadsTopToBottom: Story = scenario(
+export const TheLeftColumnReadsTopToBottom: Story = { ...scenario(
   {
     name: 'The left column reads top to bottom',
     when: 'a person reads the column left of the touch strip from the top',
@@ -82,9 +83,9 @@ export const TheLeftColumnReadsTopToBottom: Story = scenario(
     check: plays.TheLeftColumnReadsTopToBottom.check,
   },
   scenarioStory(plays.TheLeftColumnReadsTopToBottom),
-);
+), tags: ['browser'] };
 
-export const TheRightColumnReadsTopToBottom: Story = scenario(
+export const TheRightColumnReadsTopToBottom: Story = { ...scenario(
   {
     name: 'The right column reads top to bottom',
     when: 'a person reads the column right of the scene buttons from the top',
@@ -95,7 +96,7 @@ export const TheRightColumnReadsTopToBottom: Story = scenario(
     check: plays.TheRightColumnReadsTopToBottom.check,
   },
   scenarioStory(plays.TheRightColumnReadsTopToBottom),
-);
+), tags: ['browser'] };
 
 export const AnIconButtonIsNamed: Story = scenario(
   {
@@ -240,7 +241,7 @@ export const ARotaryControlTurns: Story = scenario(
   scenarioStory(plays.ARotaryControlTurns),
 );
 
-export const ANarrowFrame: Story = scenario(
+export const ANarrowFrame: Story = { ...scenario(
   {
     name: 'A narrow frame',
     when: 'the surface is drawn in a frame half as wide',
@@ -251,9 +252,9 @@ export const ANarrowFrame: Story = scenario(
     check: plays.ANarrowFrame.check,
   },
   scenarioStory(plays.ANarrowFrame),
-);
+), tags: ['browser'] };
 
-export const BelowTheSmallestSize: Story = scenario(
+export const BelowTheSmallestSize: Story = { ...scenario(
   {
     name: 'Below the smallest size',
     when: 'the frame is narrower than the surface\'s smallest size',
@@ -264,7 +265,7 @@ export const BelowTheSmallestSize: Story = scenario(
     check: plays.BelowTheSmallestSize.check,
   },
   scenarioStory(plays.BelowTheSmallestSize),
-);
+), tags: ['browser'] };
 
 export const TheDisplayRegionAlone: Story = scenario(
   {
@@ -318,7 +319,7 @@ export const Off: Story = scenario(
   scenarioStory(plays.Off),
 );
 
-export const LEDsAtHalf: Story = scenario(
+export const LEDsAtHalf: Story = { ...scenario(
   {
     name: 'LEDs at half',
     when: 'LED brightness is 50 percent',
@@ -329,4 +330,4 @@ export const LEDsAtHalf: Story = scenario(
     check: plays.LEDsAtHalf.check,
   },
   scenarioStory(plays.LEDsAtHalf),
-);
+), tags: ['browser'] };

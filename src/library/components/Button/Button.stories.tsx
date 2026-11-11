@@ -129,6 +129,7 @@ export const WaitingFlash: Story = {
   },
 };
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * New: the `role-2` tone, the second role hue (in Yahaha, the keys that move time), worn only while
  * active. Start stopped is the primary key filled in `--role-2` with `--role-2-text`; Sync Start
@@ -154,6 +155,7 @@ export const Role2: Story = {
     const label = start.querySelector('.yh-button__label') as HTMLElement;
     await expect(label.getBoundingClientRect().right).toBeLessThanOrEqual(start.getBoundingClientRect().right);
   },
+  tags: ['browser'],
 };
 
 /** New: a tall primary key, Start / Stop leading the transport: two control rows high, the label at heading size. */

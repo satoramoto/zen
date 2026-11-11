@@ -28,6 +28,7 @@ export const AllRolesAndTones: Story = {
   ...treeStory<TextArgs>(() => ({ tree: textGrid() })),
 };
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /** The `math` role around MathML in running text: the formula takes `--font-math`, not the
  *  browser's own math face, and sits on the paragraph's baseline. Drawn by React: the formulas are
  *  MathML markup set as inner HTML, which a view tree doesn't hold. */
@@ -47,4 +48,5 @@ export const MathInText: Story = {
     await expect(math).not.toBeNull();
     await expect(getComputedStyle(math!).fontFamily).toContain('Math');
   },
+  tags: ['browser'],
 };

@@ -39,8 +39,9 @@ const live = (fixture: Parameters<typeof story>[0], extra: Partial<Story> = {}):
   args: { ...fixture.args, onMute: fn() },
 });
 
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 /** The drums muted (the drummer plays them), the rest routed on. A toggle asks by stem id; the lanes keep the host's state. */
-export const Default: Story = live(s.Default, {
+export const Default: Story = { ...live(s.Default, {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getAllByRole('group', { name: /^\w+ stem(, muted)?$/ })).toHaveLength(4);
@@ -61,7 +62,7 @@ export const Default: Story = live(s.Default, {
     const head = canvasElement.querySelector('[data-part="playhead"]')!.getBoundingClientRect();
     await expect((head.left - lanes.left) / lanes.width).toBeCloseTo(0.3, 1);
   },
-});
+}), tags: ['browser'] };
 
 /**
  * Every state: a stem with no envelope says so (no waveform drawn), one not separated yet is

@@ -10,6 +10,7 @@ import WaveformSvelte from './Waveform.svelte';
 import { waveformView, type WaveformProps } from './Waveform.model';
 import { waveformArgTypes, waveformBase, waveformSamples, waveformSpectrum, waveformStories as s } from './Waveform.fixtures';
 
+// Stories tagged browser here draw on a canvas and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   id: 'music-waveform',
   title: 'Music/Components/Waveform',
@@ -18,6 +19,7 @@ const meta = {
   parameters: { layout: 'padded' },
   args: waveformBase,
   argTypes: waveformArgTypes,
+  tags: ['browser'],
 } satisfies Meta<typeof Waveform>;
 export default meta;
 type Story = StoryObj<typeof meta>;

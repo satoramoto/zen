@@ -16,4 +16,5 @@ export default meta;type Story=StoryObj<typeof meta>;
 export const Free:Story={};
 export const Circle:Story={args:{constraint:'circle'}};
 export const Horizontal:Story={args:{constraint:'horizontal'}};
-export const Keyboard:Story={play:async({canvasElement})=>{const c=within(canvasElement),point=await c.findByRole('group',{name:'Explore a point'});point.focus();await userEvent.keyboard('{ArrowUp}');await expect(c.getByLabelText('Point coordinates')).not.toHaveTextContent('1.00, 0.00');await userEvent.click(c.getByRole('button',{name:'Reset point'}));await expect(c.getByLabelText('Point coordinates')).toHaveTextContent('1.00, 0.00');}};
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const Keyboard:Story={play:async({canvasElement})=>{const c=within(canvasElement),point=await c.findByRole('group',{name:'Explore a point'});point.focus();await userEvent.keyboard('{ArrowUp}');await expect(c.getByLabelText('Point coordinates')).not.toHaveTextContent('1.00, 0.00');await userEvent.click(c.getByRole('button',{name:'Reset point'}));await expect(c.getByLabelText('Point coordinates')).toHaveTextContent('1.00, 0.00');}, tags: ['browser'] };

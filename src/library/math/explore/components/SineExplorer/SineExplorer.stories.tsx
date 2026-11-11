@@ -20,6 +20,7 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {};
 export const TwiceAround: Story = { args: { frequency: 2, time: 1.1 } };
 export const TallAndSlow: Story = { args: { amplitude: 1.5, frequency: .5, time: 2 } };
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 export const LinkedHandles: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
@@ -36,6 +37,7 @@ export const LinkedHandles: Story = {
     await expect(c.getByRole('slider', { name: 'Wave frequency' })).toHaveAttribute('aria-valuenow', '2');
     await expect(c.getByLabelText('Current height')).toHaveTextContent('1.00');
   },
+  tags: ['browser'],
 };
 export const CompareAndReset: Story = {
   args: { time: Math.PI / 4 },
@@ -51,6 +53,7 @@ export const CompareAndReset: Story = {
     await expect(c.queryByRole('button', { name: 'Unpin comparison' })).not.toBeInTheDocument();
     await expect(c.getByRole('button', { name: 'Trace' })).toHaveAttribute('aria-pressed', 'true');
   },
+  tags: ['browser'],
 };
 export const PlayAndPause: Story = {
   play: async ({ canvasElement }) => {
@@ -62,6 +65,7 @@ export const PlayAndPause: Story = {
     await userEvent.click(c.getByRole('button', { name: 'Pause motion' }));
     await expect(canvasElement.querySelector('.zen-sine')).toHaveAttribute('data-playing', 'false');
   },
+  tags: ['browser'],
 };
 
 export const FollowOneTurn: Story = {
@@ -81,4 +85,5 @@ export const FollowOneTurn: Story = {
     await userEvent.click(c.getByRole('button', { name: '1 · Follow the point' }));
     await expect(c.getByRole('slider', { name: 'Orbit position' })).toHaveAttribute('aria-valuenow', '0');
   },
+  tags: ['browser'],
 };

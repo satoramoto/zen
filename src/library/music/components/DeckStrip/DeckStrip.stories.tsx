@@ -118,6 +118,7 @@ export const FullStopQueued: Story = {
   },
 };
 
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
 export const Loops: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -143,6 +144,7 @@ export const Loops: Story = {
     await waitFor(() => expect(page.queryByRole('dialog', { name: 'Deck 1 loop settings' })).not.toBeInTheDocument());
     await expect(canvas.getByRole('button', { name: 'Deck 1 loop settings' })).toHaveFocus();
   },
+  tags: ['browser'],
 };
 
 export const LoopInPending: Story = {
@@ -157,6 +159,7 @@ export const LoopInPending: Story = {
     await expect(page.getByRole('combobox', { name: 'Deck 1 loop target' })).toBeDisabled();
     await userEvent.keyboard('{Escape}');
   },
+  tags: ['browser'],
 };
 
 export const RoutingAndPhones: Story = {

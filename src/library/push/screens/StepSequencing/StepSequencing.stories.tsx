@@ -45,7 +45,8 @@ export const RemovingIt: Story = scenario(
   scenarioStory(plays.RemovingIt),
 );
 
-export const VelocityAsBrightness: Story = scenario(
+// Stories tagged browser below measure layout and draw on a canvas: they play in a real browser, not on zen-stories' virtual DOM.
+export const VelocityAsBrightness: Story = { ...scenario(
   {
     name: 'Velocity as brightness',
     when: 'two steps hold notes at velocity 40 and 120',
@@ -56,7 +57,7 @@ export const VelocityAsBrightness: Story = scenario(
     check: plays.VelocityAsBrightness.check,
   },
   scenarioStory(plays.VelocityAsBrightness),
-);
+), tags: ['browser'] };
 
 export const Triplets: Story = scenario(
   {
@@ -396,7 +397,7 @@ export const AllTheHatsQuieter: Story = scenario(
   scenarioStory(plays.AllTheHatsQuieter),
 );
 
-export const ASlideInTheSequencer: Story = scenario(
+export const ASlideInTheSequencer: Story = { ...scenario(
   {
     name: 'A slide in the sequencer',
     when: 'a person slides the touch strip in the Melodic Sequencer',
@@ -407,4 +408,4 @@ export const ASlideInTheSequencer: Story = scenario(
     check: plays.ASlideInTheSequencer.check,
   },
   scenarioStory(plays.ASlideInTheSequencer),
-);
+), tags: ['browser'] };

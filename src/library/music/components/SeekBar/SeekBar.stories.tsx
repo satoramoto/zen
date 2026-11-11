@@ -18,7 +18,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 const story = fixtureStories<Story>(SeekBar, SeekBarSvelte);
 const tick = () => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-export const Default: Story = story({ args: {} }, {
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const Default: Story = { ...story({ args: {} }, {
   async play({ canvasElement, args }) {
     const slider = within(canvasElement).getByRole('slider');
     const box = slider.getBoundingClientRect();
@@ -52,7 +53,7 @@ export const Default: Story = story({ args: {} }, {
       await expect(slider).toHaveAttribute('aria-valuenow', '20');
     }
   },
-});
+}), tags: ['browser'] };
 export const HostUpdates: Story = { ...fixtureStories<Story>(SeekBarHost, SeekBarHostSvelte)({ args: {} }, {
   async play({ canvasElement }) {
     const slider = within(canvasElement).getByRole('slider');
@@ -66,7 +67,8 @@ export const HostUpdates: Story = { ...fixtureStories<Story>(SeekBarHost, SeekBa
     await fireEvent.pointerUp(slider, { pointerId: 9 });
     await waitFor(() => expect(slider).toHaveAttribute('aria-valuenow', '35'));
   },
-}), render: args => <SeekBarHost {...args} /> };
+}), render: args => <SeekBarHost {...args} />,
+  tags: ['browser'], };
 async function inert({ canvasElement, args }: { canvasElement: HTMLElement; args: typeof meta.args }) {
   const slider = within(canvasElement).getByRole('slider');
   await fireEvent.pointerDown(slider, { pointerId: 1, button: 0 });

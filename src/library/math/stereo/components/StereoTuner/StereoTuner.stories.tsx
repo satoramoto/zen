@@ -5,6 +5,7 @@ import {StereoTuner} from './StereoTuner';
 const meta={title:'Math/Stereo/Components/Stereo Tuner',component:StereoTuner,decorators:[withLibraryTheme],parameters:{layout:'fullscreen'},args:{illusion:'ring'}} satisfies Meta<typeof StereoTuner>;
 export default meta;type Story=StoryObj<typeof meta>;
 export const YourSeat:Story={};
+// Stories tagged browser below draw on a canvas: they play in a real browser, not on zen-stories' virtual DOM.
 export const TuneAndReveal:Story={play:async({canvasElement})=>{
  const c=within(canvasElement),stage=canvasElement.querySelector('[data-period]')!;
  const initial=Number(stage.getAttribute('data-period'));
@@ -22,4 +23,5 @@ export const TuneAndReveal:Story={play:async({canvasElement})=>{
  await userEvent.click(c.getByRole('button',{name:'Return to the target'}));
  await userEvent.click(c.getByRole('button',{name:'Find the cross again'}));
  await expect(c.getByRole('img',{name:'Left eye alignment target'})).toBeInTheDocument();
-}};
+},
+  tags: ['browser'],};

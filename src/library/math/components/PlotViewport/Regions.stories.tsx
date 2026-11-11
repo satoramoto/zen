@@ -4,11 +4,13 @@ import { scenario as makeScenario, type ScenarioSpec } from 'story-spec';
 import { withLibraryTheme } from '../../../storybook';
 import { RegionsHarness } from './Regions.story';
 
+// Stories tagged browser here need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta={title:'Math/Components/PlotViewport/Regions',component:RegionsHarness,decorators:[withLibraryTheme],
   render:(args,context)=><RegionsHarness {...args} renderer={context.globals.renderer}/>,
   parameters:{spec:{capability:'viewport-filled-regions',requirement:'Filled regions share the viewport camera',
     shall:'The viewport SHALL draw caller-supplied filled regions using its point projection and camera, preserving stable region identity through pan and zoom without changing caller geometry.',
-    purpose:'Let applications present and select filled planar regions through the same public viewport camera as points and edges.'}}} satisfies Meta<typeof RegionsHarness>;
+    purpose:'Let applications present and select filled planar regions through the same public viewport camera as points and edges.'}},
+      tags: ['browser'],} satisfies Meta<typeof RegionsHarness>;
 export default meta;
 type Story=StoryObj<typeof meta>;
 const scenario=(spec:ScenarioSpec,base:Story={}):Story=>makeScenario(spec,base) as unknown as Story;

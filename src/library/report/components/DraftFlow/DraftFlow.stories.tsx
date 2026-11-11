@@ -84,6 +84,7 @@ export default meta;
 
 type Story = StoryObj<typeof DraftFlow>;
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /** Stage 1: no working draft. A card per proposal; the long one is clamped with Show all. */
 export const Proposals: Story = {
   play: async ({ canvasElement, args }) => {
@@ -95,6 +96,7 @@ export const Proposals: Story = {
     await userEvent.click(c.getByRole('button', { name: `Use this: ${PROPOSALS[0]!.subject}` }));
     await expect(args.onUse).toHaveBeenCalledWith('warm');
   },
+  tags: ['browser'],
 };
 
 /** Stage 1 with nothing to pick from. */
@@ -145,6 +147,7 @@ export const SaveFails: Story = {
     await expect(c.getByLabelText('Subject')).toHaveValue(`${DRAFT.subject}!`);
     await expect(canvasElement.querySelector('[data-part="proposal"]')).toBeNull();
   },
+  tags: ['browser'],
 };
 
 /** The app echoes each save into `draft` before it resolves; typing on meanwhile keeps every letter. */

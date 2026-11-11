@@ -78,8 +78,9 @@ export const Transport: Story = story(s.Transport, {
   },
 });
 
+// Stories tagged browser below open popovers and dialogs and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /** Selected IDs, names, parameters, power and high pass all remain distinct for the two send slots. */
-export const FXSelection: Story = story(s.FXSelection, {
+export const FXSelection: Story = { ...story(s.FXSelection, {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole('slider', { name: 'FX A Delay Feedback' })).toHaveAttribute('aria-valuenow', '35');
@@ -101,7 +102,7 @@ export const FXSelection: Story = story(s.FXSelection, {
     await waitFor(() => expect(canvas.queryByRole('slider', { name: 'FX A Reverb Decay' })).not.toBeInTheDocument());
     await expect(canvas.getByRole('slider', { name: 'FX A high pass cutoff' })).toBeInTheDocument();
   },
-});
+}), tags: ['browser'] };
 
 /** Every master control maps to its original semantic command, not a generic change callback. */
 export const HostCallbacks: Story = story(s.HostCallbacks, {
@@ -127,7 +128,7 @@ export const HostCallbacks: Story = story(s.HostCallbacks, {
   },
 });
 
-export const EffectsAndPhones: Story = story(s.EffectsAndPhones, {
+export const EffectsAndPhones: Story = { ...story(s.EffectsAndPhones, {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const page = within(canvasElement.ownerDocument.body);
@@ -154,10 +155,10 @@ export const EffectsAndPhones: Story = story(s.EffectsAndPhones, {
     await fireEvent.keyDown(page.getByRole('slider', { name: 'Headphone Cue Master blend' }), { key: 'End' });
     await expect(args.commands.setPhones).toHaveBeenLastCalledWith('phonesMix', 100);
   },
-});
+}), tags: ['browser'] };
 
 /** Missing stereo and nullish optional host readings use precisely the source defaults. */
-export const NullValues: Story = story(s.NullValues, {
+export const NullValues: Story = { ...story(s.NullValues, {
   args: { ...s.NullValues.args, readFrame: fn((): MixerFrame => ({ decks: {}, masterLevel: 0 })) },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -171,7 +172,7 @@ export const NullValues: Story = story(s.NullValues, {
     await expect(page.getByRole('slider', { name: 'Headphone Cue Master blend' })).toHaveAttribute('aria-valuenow', '0');
     await userEvent.keyboard('{Escape}');
   },
-});
+}), tags: ['browser'] };
 
 export const ExternalTransport: Story = story(s.ExternalTransport, {
   play: async ({ canvasElement }) => {
@@ -217,7 +218,7 @@ export const ReadOnlyEffects: Story = story(s.ReadOnlyEffects, {
   },
 });
 
-export const TailsDecaying: Story = story(s.TailsDecaying, {
+export const TailsDecaying: Story = { ...story(s.TailsDecaying, {
   play: async ({ canvasElement }) => {
     const trigger = within(canvasElement).getByRole('button', { name: 'Effects group' });
     await expect(trigger).toHaveAttribute('aria-pressed', 'false');
@@ -228,7 +229,7 @@ export const TailsDecaying: Story = story(s.TailsDecaying, {
     await expect(within(dialog).getByRole('button', { name: 'Clear tails' })).toBeEnabled();
     await userEvent.keyboard('{Escape}');
   },
-});
+}), tags: ['browser'] };
 
 export const NoEffects: Story = story(s.NoEffects, {
   play: async ({ canvasElement, args }) => {

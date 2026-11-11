@@ -35,6 +35,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 const story = fixtureStories<Story>(MacroPads, MacroPadsSvelte);
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * The pair the mockups show: FX A Delay Throw beside Filter / Resonance. Dragging the first pad
  * asks for `fx-a` and the new point, not the one it started from.
@@ -60,6 +61,7 @@ export const Default: Story = {
     await expect(y).toBeCloseTo(0.3, 1);
     await expect(x).not.toBe(0.76);
   },
+  tags: ['browser'],
 };
 
 /** Every state: four pads, one per hue slot, each with its own reach and trail. */

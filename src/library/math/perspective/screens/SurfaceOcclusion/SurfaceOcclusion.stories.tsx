@@ -32,7 +32,8 @@ async function raster(root:HTMLElement){
  return {plain:[...ctx.getImageData(300,180,1,1).data],ink:[...ctx.getImageData(250,200,100,1).data]};
 }
 export const Explore:Story={};
-export const InspectContactFromBothSides=scenario({
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const InspectContactFromBothSides={ ...scenario({
  requirement:'Occlude opaque surfaces and their marks',
  shall:'The projection SHALL optionally render opaque convex planar surfaces with pointwise depth occlusion, mask surface-owned marks with their owners, and honor caller-provided coplanar side relations consistently with camera-aware picking. Transparent wire mode SHALL remain the default.',
  when:'a viewer inspects contacting opaque surfaces from opposite sides',
@@ -55,4 +56,4 @@ export const InspectContactFromBothSides=scenario({
   const visible=await raster(root);
   expect(visible.ink.some((value,i)=>value!==visible.plain[i%4])).toBe(true);
  },
-}) as Story;
+}), tags: ['browser'] } as Story;

@@ -68,11 +68,13 @@ function ThemeHost({ globals }: { globals: Record<string, unknown> }) {
   </div>;
 }
 
+// Stories tagged browser here open popovers and dialogs and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   id: 'music-theme',
   title: 'Music/Screens/Theme editor', decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen', docs: { description: { component: 'Existing Zen ThemeEditor, live Music controls and paused measured waveforms, all wearing one controlled Zen skin. The toolbar chooses the starting pack and facets; edits and legacy facet swaps use normal skin JSON, not an alternate Music theme root. React-only editor harness; Music renderers share the same canvas stores.' } } },
   render: (_args, { globals }) => <ThemeHost globals={globals} />,
+  tags: ['browser'],
 } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;

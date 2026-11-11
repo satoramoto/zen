@@ -8,12 +8,14 @@ import { ContextControls, type ContextControlsProps } from './ContextControls';
 import { powerIconView } from './ContextControls.model';
 import '../mixer.css';
 
+// Stories tagged browser here open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
 const meta = {
   id: 'music-controls-contextcontrols',
   title: 'Music/Components/Context panel', component: ContextControls,
   decorators: [withRenderer, withMusicScope, withLibraryTheme], parameters: { layout: 'centered' },
   args: { label: 'Effects group', pressed: true, onPress: fn(), disabled: false },
   argTypes: { pressed: { control: 'boolean' }, active: { control: 'boolean' }, disabled: { control: 'boolean' } },
+  tags: ['browser'],
 } satisfies Meta<typeof ContextControls>;
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -25,6 +25,7 @@ const sample = treeStory((args: PopupModelProps) => {
   return { tree: h('div', {}, face, popup), handlers: popupHandlers(props) };
 });
 
+// Stories tagged browser below open popovers and dialogs: they play in a real browser, not on zen-stories' virtual DOM.
 /** Mounted is open: dismissal reports a reason; the host decides when to unmount it. */
 export const Default: Story = {
   ...sample,
@@ -41,6 +42,7 @@ export const Default: Story = {
     canvasElement.ownerDocument.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
     await expect(args.onDismiss).toHaveBeenLastCalledWith('pointer');
   },
+  tags: ['browser'],
 };
 export const RememberedAnchor: Story = {
   ...treeStory((props: PopupModelProps) => {

@@ -14,6 +14,7 @@ export const StandingWave: Story = { args: { preset: 'standing' } };
 export const Cancellation: Story = { args: { preset: 'cancellation' } };
 export const Beating: Story = { args: { preset: 'beats' } };
 export const FunctionComposition: Story = { args: { preset: 'composition' } };
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 export const EditRelationships: Story = {
   play: async ({ canvasElement }) => {
     const c = within(canvasElement);
@@ -34,6 +35,7 @@ export const EditRelationships: Story = {
     probe.focus(); await userEvent.keyboard('{ArrowRight}');
     await expect(c.getByLabelText('f at probe')).not.toHaveTextContent('1.050');
   },
+  tags: ['browser'],
 };
 export const KeepLastValidDrawing: Story = {
   play: async ({ canvasElement }) => {
@@ -51,6 +53,7 @@ export const KeepLastValidDrawing: Story = {
     await userEvent.click(c.getByRole('button', { name: 'restore them' }));
     await expect(c.queryByRole('alert')).not.toBeInTheDocument();
   },
+  tags: ['browser'],
 };
 export const AnimateAndCompare: Story = {
   args: { preset: 'standing' },

@@ -4,11 +4,13 @@ import {scenario} from 'story-spec';
 import {withLibraryTheme} from '../../../../storybook';
 import {Interaction,specimenFaces} from './Interaction.story';
 
+// Stories tagged browser here need a laid-out page and measure layout: they play in a real browser, not on zen-stories' virtual DOM.
 const meta={title:'Math/Perspective/Screens/Face Interaction',component:Interaction,decorators:[withLibraryTheme],parameters:{spec:{
  capability:'viewport-face-interaction',requirement:'Stable controlled face selection',
  shall:'Identified faces SHALL retain caller identity across camera changes and drawing order. Selection SHALL be controlled by the caller, with accessible labels and equivalent pointer, touch and keyboard activation. Anonymous faces SHALL remain decorative.',
  purpose:'Let applications identify and select projected faces and control independent camera views without assigning domain meaning to presentation geometry.',
-}}} satisfies Meta<typeof Interaction>;
+}},
+  tags: ['browser'],} satisfies Meta<typeof Interaction>;
 export default meta;type Story=StoryObj<typeof meta>;
 const state=(el:HTMLElement)=>JSON.parse(el.querySelector('[data-state]')!.textContent!);
 const view=(el:HTMLElement)=>within(el).getByRole('group',{name:'Working view'});

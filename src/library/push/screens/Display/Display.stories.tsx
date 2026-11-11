@@ -19,7 +19,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const AColumnIsAnEighth: Story = scenario(
+// Stories tagged browser below measure SVG geometry, measure layout, draw on a canvas, read computed styles and need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const AColumnIsAnEighth: Story = { ...scenario(
   {
     name: 'A column is an eighth',
     when: 'the display is drawn at any size',
@@ -30,9 +31,9 @@ export const AColumnIsAnEighth: Story = scenario(
     check: plays.AColumnIsAnEighth.check,
   },
   scenarioStory(plays.AColumnIsAnEighth),
-);
+), tags: ['browser'] };
 
-export const ScalingKeepsThePixelGrid: Story = scenario(
+export const ScalingKeepsThePixelGrid: Story = { ...scenario(
   {
     name: 'Scaling keeps the pixel grid',
     when: 'the display is drawn at twice its size',
@@ -43,7 +44,7 @@ export const ScalingKeepsThePixelGrid: Story = scenario(
     check: plays.ScalingKeepsThePixelGrid.check,
   },
   scenarioStory(plays.ScalingKeepsThePixelGrid),
-);
+), tags: ['browser'] };
 
 export const AScreenFromJSON: Story = scenario(
   {
@@ -58,7 +59,7 @@ export const AScreenFromJSON: Story = scenario(
   scenarioStory(plays.AScreenFromJSON),
 );
 
-export const TheDisplayAlone: Story = scenario(
+export const TheDisplayAlone: Story = { ...scenario(
   {
     name: 'The display alone',
     when: 'an app draws the display with no surface around it',
@@ -69,7 +70,7 @@ export const TheDisplayAlone: Story = scenario(
     check: plays.TheDisplayAlone.check,
   },
   scenarioStory(plays.TheDisplayAlone),
-);
+), tags: ['browser'] };
 
 export const ATracksButtonWearsItsColour: Story = scenario(
   {
@@ -97,7 +98,7 @@ export const NothingToPress: Story = scenario(
   scenarioStory(plays.NothingToPress),
 );
 
-export const TheSelectedTrack: Story = scenario(
+export const TheSelectedTrack: Story = { ...scenario(
   {
     name: 'The selected track',
     when: 'track 4 is selected',
@@ -108,9 +109,9 @@ export const TheSelectedTrack: Story = scenario(
     check: plays.TheSelectedTrack.check,
   },
   scenarioStory(plays.TheSelectedTrack),
-);
+), tags: ['browser'] };
 
-export const AContinuousParameter: Story = scenario(
+export const AContinuousParameter: Story = { ...scenario(
   {
     name: 'A continuous parameter',
     when: 'a column shows a filter frequency of 20.0 kHz',
@@ -121,7 +122,7 @@ export const AContinuousParameter: Story = scenario(
     check: plays.AContinuousParameter.check,
   },
   scenarioStory(plays.AContinuousParameter),
-);
+), tags: ['browser'] };
 
 export const AChoice: Story = scenario(
   {
@@ -136,7 +137,7 @@ export const AChoice: Story = scenario(
   scenarioStory(plays.AChoice),
 );
 
-export const ABipolarValue: Story = scenario(
+export const ABipolarValue: Story = { ...scenario(
   {
     name: 'A bipolar value',
     when: 'a column shows a pan at centre',
@@ -147,7 +148,7 @@ export const ABipolarValue: Story = scenario(
     check: plays.ABipolarValue.check,
   },
   scenarioStory(plays.ABipolarValue),
-);
+), tags: ['browser'] };
 
 export const TouchAndRelease: Story = scenario(
   {
@@ -162,7 +163,7 @@ export const TouchAndRelease: Story = scenario(
   scenarioStory(plays.TouchAndRelease),
 );
 
-export const AnOscillatorShapeAcrossFourColumns: Story = scenario(
+export const AnOscillatorShapeAcrossFourColumns: Story = { ...scenario(
   {
     name: 'An oscillator shape across four columns',
     when: 'a device\'s bank gives its oscillator drawing columns 2 to 5',
@@ -173,9 +174,9 @@ export const AnOscillatorShapeAcrossFourColumns: Story = scenario(
     check: plays.AnOscillatorShapeAcrossFourColumns.check,
   },
   scenarioStory(plays.AnOscillatorShapeAcrossFourColumns),
-);
+), tags: ['browser'] };
 
-export const ADeviceOnAGreenTrack: Story = scenario(
+export const ADeviceOnAGreenTrack: Story = { ...scenario(
   {
     name: 'A device on a green track',
     when: 'Device View shows a device on a green track',
@@ -186,9 +187,9 @@ export const ADeviceOnAGreenTrack: Story = scenario(
     check: plays.ADeviceOnAGreenTrack.check,
   },
   scenarioStory(plays.ADeviceOnAGreenTrack),
-);
+), tags: ['browser'] };
 
-export const Setup: Story = scenario(
+export const Setup: Story = { ...scenario(
   {
     name: 'Setup',
     when: 'the Setup menu is shown',
@@ -199,9 +200,9 @@ export const Setup: Story = scenario(
     check: plays.Setup.check,
   },
   scenarioStory(plays.Setup),
-);
+), tags: ['browser'] };
 
-export const AMutedDevice: Story = scenario(
+export const AMutedDevice: Story = { ...scenario(
   {
     name: 'A muted device',
     when: 'a device is muted',
@@ -212,9 +213,9 @@ export const AMutedDevice: Story = scenario(
     check: plays.AMutedDevice.check,
   },
   scenarioStory(plays.AMutedDevice),
-);
+), tags: ['browser'] };
 
-export const ChoosingATab: Story = scenario(
+export const ChoosingATab: Story = { ...scenario(
   {
     name: 'Choosing a tab',
     when: 'the Setup menu shows Status and a person presses the lower display button under Audio',
@@ -225,7 +226,7 @@ export const ChoosingATab: Story = scenario(
     check: plays.ChoosingATab.check,
   },
   scenarioStory(plays.ChoosingATab),
-);
+), tags: ['browser'] };
 
 export const ATabWithNews: Story = scenario(
   {
@@ -383,7 +384,7 @@ export const LowBattery: Story = scenario(
   scenarioStory(plays.LowBattery),
 );
 
-export const CountIn: Story = scenario(
+export const CountIn: Story = { ...scenario(
   {
     name: 'Count-in',
     when: 'a one-bar count-in is running',
@@ -394,9 +395,9 @@ export const CountIn: Story = scenario(
     check: plays.CountIn.check,
   },
   scenarioStory(plays.CountIn),
-);
+), tags: ['browser'] };
 
-export const AnArmedTrack: Story = scenario(
+export const AnArmedTrack: Story = { ...scenario(
   {
     name: 'An armed track',
     when: 'track 5 is armed',
@@ -407,9 +408,9 @@ export const AnArmedTrack: Story = scenario(
     check: plays.AnArmedTrack.check,
   },
   scenarioStory(plays.AnArmedTrack),
-);
+), tags: ['browser'] };
 
-export const APlayingClip: Story = scenario(
+export const APlayingClip: Story = { ...scenario(
   {
     name: 'A playing clip',
     when: 'track 2\'s clip is halfway through its loop',
@@ -420,7 +421,7 @@ export const APlayingClip: Story = scenario(
     check: plays.APlayingClip.check,
   },
   scenarioStory(plays.APlayingClip),
-);
+), tags: ['browser'] };
 
 export const ReturnTracks: Story = scenario(
   {
@@ -435,7 +436,7 @@ export const ReturnTracks: Story = scenario(
   scenarioStory(plays.ReturnTracks),
 );
 
-export const NoLevel: Story = scenario(
+export const NoLevel: Story = { ...scenario(
   {
     name: 'No level',
     when: 'the app gives no level for a track\'s meter',
@@ -446,7 +447,7 @@ export const NoLevel: Story = scenario(
     check: plays.NoLevel.check,
   },
   scenarioStory(plays.NoLevel),
-);
+), tags: ['browser'] };
 
 export const NoClip: Story = scenario(
   {

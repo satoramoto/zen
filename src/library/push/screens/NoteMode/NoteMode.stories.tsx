@@ -188,7 +188,8 @@ export const UpAnOctave: Story = scenario(
   scenarioStory(plays.UpAnOctave),
 );
 
-export const BendWhileHoldingAChord: Story = scenario(
+// Stories tagged browser below measure layout: they play in a real browser, not on zen-stories' virtual DOM.
+export const BendWhileHoldingAChord: Story = { ...scenario(
   {
     name: 'Bend while holding a chord',
     when: 'a person holds three pads and slides the strip up in pitch bend',
@@ -199,7 +200,7 @@ export const BendWhileHoldingAChord: Story = scenario(
     check: plays.BendWhileHoldingAChord.check,
   },
   scenarioStory(plays.BendWhileHoldingAChord),
-);
+), tags: ['browser'] };
 
 export const ThreePresses: Story = scenario(
   {

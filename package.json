@@ -89,6 +89,7 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p src/harness/claude-code",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:stories": "node src/harness/stories/cli.mjs",
     "test:music:stories": "node scripts/music-stories.mjs",
     "test:music:visual": "node scripts/music-visual.mjs",
     "test:music:themes": "node scripts/music-theme-switch.mjs",

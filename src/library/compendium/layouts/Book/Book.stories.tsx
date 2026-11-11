@@ -12,6 +12,7 @@ import { bookIndex } from '../../model/book';
 import { validateEntry } from '../../model/validate';
 import { Book } from './Book';
 
+// Stories tagged browser here scroll: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * The interactive textbook: contents down the side, the open chapter as a Document, a pager
  * under it. Two sample books: the Fourier series book, seven chapters each driven by a figure
@@ -25,6 +26,7 @@ const meta = {
   decorators: [withLibraryTheme],
   parameters: { layout: 'fullscreen' },
   args: { book: HARMONIC_BOOK, figures: FIGURES, checkers: CHECKERS, onProgress: fn(), onChapter: fn() },
+  tags: ['browser'],
 } satisfies Meta<typeof Book>;
 export default meta;
 type Story = StoryObj<typeof meta>;

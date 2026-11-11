@@ -41,18 +41,19 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 const story = fixtureStories<Story>(ChordStrip, ChordStripSvelte);
 
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
 /**
  * Bar 3 of a ii–V–I: G7 is now (lit, ringed, its notes under the name), Cmaj7 is next (a strong
  * dashed edge) and selected by the editor (the accent mark), and the three mutation actions sit
  * under the strip.
  */
-export const Default: Story = story(s.Default, {
+export const Default: Story = { ...story(s.Default, {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: /^Dm7$/ }));
     await expect(args.onFollow).toHaveBeenLastCalledWith('dm7');
   },
-});
+}), tags: ['browser'] };
 
 /** One row with every state at once: Am7 now, Dm7 next, Cmaj7 selected, the rest idle. */
 export const EveryState: Story = story(s.EveryState);

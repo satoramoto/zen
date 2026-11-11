@@ -31,12 +31,13 @@ export const WithPeak: Story = story(s.WithPeak, { play: async ({ canvasElement 
   await expect(meter.querySelector('.wdg-meter-hold')).toBeInTheDocument();
   await expect(meter.closest<HTMLElement>('.wdg-meter')!.style.getPropertyValue('--wdg-meter-peak')).toBe('0.83');
 } });
-export const Vertical: Story = story(s.Vertical, { play: async ({ canvasElement }) => {
+// Stories tagged browser below need a laid-out page: they play in a real browser, not on zen-stories' virtual DOM.
+export const Vertical: Story = { ...story(s.Vertical, { play: async ({ canvasElement }) => {
   const meter = within(canvasElement).getByRole('meter');
   await expect(meter).toHaveClass('wdg-meter-vertical');
   await expect(meter.getBoundingClientRect().height).toBe(60);
   await expect(meter.getBoundingClientRect().width).toBe(6);
-} });
+} }), tags: ['browser'] };
 export const Readout: Story = story(s.Readout, { play: async ({ canvasElement }) => {
   await expect(within(canvasElement).getByText('−4.2 dB')).toHaveClass('wdg-readout');
 } });
