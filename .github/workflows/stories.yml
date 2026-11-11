@@ -38,8 +38,12 @@ on:
         description: More tries for a story that fails in the browser on main; one that then passes is reported flaky (zen-stories --retries, zen 6886cb5 or later)
         type: number
         default: 0
+      shards:
+        description: Runners the browser run on main is split across, each playing an even share (zen-stories --shard)
+        type: number
+        default: 1
       timeout-minutes:
-        description: How long the browser run on main may take
+        description: How long the browser run on main may take, per runner
         type: number
         default: 60
       setup:
@@ -72,8 +76,22 @@ jobs:
       - name: Every story on a virtual DOM
         run: ${{ inputs.stories }} --no-browser --workers ${{ inputs.workers }}
 
-  browser:
+  shards:
     if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    outputs:
+      list: ${{ steps.list.outputs.list }}
+    steps:
+      - id: list
+        run: echo "list=[$(seq -s, 1 ${{ inputs.shards }})]" >> "$GITHUB_OUTPUT"
+
+  browser:
+    needs: shards
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.shards.outputs.list) }}
     runs-on: ubuntu-24.04
     timeout-minutes: ${{ inputs.timeout-minutes }}
     defaults:
@@ -103,4 +121,4 @@ jobs:
           cat "$RUNNER_TEMP/storybook.log"; exit 1
       - name: Every story in the headless shell
         # An option goes on the command only when it is asked for: a repo's zen may predate it.
-        run: ${{ inputs.stories }} --browser-all --url http://127.0.0.1:6006 --workers ${{ inputs.workers }}${{ inputs.retries > 0 && format(' --retries {0}', inputs.retries) || '' }}
+        run: ${{ inputs.stories }} --browser-all --url http://127.0.0.1:6006 --workers ${{ inputs.workers }}${{ inputs.retries > 0 && format(' --retries {0}', inputs.retries) || '' }}${{ inputs.shards > 1 && format(' --shard {0}/{1}', matrix.shard, inputs.shards) || '' }}

@@ -7,7 +7,9 @@ on:
 
 concurrency:
   group: checks-${{ github.ref }}
-  cancel-in-progress: true
+  # A newer push to a pull request replaces its run; on main every run finishes, or the stories
+  # played in the browser there would rarely be.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   # `checks` is the required status on main, so it always runs and reports.
@@ -67,7 +69,9 @@ jobs:
     uses: ./.github/workflows/stories.yml
     with:
       stories: npm run test:stories --
-      # 1,800 stories: four at a time on the runner's four cores, and room to finish.
-      workers: 4
-      timeout-minutes: 90
+      # 1,800 stories in the browser: four runners of two each (four on one runner's cores was
+      # slower, and stretched the timing of double presses), about a quarter of an hour.
+      workers: 2
+      shards: 4
+      timeout-minutes: 45
       retries: 1
