@@ -44,7 +44,8 @@ async function play(browser, viewport, base, story, timeout) {
   await page.addInitScript(observe);
   const started = Date.now();
   try {
-    await page.goto(`${base}/iframe.html?id=${story.id}&viewMode=story`, { waitUntil: 'domcontentloaded' });
+    // A dev server's first page can take longer than Playwright's 30 s while it prepares modules.
+    await page.goto(`${base}/iframe.html?id=${story.id}&viewMode=story`, { waitUntil: 'domcontentloaded', timeout });
     await page.waitForFunction((id) => {
       const ev = window.__STORY_RUN__?.events ?? [];
       return ev.some((e) => e.type === 'storyFinished' && e.args[0]?.storyId === id)
