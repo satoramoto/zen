@@ -1,7 +1,7 @@
 /**
  * The tier rules (docs/tiers.md) as a scanner: it counts each breach per folder so
  * `tiers.test.ts` can hold every count to its recorded baseline (`tiers.baseline.json`).
- * Pure node:fs and string work, no React.
+ * Pure string work over a `FileSource`, no React and no node: a test reads the disk through one.
  *
  * **What is scanned.** `src/library/{components,music,graph,layouts,yahaha,primitives,report,push}`: CSS, TSX, TS
  * and Svelte files, except stories, tests and story/test data (`*.fixtures.ts`, `*.stories.svelte.ts`,
@@ -48,8 +48,30 @@
  * `fontVariantNumeric` key inside `style={{ … }}`. Setting a `Text` knob (`--text-size`) is not
  * counted.
  */
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+/** A path's folder (`a/b/c.css` → `a/b`; `c.css` → `.`), as node's `dirname` gives it. */
+const dirname = (path: string) => (path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '.');
+
+/**
+ * Where the scanners read files: `files(dir)` is every file under `dir` at any depth, relative to
+ * it, with `/` between folders (none when `dir` is missing); `read(path)` is one file. Paths are
+ * relative to the root the source was made for. `diskFiles` (`checks.ts`) reads a folder in node;
+ * `memoryFiles` holds files given as text.
+ */
+export interface FileSource {
+  files(dir: string): string[];
+  read(path: string): string;
+}
+
+/** Files given as text, by path: a source for a check that has no disk (a story's play). */
+export function memoryFiles(files: Record<string, string>): FileSource {
+  return {
+    files: (dir) => Object.keys(files).filter((p) => p.startsWith(`${dir}/`)).map((p) => p.slice(dir.length + 1)),
+    read: (path) => {
+      if (!(path in files)) throw new Error(`no file ${path}`);
+      return files[path];
+    },
+  };
+}
 
 export type RuleId = 'pixels' | 'margins' | 'painting' | 'knobs' | 'type';
 
@@ -634,19 +656,20 @@ const SKIP = /\.(?:stories|test|fixtures)\.(?:svelte\.)?tsx?$|\.story\.svelte$/;
 const excluded = (rel: string) => SKIP.test(rel);
 
 /** Every finding under `root` (the `src/library` directory), with every scanned folder. */
-export function scanLibrary(root: string): LibraryScan {
+export function scanLibrary(source: FileSource, folders: readonly string[] = TOP_FOLDERS, as: Record<string, string> = {}): LibraryScan {
   const files: string[] = [];
-  for (const t of TOP_FOLDERS) {
-    const base = join(root, t);
-    if (!existsSync(base)) continue;
-    for (const f of readdirSync(base, { recursive: true, encoding: 'utf8' })) {
-      const rel = `${t}/${f.split('\\').join('/')}`;
+  // A folder may be read under another top folder's name (`as`), to take that folder's rules.
+  const real = new Map<string, string>();
+  for (const t of folders) {
+    for (const f of source.files(t)) {
+      const rel = `${as[t] ?? t}/${f}`;
       if (!/\.(?:css|tsx?|svelte)$/.test(rel) || /\.d\.ts$/.test(rel) || excluded(rel)) continue;
-      if (statSync(join(root, rel)).isFile()) files.push(rel);
+      files.push(rel);
+      real.set(rel, `${t}/${f}`);
     }
   }
   files.sort();
-  const read = (rel: string) => readFileSync(join(root, rel), 'utf8');
+  const read = (rel: string) => source.read(real.get(rel) ?? rel);
   // Knobs listed per directory, from its TSX doc comments; undefined when it has no TSX.
   const knobsByDir = new Map<string, string[] | undefined>();
   for (const rel of files) {
@@ -738,21 +761,19 @@ export interface Adoption {
 }
 
 /** How many components render the primitives: a folder counts when any scanned TSX in it does. */
-export function adoption(root: string): Adoption {
+export function adoption(source: FileSource): Adoption {
   const components = new Set<string>();
   const text = new Set<string>();
   const surface = new Set<string>();
   for (const t of ADOPTION_TOPS) {
-    const base = join(root, t);
-    if (!existsSync(base)) continue;
-    for (const f of readdirSync(base, { recursive: true, encoding: 'utf8' })) {
-      const rel = `${t}/${f.split('\\').join('/')}`;
+    for (const f of source.files(t)) {
+      const rel = `${t}/${f}`;
       if (!rel.endsWith('.tsx') || excluded(rel)) continue;
       const folder = folderOf(rel);
       // A tier folder (`components`, `graph/components`) holds widgets; it isn't one.
       if (!/^[A-Z]/.test(folder.split('/').at(-1)!)) continue;
       components.add(folder);
-      const src = stripTsComments(readFileSync(join(root, rel), 'utf8'));
+      const src = stripTsComments(source.read(rel));
       if (/<Text\b/.test(src)) text.add(folder);
       if (/<Surface\b/.test(src)) surface.add(folder);
     }

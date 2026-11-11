@@ -4,9 +4,7 @@
 // `view.baseline.json` by `bindings-only.test.ts`: a count may go down, never up. Markup written
 // without tags counts too: `createElement(` and `h(` calls (a model file, `*.model.ts`, is never a
 // binding, so the tree's `h` is free there) and Svelte's `{@html …}`.
-import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
-import { stripTsComments } from '../../tiers';
+import { stripTsComments, type FileSource } from '../../tiers';
 
 /** The folders whose renderers are held to the rule, under `src/library`. */
 export const BINDING_FOLDERS = ['primitives', 'components', 'music', 'layouts', 'yahaha', 'push'] as const;
@@ -44,16 +42,14 @@ export function markupCount(file: string, src: string): number {
   return count(code, JSX_TAG) + count(code, BUILD_CALL);
 }
 
-/** Every binding file under `root` (`src/library`) with markup besides `<Tree`, and its count. */
-export function scanBindings(root: string): Record<string, number> {
+/** Every binding file under `root`'s `folders` (zen's: `src/library`'s binding folders) with markup besides `<Tree`, and its count. */
+export function scanBindings(source: FileSource, folders: readonly string[] = BINDING_FOLDERS): Record<string, number> {
   const counts: Record<string, number> = {};
-  for (const folder of BINDING_FOLDERS) {
-    const base = join(root, folder);
-    if (!existsSync(base)) continue;
-    for (const f of readdirSync(base, { recursive: true, encoding: 'utf8' })) {
-      const rel = `${folder}/${f.split('\\').join('/')}`;
-      if (!/\.(?:tsx|svelte)$/.test(rel) || SKIP.test(rel) || !statSync(join(root, rel)).isFile()) continue;
-      const n = markupCount(rel, readFileSync(join(root, rel), 'utf8'));
+  for (const folder of folders) {
+    for (const f of source.files(folder)) {
+      const rel = `${folder}/${f}`;
+      if (!/\.(?:tsx|svelte)$/.test(rel) || SKIP.test(rel)) continue;
+      const n = markupCount(rel, source.read(rel));
       if (n > 0) counts[rel] = n;
     }
   }

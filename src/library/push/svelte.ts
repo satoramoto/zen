@@ -1,6 +1,7 @@
 // The Push area in Svelte: the same models and stores as `./index`, drawn by Svelte's Tree. The
 // package's Svelte entry exposes it as the `Push` namespace. The device model is framework-free
 // and comes with it.
+import './registry.svelte';
 import type { Component } from 'svelte';
 import SurfaceBinding from './layouts/Surface/Surface.svelte';
 import DisplayBinding from './layouts/Display/Display.svelte';

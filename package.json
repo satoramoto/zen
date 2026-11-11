@@ -27,6 +27,11 @@
       "types": "./lib/storybook.d.ts",
       "import": "./lib/storybook.js"
     },
+    "./storybook/renderers": {
+      "zen-source": "./src/library/storybook-renderers.tsx",
+      "types": "./lib/storybook-renderers.d.ts",
+      "import": "./lib/storybook-renderers.js"
+    },
     "./svelte": {
       "zen-source": "./src/library/svelte.ts",
       "types": "./lib/svelte.d.ts",
@@ -36,6 +41,26 @@
       "zen-source": "./src/library/themes.ts",
       "types": "./lib/themes.d.ts",
       "import": "./lib/themes.js"
+    },
+    "./view": {
+      "zen-source": "./src/library/view.ts",
+      "types": "./lib/view.d.ts",
+      "import": "./lib/view.js"
+    },
+    "./view/react": {
+      "zen-source": "./src/library/view-react.ts",
+      "types": "./lib/view-react.d.ts",
+      "import": "./lib/view-react.js"
+    },
+    "./view/svelte": {
+      "zen-source": "./src/library/view-svelte.ts",
+      "types": "./lib/view-svelte.d.ts",
+      "import": "./lib/view-svelte.js"
+    },
+    "./checks": {
+      "zen-source": "./src/library/checks.ts",
+      "types": "./lib/checks.d.ts",
+      "import": "./lib/checks.js"
     },
     "./compendium": {
       "zen-source": "./src/library/compendium/index.ts",

@@ -47,7 +47,7 @@ export function mountNode(element: Element, node: Node, context: MountContext): 
   const bindAll = () => {
     bound = (current.bind ?? []).map(([name, params]) => {
       const store = ctx.stores[name];
-      if (!store) throw new Error(`view: no store named "${name}" (register it in src/library/foundation/view/stores.ts)`);
+      if (!store) throw new Error(`view: no store named "${name}" (zen's are in src/library/foundation/view/stores.ts; an app adds its own with registerStores)`);
       return { name, params: JSON.stringify(params), targets: targetsOf(params, ctx.handlers), binding: store(element as HTMLElement, params, handler) ?? {} };
     });
   };

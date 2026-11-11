@@ -1,5 +1,8 @@
 import type { Preview } from '@storybook/react-vite';
 import './preview.css';
+// The Push area registers its parts and stores with the view tree when loaded; its stories draw them by name.
+import '../src/library/push/registry.react';
+import '../src/library/push/registry.svelte';
 import { libraryGlobalTypes, libraryInitialGlobals } from '../src/library/storybook';
 import { rendererGlobalTypes, rendererInitialGlobals } from '../src/library/storybook.globals';
 // The Claude Code harness: the global `h`/`Fragment` its kit and sample mod compile against, its

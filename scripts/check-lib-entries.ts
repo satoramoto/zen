@@ -7,7 +7,9 @@ import { dirname, join, relative, resolve } from 'node:path';
 const LIB = resolve('lib');
 const ENTRIES = [
   { file: 'svelte.js', frameworks: /^react(?:-dom)?(?:\/.*)?$/ },
-  ...['themes.js', 'compendium-model.js', 'math-trig-model.js', 'math-expression.js', 'push-model.js'].map((file) => ({
+  { file: 'view-svelte.js', frameworks: /^react(?:-dom)?(?:\/.*)?$/ },
+  { file: 'view-react.js', frameworks: /^svelte(?:\/.*)?$/ },
+  ...['themes.js', 'view.js', 'checks.js', 'compendium-model.js', 'math-trig-model.js', 'math-expression.js', 'push-model.js'].map((file) => ({
     file, frameworks: /^(?:react(?:-dom)?|svelte|storybook|@storybook\/[^/]+)(?:\/.*)?$/,
   })),
 ];

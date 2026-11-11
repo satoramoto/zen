@@ -1,4 +1,4 @@
-// The Push area's stores by name, for the view tree's store registry (`foundation/view/stores.ts`).
+// The Push area's stores by name, registered with the view tree's store registry by `registry.react.ts` and `registry.svelte.ts`.
 import { keyed } from '../foundation/view/stores';
 import { bindSurface } from './layouts/Surface/surfaceInput';
 import { bindLifetime } from './layouts/Device/lifetime';

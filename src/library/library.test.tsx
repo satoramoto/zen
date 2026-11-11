@@ -8,6 +8,7 @@ import { palettes } from './foundation/themes/palettes';
 import { materials } from './foundation/themes/materials';
 import { ThemeScope, resolveTheme } from './theme';
 import { Region, Screen } from './layouts';
+import { checkContract } from './checks';
 
 // jsdom gives import.meta.url a non-file scheme; tests run from the repo root.
 const dir = join(process.cwd(), 'src/library');
@@ -70,23 +71,9 @@ const PORT_VOCABULARY = new Set([
   'music/theme.css',
 ]);
 
-/** What a component source reads or writes outside the contract. */
-const DECLARED = new Set<string>();
-for (const file of COMPONENT_SOURCES) for (const m of read(file).matchAll(/(--[a-z0-9-]+)\s*:/g)) DECLARED.add(m[1]);
-function contractProblems(file: string): string[] {
-  const problems: string[] = [];
-  for (const m of read(file).matchAll(/var\((--[a-z0-9-]+)/g)) {
-    if (!CONTRACT.has(m[1]) && !DECLARED.has(m[1])) problems.push(`${file} reads ${m[1]}`);
-  }
-  const src = read(file).replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');
-  if (/#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/.test(src)) problems.push(`${file} has a colour literal`);
-  // `0` (no rounding) and `inherit` aren't radii a theme chooses.
-  if (/border-radius:(?!\s*(var\(|0(px)?\s*[;}]|inherit\s*[;}]))/.test(src)) problems.push(`${file} has a literal radius`);
-  // The build rewrites light-dark() into variables only a literal color-scheme sets; the
-  // library's scheme comes from var(--scheme), so it renders transparent.
-  if (/\blight-dark\(/.test(src)) problems.push(`${file} uses light-dark()`);
-  return problems;
-}
+/** What a component source reads or writes outside the contract (`checks.ts`, run on zen's own sources). */
+const contract = checkContract(dir, { files: COMPONENT_SOURCES });
+const contractProblems = (file: string): string[] => contract.filter((f) => f.file === file).map((f) => f.message);
 /** Each mode of a palette, named for messages. */
 const schemes = (p: Palette): [string, Scheme][] => MODES.map((mode) => [`${p.id} ${mode}`, p[mode]]);
 

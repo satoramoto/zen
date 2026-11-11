@@ -10,6 +10,8 @@ export { palettes } from './foundation/themes/palettes';
 export { faces } from './foundation/themes/faces';
 export { scales } from './foundation/themes/scales';
 export { materials } from './foundation/themes/materials';
+/** The Push 3's lamp colour table (an index to a colour, set as `--push-lamp-N`) and its shades. */
+export { LAMPS, LAMP_NEUTRAL, LAMP_SHADES, LAMP_SHADE_RULES, isLampIndex, lampColour, lampVar, lampVars, lampShadeCss, lampShadeHex, lampLuminance, type LampShade } from './foundation/themes/lamps';
 export {
   toCssVars,
   LAYERS,

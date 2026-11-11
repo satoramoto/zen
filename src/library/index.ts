@@ -67,6 +67,8 @@ export * from './shader';
 // The theme editor (docs/theme-editor.md): skins (a pack as portable JSON) and their helpers,
 // SkinProvider/SkinScope to wear one, ThemePicker, ThemeEditor and ThemeSettings to change it.
 export * from './components/theme-editor';
+/** A pack's facets laid out for reading: its palette, type, shape and source rules. */
+export { ThemeInspector } from './screens/ThemeInspector/ThemeInspector';
 
 // The research report (docs/research-report.md): a plain-JSON market research report and the document that
 // renders it (Report, Brief, Summary, Segments, Findings, LeadTable, Sources).
