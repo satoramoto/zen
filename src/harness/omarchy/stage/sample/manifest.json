@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "zen.sample",
+  "name": "Stage sample",
+  "version": "0.1.0",
+  "author": "satoramoto",
+  "description": "The Omarchy stage's own sample: zen's Lab view in Omarchy's KeyboardPanel, and two commands.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {"barWidget": "Panel.qml"},
+  "barWidget": {
+    "displayName": "Stage sample",
+    "description": "The stage's sample plugin",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "left",
+    "defaults": {},
+    "schema": []
+  }
+}

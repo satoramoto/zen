@@ -1,0 +1,3 @@
+module qs.stage.fakes.Polkit
+PolkitAgent 1.0 PolkitAgent.qml
+AuthFlow 1.0 AuthFlow.qml

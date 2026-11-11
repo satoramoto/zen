@@ -1,0 +1,8 @@
+module qs.stage.fakes.Pipewire
+singleton Pipewire 1.0 Pipewire.qml
+singleton PwNodeType 1.0 PwNodeType.qml
+PwNode 1.0 PwNode.qml
+PwNodeAudio 1.0 PwNodeAudio.qml
+PwObjectTracker 1.0 PwObjectTracker.qml
+PwNodePeakMonitor 1.0 PwNodePeakMonitor.qml
+PwNodeLinkTracker 1.0 PwNodeLinkTracker.qml

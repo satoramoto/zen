@@ -1,5 +1,167 @@
 # Omarchy plugin framework
 
+Two ways to see an Omarchy plugin in Storybook:
+
+- **The stage** (`src/harness/omarchy/stage/`): any plugin, as written, drawn by
+  real Qt. It runs the plugin's own QML with Omarchy's installed kit in a
+  headless, sandboxed Quickshell. The canvas shows the frames Qt draws, and plays
+  and the viewer drive it with real Qt input. Use it for every plugin story.
+- **The portable kit** (below): a view vocabulary that one module draws both in
+  the browser and natively. It also has a browser copy of Omarchy's controls.
+
+## The stage
+
+```
+story ── <OmarchyStage plugin state/> ── HTTP /__omarchy-stage ── Session (Node)
+                                                               │
+             bwrap: read-only /, no network, own pids, /run/user and /run/dbus hidden
+                 dbus-run-session ── quickshell (QT_QPA_PLATFORM=offscreen)
+                     shell.qml: screen window, bar strip, PluginBarApi, TestCase
+                     staged copy: Omarchy's Commons/Ui/services + the plugin
+                     PATH: fakes ─► fake-command.mjs ─► broker socket ─► fixture
+```
+
+**Faithful where it counts.**
+- The plugin's QML and Omarchy's kit run unmodified, on Qt's software renderer,
+  in the person's current theme and fonts. The stage copies the theme files and
+  reads Hyprland's rounding and gaps once, read-only.
+- Only the window layer is stood in for, because headless Qt can't create
+  layer-shell surfaces:
+  - In the staged copy, `PanelWindow`, `FloatingWindow` and `PopupWindow` become
+    `StagePanelWindow`, `StageFloatingWindow` and `StagePopupWindow`.
+  - `WlrLayershell.x:` becomes `wlr_x:`.
+  - `item.QsWindow.window` becomes `Stage.windowOf(item)`.
+
+  Omarchy's real KeyboardPanel, PopupCard and OverlayWindow run on those
+  stand-ins.
+- The widget is hosted like `Bar.qml` hosts one. It gets Omarchy's own
+  `PluginBarApi` as `bar`, plus `moduleName`, `settings` and `fixedEdge`.
+- Services are created with no visual parent and handed `omarchyPath`, `shell`
+  and `manifest`.
+- Plugins are staged outside the shell's config root and loaded by `file://`
+  URL, as the shell loads `~/.config/omarchy/plugins`. Inside the root,
+  Quickshell's `qs:` scheme breaks a plugin's imports of its sibling files.
+
+**Isolated from the machine.** Each session runs in `bwrap`:
+- `/` is read-only.
+- Only the session folder (`~/.cache/omarchy-stage/sessions/<id>`) and its
+  runtime folder (`/tmp/oqs-*`, sockets only) are writable.
+- `/tmp` is private.
+- `/run/user` and `/run/dbus` are hidden: no Wayland, PipeWire, session bus or
+  1Password socket.
+- There is no network, and the session has its own pid namespace.
+- `dbus-run-session` gives it a private bus.
+
+`PATH` is the session's fakes plus a short list of harmless tools. Every command
+that could reach the machine (`GUARDED` in `session.mjs`: hyprctl, omarchy,
+wpctl, systemctl, python, op, …) is faked:
+- A fixture answers it.
+- Or the stage answers it: Omarchy's own `hyprctl getoption` and `notify-send`.
+- Or it fails with 127, and the log shows it as unanswered.
+
+An absolute `/usr/bin/x` in the plugin becomes `x`. Quickshell's UPower, PipeWire,
+MPRIS, Polkit and Hyprland modules become fakes under `qml/stage/fakes/<Name>/`,
+driven by the fixture.
+
+**Sessions end.** A session ends when:
+- the story unmounts or its page hides;
+- nothing has polled it for 90 seconds;
+- the server stops.
+
+Its process group is killed and both folders are removed. `bwrap
+--die-with-parent` covers a killed server, and the next server sweeps the folders
+it left.
+
+### Using it
+
+In a Storybook's `.storybook/main.ts`:
+
+```ts
+import { omarchyStage } from '@satoramoto/zen/harness/omarchy/stage/server.mjs';
+config.plugins.push(omarchyStage({ plugins }));   // an object, or a function read per request
+```
+
+A registry entry (`PluginEntry` in `server.d.mts`) names the plugin's folder:
+
+```js
+'satoramoto.p5a': {
+  source: '/path/to/plugin',              // holds manifest.json
+  fixture: '/path/to/fixture.mjs',        // default export: (state, session) => Fixture
+  prepare(dir, session) { … },            // edit the staged copy (fill placeholders)
+  roles: ['barWidget'],                   // entry points to load; all by default
+}
+```
+
+A story:
+
+```tsx
+import { OmarchyStage, stageOf } from '@satoramoto/zen/harness/omarchy/stage/index.ts';
+export const Open = {
+  args: { plugin: 'satoramoto.p5a', state: { personas: [...] }, width: 620, height: 880 },
+  play: async ({ canvasElement }) => {
+    const stage = await stageOf(canvasElement);
+    await stage.click('p5a');               // exact visible text; '#name' for an objectName
+    await stage.waitForText('Personas');
+  },
+};
+```
+
+Component props:
+- `plugin` and `state`.
+- `roles` and `settings`.
+- `width`, `height` and `scale` (device pixels per pixel).
+- `theme`: an Omarchy theme by name, or `current`.
+- `animations`: off by default, so frames settle at once.
+
+The client (`client.ts`) reads and acts on the screen:
+
+| Call | Does |
+|---|---|
+| `click(target, {button, at, modifiers, double, timeout})` | moves the pointer there and clicks at the target's centre; waits until it is shown and enabled |
+| `type(target, text, {append})` | clicks the field, selects all unless `append`, types key by key |
+| `press(key, {modifiers})` | Escape, Enter, Tab, Backtab, Up, Down, …, or a character |
+| `hover(target)`, `pointer(kind, x, y, …)`, `key(kind, key)` | raw input |
+| `texts()`, `strings()`, `find(target)`, `inspect(target, props)`, `focused()` | what Qt shows |
+| `waitForText(match)`, `waitForNoText(match)` | wait for a text, or for it to go |
+| `calls(name)`, `waitForCall(name, test)`, `reports(kind)` | what the plugin ran, and what fakes were asked |
+| `fixture(op, data)`, `ipc(target, fn, …args)`, `shortcut(name)` | change the world; call the plugin's IPC; press a GlobalShortcut |
+| `settle()` | wait until frames stop changing |
+
+A target is:
+- exact text;
+- `#objectName`;
+- or `{ text | textContains | name | placeholder, index, within }`.
+
+Matching is by what is *shown*. Anything invisible, transparent, clipped or off
+screen doesn't count. When several things match, the call fails until you give an
+`index` or a `within`.
+
+A fixture module (`Fixture` in `session.d.mts`) returns:
+
+| Field | What it gives |
+|---|---|
+| `commands` | `{ name(call, session) }`, answering `{ stdout, stderr, code, delay }` |
+| ↳ `stream` | an answer that writes lines over time |
+| ↳ `exec` | runs the real program inside the sandbox; what it prints lands in the call log |
+| `services` | the fakes' first state, by service |
+| `ops` | for `stage.fixture()` |
+| `serviceCall` | hears what a fake was asked to do |
+| `overlays` | files laid read-only over the sandbox, such as an `/etc/passwd` |
+
+Push service changes with `session.setServices({ upower: … })`.
+
+Run plays headless against a running Storybook:
+
+```sh
+node src/harness/omarchy/stage/play-stories.mjs --url http://127.0.0.1:6010 omarchy-lab-on-qt
+```
+
+It needs `quickshell`, `bwrap`, `dbus-run-session`, Omarchy's shell kit, and
+Playwright with a system Chromium. A story whose plugin or tools are missing
+shows why, and its play fails.
+
+## The portable kit
+
 One path from a fixture-driven Storybook UI to a native Omarchy plugin. This is
 an Omarchy vocabulary, not a port of Claude Code's inspector or the music kit.
 

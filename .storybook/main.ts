@@ -4,6 +4,8 @@ import { transformWithOxc } from 'vite';
 import type { Plugin } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { sharedAliases } from '../vite.aliases.ts';
+import { omarchyStage } from '../src/harness/omarchy/stage/server.mjs';
+import { sample } from '../src/harness/omarchy/stage/sample/registry.mjs';
 
 /** The Claude Code harness's engine-side TSX: JSX against the global `h` and `Fragment`, as the engine compiles it, never React's runtime. */
 const ENGINE_JSX = /\/src\/harness\/claude-code\/(kit|sample)\/.*\.tsx$/;
@@ -37,7 +39,8 @@ const config: StorybookConfig = {
   },
   viteFinal: async (config) => {
     // Svelte's plugin too: the Renderer toolbar draws view-tree components with the Svelte `Tree`.
-    config.plugins = [engineJsx(), ...(config.plugins ?? []), svelte()];
+    // The Omarchy stage runs its sample plugin in headless Quickshell, for the Lab's stories on Qt.
+    config.plugins = [engineJsx(), ...(config.plugins ?? []), svelte(), omarchyStage({ plugins: { ...sample } })];
     config.resolve ??= {};
     // The harness's sample mod imports its atoms from 'claude-code', as a mod does: here, the bench's stand-in engine.
     const existing = config.resolve.alias;
