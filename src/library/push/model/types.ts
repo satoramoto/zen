@@ -605,6 +605,8 @@ export interface TraceCell {
   type: 'trace';
   /** Drawn behind the parameters of the columns it spans. */
   under?: boolean;
+  /** Greyed: what it belongs to is off. */
+  dim?: boolean;
   drawing: Drawing;
   colour?: number | LampMeaning;
 }

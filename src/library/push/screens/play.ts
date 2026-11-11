@@ -201,3 +201,17 @@ export function rgbOf(colour: string): [number, number, number] {
 }
 /** The colour an element is filled with. */
 export const fillOf = (el: Element) => rgbOf(getComputedStyle(el).backgroundColor);
+
+/** The words in the top or bottom row's eight cells. */
+export const rowTexts = (canvas: HTMLElement, row: 'top' | 'bottom'): string[] => [1, 2, 3, 4, 5, 6, 7, 8].map((c) => (tab(canvas, row, c)?.textContent ?? '').trim());
+/** The words of every body cell, by its first column. */
+export const bodyTexts = (canvas: HTMLElement): Record<number, string> => Object.fromEntries([...display(canvas).querySelectorAll<HTMLElement>('.push-display__cell')].map((el) => [Number(el.dataset.col), (el.textContent ?? '').replace(/\s+/g, ' ').trim()]));
+/** The columns that have a body cell. */
+export const columns = (canvas: HTMLElement): number[] => [...display(canvas).querySelectorAll<HTMLElement>('.push-display__cell')].map((el) => Number(el.dataset.col)).sort((a, b) => a - b);
+/** Hold a control with a pointer for as long as `during` takes. */
+export async function holdDown(canvas: HTMLElement, id: string, during: () => Promise<void>, before = 0): Promise<void> {
+  const touch = await down(canvas, id);
+  if (before) await wait(before);
+  await during();
+  await touch.up();
+}

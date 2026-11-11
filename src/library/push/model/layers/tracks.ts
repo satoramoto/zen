@@ -258,7 +258,7 @@ export const tracks: Layer = {
         return true;
       }
       const items = rowItems(state, set);
-      const already = items.indexOf(items.find((i) => i === item)!) === selectedAt(items, state, set);
+      const already = rowStart(state, set) + indexOf(target.id, 'lower')! - 1 === selectedAt(items, state, set);
       if (already && !item.pad && !item.chain) {
         // The selected track again: a group folds, a Rack track unfolds to its chains or pads.
         const rack = instrumentOf(item.track);

@@ -124,6 +124,16 @@ const APPLY: Record<string, Apply> = {
     const t = track(s, i.track);
     if (t) t.frozen = false;
   },
+  'map-macro': (s, i) => {
+    const rack = tracksOf(s).flatMap((t) => everyDevice(t.devices)).find((x) => x.id === i.device);
+    const macro = rack?.macros?.[Number(i.macro) - 1];
+    const p = everyParameter(s).find((x) => x.id === i.parameter);
+    if (!macro || !p) return;
+    p.macro = Number(i.macro);
+    macro.mappings = (macro.mappings ?? 0) + 1;
+    // A macro mapped to one thing takes its name; mapped to two, it reads its default name.
+    macro.name = macro.mappings === 1 ? p.name : `Macro ${i.macro}`;
+  },
   'set-monitor': (s, i) => {
     const t = track(s, i.track);
     if (t?.routing) t.routing.monitor = i.monitor as 'in' | 'auto' | 'off';

@@ -67,7 +67,8 @@ const shownBank = (state: PushState, device: Device): Bank | undefined => banksO
 const ICON: Partial<Record<Device['kind'], RowCell['icon']>> = { 'instrument-rack': 'rack', 'audio-effect-rack': 'rack', 'midi-effect-rack': 'rack', 'drum-rack': 'drum-rack' };
 
 /** A drawing as display cells: a line behind the columns it spans, a bar for gain reduction, a centred arc and a note for the tuner. */
-function drawingCells(d: Drawing, colour: number): BodyCell[] {
+function drawingCells(d: Drawing, colour: number, off = false): BodyCell[] {
+  if (off) return drawingCells(d, colour).map((c) => (c.type === 'trace' ? { ...c, dim: true } : { ...c, disabled: true }));
   if (d.kind === 'gain-reduction') return [{ type: 'param', col: d.col, span: d.span, name: 'Gain Reduction', value: d.label ?? '', fraction: d.value ?? 0, style: 'bar', colour }];
   if (d.kind === 'tuner') return [{ type: 'param', col: d.col, span: d.span, name: 'Tuner', value: d.label ?? '', fraction: clamp(((d.value ?? 0) + 1) / 2, 0, 1), style: 'bipolar', colour }];
   const points = d.kind === 'waveform' && d.peaks ? d.peaks.map(([, high], i) => [i / Math.max(1, d.peaks!.length - 1), high] as [number, number]) : d.points;
@@ -494,7 +495,7 @@ export const deviceView: Layer = {
     const drawing = d.macroMap ? undefined : shownBank(state, shown.device)?.drawing;
     const under = (col: number) => !!drawing && drawing.kind !== 'gain-reduction' && drawing.kind !== 'tuner' && col >= drawing.col && col < drawing.col + drawing.span;
     paint.screen.body = [
-      ...(drawing ? drawingCells(drawing, colour) : []),
+      ...(drawing ? drawingCells(drawing, colour, off) : []),
       ...params.flatMap((p, i) => cell(p, i, under(i + 1) ? { style: 'value' } : {})),
     ];
   },

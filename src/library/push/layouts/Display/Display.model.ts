@@ -133,6 +133,7 @@ function content(cell: BodyCell): ChildArg {
         region: d.region,
         markers: (d.markers ?? []).map((m) => ({ at: m.at, name: m.kind, strong: m.kind === 'playhead' || m.kind === 'selected' })),
         name: d.label ?? d.kind,
+        disabled: cell.dim,
         ...(cell.colour === undefined ? {} : { hue: 1 }),
       });
     }
@@ -171,7 +172,7 @@ function body(cell: BodyCell): Node {
       'data-touched': p?.touched || (cell.type === 'meter' && cell.touched) ? 'true' : undefined,
       'data-enclosing': cell.type === 'list' && cell.enclosing ? 'true' : undefined,
       'data-under': cell.type === 'trace' && cell.under ? 'true' : undefined,
-      'data-disabled': p?.disabled || (cell.type === 'text' && cell.tone === 'dim') || (cell.type === 'meter' && cell.dim) ? 'true' : undefined,
+      'data-disabled': p?.disabled || (cell.type === 'text' && cell.tone === 'dim') || (cell.type === 'meter' && cell.dim) || (cell.type === 'trace' && cell.dim) ? 'true' : undefined,
       'data-align': cell.type === 'text' ? (cell.align ?? 'start') : undefined,
       'data-size': cell.type === 'text' ? (cell.size ?? 'label') : undefined,
       style: styleText({ 'grid-column': `${cell.col} / span ${span}`, '--push-lamp': lamp(colour) }),
