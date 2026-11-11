@@ -13,6 +13,11 @@
   margin: 0;
 }
 
+/* Compact has no key column: the grid takes the whole width (in the first, `auto`, column it had none). */
+.yh-pianoroll[data-form='compact'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .yh-pianoroll__keys {
   display: grid;
   grid-template-rows: repeat(var(--yh-roll-rows), minmax(0, 1fr));
