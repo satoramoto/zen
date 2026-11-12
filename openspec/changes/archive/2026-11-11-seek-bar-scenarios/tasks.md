@@ -9,7 +9,7 @@
 ## 2. Merge
 
 - [x] 2.1 Remove the store's copy of the change from the zen-flow store. Verified by `openspec list --store zen-flow` no longer listing it
-- [ ] 2.2 Merge: `npx story-spec sync --change seek-bar-scenarios --check` reports nothing and zen's `checks` workflow passes on the pull request, which then merges itself; its branch is deleted
+- [x] 2.2 Merge: `npx story-spec sync --change seek-bar-scenarios --check` reports nothing and zen's `checks` workflow passes on the pull request, which then merges itself; its branch is deleted
 
 ## Workflow follow-up
 
