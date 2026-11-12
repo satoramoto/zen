@@ -8,5 +8,9 @@
 
 ## 2. Merge
 
-- [ ] 2.1 Remove the store's copy of the change from the zen-flow store. Verified by `openspec list --store zen-flow` no longer listing it
-- [ ] 2.2 Before merging: `npx story-spec sync --change seek-bar-scenarios --check` reports nothing, the change is archived into `openspec/specs/music-seek-bar`, and zen's `checks` workflow passes. The pull request then merges itself, its branch is deleted and the worktree is removed
+- [x] 2.1 Remove the store's copy of the change from the zen-flow store. Verified by `openspec list --store zen-flow` no longer listing it
+- [ ] 2.2 Merge: `npx story-spec sync --change seek-bar-scenarios --check` reports nothing and zen's `checks` workflow passes on the pull request, which then merges itself; its branch is deleted
+
+## Workflow follow-up
+
+- Archive the change into `openspec/specs/music-seek-bar` through a plan pull request, then remove the worktree and stop its Storybook.
