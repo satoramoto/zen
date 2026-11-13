@@ -308,3 +308,18 @@ and their existing kit dependencies into native packages. Do not author an
 application-specific QML dashboard beside a browser dashboard. Extend this
 vocabulary when a shared view needs a new visual primitive. The
 `Omarchy/Application` story exercises navigation, submission and state retention.
+
+
+Application hosts select `ApplicationTheme.name` (`omarchy` or `visuals`) and
+bind its `snapshot` to `Application.theme`. Omarchy follows the live shell palette,
+font and controls; its buttons, tabs, fields and dropdowns use the shell kit.
+Visual Flow uses generated palette/material roles. Run
+`node scripts/build-application-themes.mjs` after changing its theme facets;
+CI checks that generated native tokens still match the browser source. Native
+Visual Flow surfaces use opaque theme tones, as its native-preview contract
+requires; the Mac webview supplies actual HUD frost.
+
+Browser hosts use `resolveApplicationTheme` from `bench/application-theme.ts`
+and pass the appearance name to `Application`. Without a live Omarchy snapshot,
+the browser uses the portable Omarchy fallback palette. Theme pickers and stored
+preferences belong to the application’s shared view and host settings adapter.

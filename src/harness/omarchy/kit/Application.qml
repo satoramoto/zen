@@ -5,8 +5,8 @@ import "application.mjs" as Presentation
 FocusScope {
     id: root
     required property var tree
-    Theme { id: palette }
-    property var theme: Object.assign({},palette.snapshot,{font:'sans-serif'})
+    ApplicationTheme { id: palette }
+    property var theme: palette.snapshot
     signal dispatched(string action, var payload, var value)
     implicitWidth: tree.width || 460
     implicitHeight: toolbar.height + content.contentHeight
