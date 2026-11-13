@@ -1,0 +1,37 @@
+import type { Element } from './ui.mjs';
+export interface ApplicationNode extends Omit<Element, 'kind' | 'children' | 'tone' | 'value'> {
+  kind: Element['kind'] | 'application' | 'surface' | 'hero' | 'tabs' | 'reading' | 'meter' | 'stacked-meter' | 'code';
+  children: ApplicationNode[];
+  value?: string | number | boolean;
+  tone?: string;
+  meta?: string;
+  icon?: string;
+  aside?: string;
+  layer?: 'float' | 'raised';
+  variant?: 'primary' | 'secondary' | 'quiet';
+  title?: string;
+  placeholder?: string;
+  submit?: string;
+  autoFocus?: boolean;
+  role?: 'alert' | 'status';
+  strong?: boolean;
+  active?: boolean;
+  fraction?: number;
+  pulsing?: boolean;
+  total?: number;
+  marker?: number;
+  markerLabel?: string;
+  segments?: { key: string; label: string; value: number }[];
+  screen?: string;
+  width?: number;
+}
+export const metrics: { gap: number; padding: number; surfacePadding: number; radius: number; control: number; size: number; small: number; line: number };
+export const icons: Record<string, string[]>;
+export function iconSvg(name: string, color: string): string;
+export function element(kind: ApplicationNode['kind'], props?: Partial<ApplicationNode>, children?: ApplicationNode[]): ApplicationNode;
+export function column(children: ApplicationNode[], props?: Partial<ApplicationNode>): ApplicationNode;
+export function row(children: ApplicationNode[], props?: Partial<ApplicationNode>): ApplicationNode;
+export function text(label: string, props?: Partial<ApplicationNode>): ApplicationNode;
+export function button(label: string, action: string, props?: Partial<ApplicationNode>): ApplicationNode;
+export function section(label: string, children: ApplicationNode[]): ApplicationNode;
+export function control(kind: 'input' | 'select', label: string, value: string, action: string, props?: Partial<ApplicationNode>): ApplicationNode;

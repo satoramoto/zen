@@ -285,3 +285,26 @@ The live native window was opened and inspected after migration. Its read-only
 diagnostics confirmed the Zen host, seven real nodes, 48,000 Hz / 1,024 frames,
 no forced clock overrides, and no backend failure. Mutating commands were
 exercised with mocks, **not** against the person's actual audio devices.
+
+### Portable application views
+
+For an application with a fixed toolbar and scrolling pages, return an
+`application` node from one plain `.mjs` view function. Its first child is the
+toolbar and its second child is the current page. Import the builders and
+`ApplicationNode` type from `kit/application.mjs`. In addition to rows, columns,
+text, buttons and fields, this vocabulary supplies surfaces, heroes, tabs,
+label/value readings, meters, segmented meters and selectable log output.
+
+Render the same tree with `bench/Application.tsx` in a Zen `ThemeScope`, or with
+`kit/Application.qml` in a native window. Both emit `(action, payload, value)`;
+the host owns effects, not layout. Input `submit` names the action emitted on
+Enter; button `autoFocus` supports confirmation flows. Changing `screen` resets
+the page scroll. The native host can override `theme` with a palette snapshot.
+The browser binding uses Zen's actual Button, Surface and Tabs components;
+the native binding provides Qt controls for the same semantic nodes.
+
+Copy `application.mjs`, `Application.qml`, `ApplicationTree.qml`, `Theme.qml`
+and their existing kit dependencies into native packages. Do not author an
+application-specific QML dashboard beside a browser dashboard. Extend this
+vocabulary when a shared view needs a new visual primitive. The
+`Omarchy/Application` story exercises navigation, submission and state retention.
