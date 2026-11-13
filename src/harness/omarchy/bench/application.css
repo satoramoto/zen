@@ -1,0 +1,56 @@
+/* Application layout; materials, typography and ink come from the host Zen scope. */
+.zen-application { display:flex;flex-direction:column;max-width:460px;height:100dvh;min-height:0;margin:auto;outline:none;overflow:hidden; }
+.zen-application .app-toolbar { position:relative;z-index:1;flex:0 0 auto;display:flex;flex-direction:column;gap:12px;padding:16px 20px;border-radius:0; }
+.zen-application .app-column { display:flex;flex-direction:column;gap:12px; }
+.zen-application .app-row { display:flex;align-items:center;gap:8px; }
+.zen-application .app-row > div { min-width:0; }
+.zen-application .app-grow { flex:1; }
+.zen-application .app-action { display:block; }
+.zen-application .app-action > .yh-button { width:100%; }
+.zen-application .telemetry-section { display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:var(--radius-card); }
+.zen-application .app-section-heading { display:flex;justify-content:space-between;align-items:center;gap:8px; }
+.zen-application .app-section-heading > strong { color:var(--text-1);font-size:var(--size-label); }
+.zen-application .app-section-heading > span { color:var(--text-3);font-size:11px; }
+.zen-application .app-section-title { font-size:13px;margin:0; }
+.zen-application .application-content { padding:20px; }
+.zen-application .app-text { white-space:pre-wrap;overflow-wrap:anywhere; }
+.zen-application .app-text small { display:block;color:var(--text-3);font-size:11px;margin-top:2px; }
+.zen-application .app-input { width:100%;min-width:0;height:34px;padding:6px 10px;font:inherit;color:inherit;background:var(--mat-well-fill);border:1px solid var(--border);border-radius:var(--radius-input); }
+.zen-application .app-input:focus-visible { outline:2px solid var(--focus-ring);outline-offset:2px; }
+.zen-application .lib-tabs { width:100%;height:var(--control-h);--mat-tabs-track-fill:var(--mat-well-fill);--mat-tabs-track-shadow:inset 0 0 0 var(--border-width) var(--border-strong);--mat-tabs-chosen-fill:var(--selected);--mat-tabs-chosen-ink:var(--selected-text);--mat-tabs-pad:var(--space-1);--mat-tabs-gap:var(--space-1);--mat-tabs-tab-pad:0 var(--space-2); }
+.zen-application .lib-tabs__tab { flex:1; }
+.zen-application .tab-content { flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;outline:none; }
+.zen-application .tab-content:focus-visible { outline:2px solid var(--focus-ring);outline-offset:-2px; }
+.zen-application .tab-content,.zen-application .engine-logs { scrollbar-width:thin;scrollbar-color:color-mix(in srgb,currentColor 38%,transparent) transparent; }
+.zen-application .panel-hero { display:flex;align-items:center;gap:12px;min-height:40px; }
+.zen-application .hero-icon { display:flex;width:28px;flex:none;color:var(--text-1); }
+.zen-application .hero-icon .glyph { width:26px;height:26px; }
+.zen-application .hero-active .hero-icon { color:var(--accent); }
+.zen-application .glyph { width:14px;height:14px;display:block;flex:none; }
+.zen-application .glyph > svg { width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round; }
+.zen-application .hero-copy { min-width:0;flex:1; }
+.zen-application .hero-title-row { display:flex;align-items:center;gap:8px;min-height:24px; }
+.zen-application .hero-title-row h1 { margin:0;font-size:16px;line-height:24px;font-weight:var(--weight-strong);letter-spacing:.05em; }
+.zen-application .hero-badge { margin-left:auto;padding:2px 7px;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-radius:var(--radius-control);background:var(--mat-well-fill);color:var(--text-2);font-size:var(--size-caption);font-weight:var(--weight-strong); }
+.zen-application .hero-meta { color:var(--text-3);text-transform:uppercase;font-size:11px;font-weight:var(--weight-strong);line-height:16px;letter-spacing:.08em;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.zen-application .info-pair { display:flex;align-items:baseline;justify-content:space-between;gap:8px;min-width:0;line-height:18px; }
+.zen-application .info-label { color:var(--text-3);flex:none; }
+.zen-application .info-value { text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;color:var(--text-1); }
+.zen-application .native-meter { display:flex;flex-direction:column;gap:4px; }
+.zen-application .meter-track { height:6px;background:var(--mat-well-fill);border-radius:3px;overflow:hidden; }
+.zen-application .meter-fill { display:block;height:100%;border-radius:inherit;background:var(--text-1); }
+.zen-application .meter-accent .meter-fill { background:var(--accent); }
+.zen-application .meter-danger .meter-fill { background:var(--danger); }
+.zen-application .stacked-meter { position:relative;height:8px; }
+.zen-application .stacked-track { display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--mat-well-fill); }
+.zen-application .stacked-track > span { display:block;flex:none;height:8px; }
+.zen-application .gtt-marker { position:absolute;top:-3px;height:14px;width:2px;margin-left:-1px;border-radius:1px;background:var(--accent); }
+.zen-application .memory-legend { display:flex;flex-wrap:wrap;gap:6px 10px;color:var(--text-3);font-size:var(--size-caption);line-height:16px; }
+.zen-application .memory-legend > span { display:inline-flex;align-items:center;gap:4px; }
+.zen-application .memory-legend i { width:8px;height:8px;border-radius:2px;display:inline-block; }
+.zen-application .memory-legend .legend-tick { width:2px;height:10px;border-radius:0;background:var(--accent); }
+.zen-application .control-caption { color:var(--text-3);margin:0;font-size:var(--size-caption);line-height:1.5;overflow-wrap:anywhere; }
+.zen-application .control-error { color:var(--danger);white-space:pre-wrap; }
+.zen-application .engine-logs { white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,monospace;font-size:11px;line-height:1.6;padding:12px;border-radius:var(--radius-input);background:var(--mat-well-fill);color:var(--text-1);overflow:auto;min-width:0;margin:0; }
+.zen-application .engine-logs:focus-visible { outline:2px solid var(--focus-ring);outline-offset:2px; }
+@media(max-width:380px) { .zen-application .app-toolbar,.zen-application .application-content { padding-inline:12px; } }
