@@ -176,6 +176,15 @@ Loader {
                 indicator:Item {}
                 background:Rectangle { color:root.fill; border.color:choice.activeFocus?root.accent:root.edge }
                 popup.width:Math.max(240,width)
+                popup.y:height+2
+                popup.background:Rectangle { color:root.theme.background; border.color:root.edge }
+                delegate:ItemDelegate {
+                    required property var modelData
+                    required property int index
+                    width:choice.popup.width; highlighted:choice.highlightedIndex===index
+                    contentItem:Label { text:modelData.label; color:parent.highlighted?root.theme.background:root.ink; wrapMode:Text.NoWrap }
+                    background:Rectangle { color:parent.highlighted?root.accent:root.theme.background }
+                }
                 palette.button:root.theme.background; palette.buttonText:root.ink; palette.text:root.ink; palette.base:root.theme.background; palette.highlight:root.accent; palette.highlightedText:root.theme.background
                 onActivated:root.dispatched(root.node.selectionAction,undefined,currentValue)
                 ToolTip.visible:hovered
