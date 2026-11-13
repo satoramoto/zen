@@ -40,6 +40,7 @@ Loader {
         case 'select': return theme.style==='omarchy'?nativeSelect:select
         case 'code': return code
         case 'text': return text
+        case 'link': return link
         default: console.error('Unsupported application element: ' + node.kind); return null
         }
     }
@@ -96,6 +97,16 @@ Loader {
                 }
                 Children { width:parent.width }
             }
+        }
+    }
+    Component { id: link
+        Label {
+            text:root.node.label || root.node.href || ''; color:root.accent; font.underline:true
+            activeFocusOnTab:true; Accessible.role:Accessible.Link; Accessible.name:text
+            function open() { if(/^https?:\/\//.test(root.node.href || '')) Qt.openUrlExternally(root.node.href) }
+            Keys.onReturnPressed:open()
+            Keys.onSpacePressed:open()
+            MouseArea { anchors.fill:parent; cursorShape:Qt.PointingHandCursor; onClicked:parent.open() }
         }
     }
     Component { id: text
@@ -178,14 +189,15 @@ Loader {
                 indicator:Item {}
                 opacity:enabled?1:0.45
                 background:Item {
+                    clip:true
                     Ui.Button {
-                        anchors.fill:parent; visible:root.theme.style==='omarchy'; enabled:false
+                        x:-borderLeft; width:parent.width+borderLeft; height:parent.height; visible:root.theme.style==='omarchy'; enabled:false
                         bordered:true; hasCursor:choice.hovered || choice.activeFocus
                         foreground:root.ink; accent:root.accent
                         topLeftRadius:0; bottomLeftRadius:0
                     }
                     Rectangle {
-                        anchors.fill:parent; visible:root.theme.style!=='omarchy'
+                        x:-1; width:parent.width+1; height:parent.height; visible:root.theme.style!=='omarchy'
                         radius:root.controlRadius; topLeftRadius:0; bottomLeftRadius:0
                         color:choice.hovered?root.colorRole('hoverFill',root.edge):root.fill
                         border.color:choice.activeFocus?root.accent:root.edge
