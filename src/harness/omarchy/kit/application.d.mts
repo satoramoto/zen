@@ -1,6 +1,6 @@
 import type { Element } from './ui.mjs';
 export interface ApplicationNode extends Omit<Element, 'kind' | 'children' | 'tone' | 'value'> {
-  kind: Element['kind'] | 'application' | 'surface' | 'hero' | 'tabs' | 'reading' | 'meter' | 'stacked-meter' | 'code';
+  kind: Element['kind'] | 'application' | 'surface' | 'hero' | 'tabs' | 'reading' | 'meter' | 'stacked-meter' | 'code' | 'split-button';
   children: ApplicationNode[];
   value?: string | number | boolean;
   tone?: string;
@@ -10,6 +10,9 @@ export interface ApplicationNode extends Omit<Element, 'kind' | 'children' | 'to
   layer?: 'float' | 'raised';
   variant?: 'primary' | 'secondary' | 'quiet';
   title?: string;
+  selectionLabel?: string;
+  selectionAction?: string;
+  selectionDisabled?: boolean;
   placeholder?: string;
   submit?: string;
   autoFocus?: boolean;

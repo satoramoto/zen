@@ -54,3 +54,12 @@
 .zen-application .engine-logs { white-space:pre-wrap;overflow-wrap:anywhere;font-family:ui-monospace,monospace;font-size:11px;line-height:1.6;padding:12px;border-radius:var(--radius-input);background:var(--mat-well-fill);color:var(--text-1);overflow:auto;min-width:0;margin:0; }
 .zen-application .engine-logs:focus-visible { outline:2px solid var(--focus-ring);outline-offset:2px; }
 @media(max-width:380px) { .zen-application .app-toolbar,.zen-application .application-content { padding-inline:12px; } }
+
+.zen-application .app-split { display:flex;position:relative; }
+.zen-application .app-split > .app-action { flex:1;min-width:0; }
+.zen-application .app-split .yh-button { border-top-right-radius:0;border-bottom-right-radius:0; }
+.zen-application .app-split select { width:28px;flex:none;appearance:none;color:transparent;background:var(--mat-well-fill);border:1px solid var(--border);border-radius:0 var(--radius-input) var(--radius-input) 0;font:inherit;cursor:pointer; }
+.zen-application .app-split select option { color:var(--text-1);background:var(--layer-float-solid); }
+.zen-application .app-split select:focus-visible { outline:2px solid var(--focus-ring);outline-offset:2px; }
+.zen-application .app-split select:disabled { opacity:.45;cursor:default; }
+.zen-application .app-split-arrow { position:absolute;right:8px;top:50%;transform:translateY(-50%);pointer-events:none; }
