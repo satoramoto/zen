@@ -108,6 +108,8 @@ Loader {
 
     Component { id:nativeButton
         Ui.Button {
+            topRightRadius:root.node.joined ? 0 : radius
+            bottomRightRadius:root.node.joined ? 0 : radius
             objectName:root.node.action || ""
             iconText:Presentation.nativeIcons[root.node.icon] || ""
             text:root.node.label || ""; tooltipText:root.node.title || ""
@@ -150,7 +152,7 @@ Loader {
             implicitHeight:root.theme.control || 34; text:root.node.label || ''; focusPolicy:Qt.StrongFocus
             opacity: enabled?1:0.45
             Accessible.name:text
-            background:Rectangle { radius:root.controlRadius; color:control.down?root.accent:root.node.variant==='primary'?root.colorRole('action',root.accent):control.hovered?root.colorRole('hoverFill',root.edge):root.node.variant==='quiet'?'transparent':root.fill; border.color:control.activeFocus?root.accent:root.node.variant==='quiet'?'transparent':root.edge }
+            background:Rectangle { radius:root.controlRadius; topRightRadius:root.node.joined?0:radius; bottomRightRadius:root.node.joined?0:radius; color:control.down?root.accent:root.node.variant==='primary'?root.colorRole('action',root.accent):control.hovered?root.colorRole('hoverFill',root.edge):root.node.variant==='quiet'?'transparent':root.fill; border.color:control.activeFocus?root.accent:root.node.variant==='quiet'?'transparent':root.edge }
             contentItem:RowLayout {
                 spacing:5
                 Image { visible:!!source.toString(); source:Presentation.iconSvg(root.node.icon,root.node.variant==='primary'?root.colorRole('actionText',root.theme.background):root.ink.toString()); Layout.preferredWidth:14; Layout.preferredHeight:14 }
@@ -163,18 +165,32 @@ Loader {
         }
     }
     Component { id: splitButton
-        RowLayout {
-            spacing:0
-            Child { Layout.fillWidth:true; Layout.minimumWidth:0; childNode:Object.assign({},root.node,{kind:'button'}) }
+        Item {
+            implicitHeight:mainAction.implicitHeight
+            Child { id:mainAction; anchors.left:parent.left; anchors.top:parent.top; anchors.bottom:parent.bottom; width:Math.max(0,parent.width-choice.width); childNode:Object.assign({},root.node,{kind:'button',joined:true}) }
             ComboBox {
-                id:choice; Layout.preferredWidth:28; Layout.fillHeight:true; implicitHeight:root.theme.control || 34
+                id:choice; anchors.right:parent.right; anchors.top:parent.top; anchors.bottom:parent.bottom; width:28
                 model:root.node.options || []; textRole:'label'; valueRole:'value'
                 currentIndex:(root.node.options || []).findIndex(o=>o.value===root.node.value)
                 enabled:!root.node.selectionDisabled
                 Accessible.name:root.node.selectionLabel || 'Options'
                 contentItem:Label { text:'▾'; horizontalAlignment:Text.AlignHCenter; verticalAlignment:Text.AlignVCenter }
                 indicator:Item {}
-                background:Rectangle { color:root.fill; border.color:choice.activeFocus?root.accent:root.edge }
+                opacity:enabled?1:0.45
+                background:Item {
+                    Ui.Button {
+                        anchors.fill:parent; visible:root.theme.style==='omarchy'; enabled:false
+                        bordered:true; hasCursor:choice.hovered || choice.activeFocus
+                        foreground:root.ink; accent:root.accent
+                        topLeftRadius:0; bottomLeftRadius:0
+                    }
+                    Rectangle {
+                        anchors.fill:parent; visible:root.theme.style!=='omarchy'
+                        radius:root.controlRadius; topLeftRadius:0; bottomLeftRadius:0
+                        color:choice.hovered?root.colorRole('hoverFill',root.edge):root.fill
+                        border.color:choice.activeFocus?root.accent:root.edge
+                    }
+                }
                 popup.width:Math.max(240,width)
                 popup.y:height+2
                 popup.background:Rectangle { color:root.theme.background; border.color:root.edge }
