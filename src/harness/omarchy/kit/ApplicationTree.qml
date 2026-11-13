@@ -70,6 +70,7 @@ Loader {
                     Layout.minimumWidth: 0
                 }
             }
+            Item { Layout.fillWidth:true; visible:!root.node.children.some(child=>child.grow) }
         }
     }
     Component { id: surface
@@ -203,6 +204,7 @@ Loader {
             ComboBox {
                 width:parent.width; implicitHeight:34; model:root.node.options || []; textRole:'label'; valueRole:'value'
                 currentIndex:(root.node.options || []).findIndex(o=>o.value===root.node.value); enabled:!root.node.disabled
+                palette.button:root.theme.background; palette.buttonText:root.ink; palette.text:root.ink; palette.base:root.theme.background; palette.highlight:root.accent; palette.highlightedText:root.theme.background
                 onActivated:root.emit(currentValue)
             }
         }
