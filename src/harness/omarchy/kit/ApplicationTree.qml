@@ -167,7 +167,7 @@ Loader {
             spacing:0
             Child { Layout.fillWidth:true; Layout.minimumWidth:0; childNode:Object.assign({},root.node,{kind:'button'}) }
             ComboBox {
-                id:choice; Layout.preferredWidth:28; implicitHeight:root.theme.control || 34
+                id:choice; Layout.preferredWidth:28; Layout.fillHeight:true; implicitHeight:root.theme.control || 34
                 model:root.node.options || []; textRole:'label'; valueRole:'value'
                 currentIndex:(root.node.options || []).findIndex(o=>o.value===root.node.value)
                 enabled:!root.node.selectionDisabled

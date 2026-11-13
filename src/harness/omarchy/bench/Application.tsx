@@ -27,7 +27,7 @@ function Node({node,dispatch}: {node: ApplicationNode; dispatch: ApplicationDisp
   const emit = (value?: unknown) => { if (!node.disabled && node.action) dispatch(node.action,node.payload,value); };
   switch(node.kind) {
     case 'column': return <div className="app-column">{children}</div>;
-    case 'row': return <div className="app-row">{node.children.map((child,index)=><div key={child.key || index} className={child.grow?'app-grow':undefined}><Node node={child} dispatch={dispatch}/></div>)}</div>;
+    case 'row': return <div className="app-row">{node.children.map((child,index)=><div key={child.key || index} className={child.grow?'app-grow':undefined} style={child.width?{width:child.width}:undefined}><Node node={child} dispatch={dispatch}/></div>)}</div>;
     case 'surface': return <Surface layer={node.layer || 'raised'} className={node.layer==='float'?'app-toolbar':'telemetry-section'}>{node.label&&<div className="app-section-heading"><strong>{node.label}</strong>{node.aside&&<span>{node.aside}</span>}</div>}{children}</Surface>;
     case 'section': return <section className="app-column"><h2 className="app-section-title">{node.label}</h2>{children}</section>;
     case 'text': return <div role={node.role} className={`app-text ${node.tone==='danger'?'control-error':node.tone==='muted'?'control-caption':''}`}><span style={{fontWeight:node.strong?600:undefined}}>{node.label}</span>{node.detail&&<small>{node.detail}</small>}</div>;
