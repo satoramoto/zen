@@ -30,6 +30,7 @@ Loader {
         case 'column': case 'section': return column
         case 'row': return row
         case 'button': return theme.style==='omarchy'?nativeButton:button
+        case 'split-button': return splitButton
         case 'hero': return hero
         case 'tabs': return theme.style==='omarchy'?nativeTabs:tabs
         case 'reading': return reading
@@ -74,7 +75,7 @@ Loader {
                     required property int index
                     childNode: root.node.children[index]
                     Layout.fillWidth: !!childNode.grow
-                    Layout.preferredWidth: childNode.grow ? 0 : childNode.kind==='button' ? Math.max(60, (childNode.label || '').length*7+24) : 100
+                    Layout.preferredWidth: childNode.width || (childNode.grow ? 0 : childNode.kind==='button' ? Math.max(60, (childNode.label || '').length*7+24) : 100)
                     Layout.minimumWidth: 0
                 }
             }
@@ -159,6 +160,36 @@ Loader {
             Component.onCompleted:if(root.node.autoFocus) Qt.callLater(()=>forceActiveFocus())
             ToolTip.visible:hovered && !!root.node.title
             ToolTip.text:root.node.title || ''
+        }
+    }
+    Component { id: splitButton
+        RowLayout {
+            spacing:0
+            Child { Layout.fillWidth:true; Layout.minimumWidth:0; childNode:Object.assign({},root.node,{kind:'button'}) }
+            ComboBox {
+                id:choice; Layout.preferredWidth:28; Layout.fillHeight:true; implicitHeight:root.theme.control || 34
+                model:root.node.options || []; textRole:'label'; valueRole:'value'
+                currentIndex:(root.node.options || []).findIndex(o=>o.value===root.node.value)
+                enabled:!root.node.selectionDisabled
+                Accessible.name:root.node.selectionLabel || 'Options'
+                contentItem:Label { text:'▾'; horizontalAlignment:Text.AlignHCenter; verticalAlignment:Text.AlignVCenter }
+                indicator:Item {}
+                background:Rectangle { color:root.fill; border.color:choice.activeFocus?root.accent:root.edge }
+                popup.width:Math.max(240,width)
+                popup.y:height+2
+                popup.background:Rectangle { color:root.theme.background; border.color:root.edge }
+                delegate:ItemDelegate {
+                    required property var modelData
+                    required property int index
+                    width:choice.popup.width; highlighted:choice.highlightedIndex===index
+                    contentItem:Label { text:modelData.label; color:parent.highlighted?root.theme.background:root.ink; wrapMode:Text.NoWrap }
+                    background:Rectangle { color:parent.highlighted?root.accent:root.theme.background }
+                }
+                palette.button:root.theme.background; palette.buttonText:root.ink; palette.text:root.ink; palette.base:root.theme.background; palette.highlight:root.accent; palette.highlightedText:root.theme.background
+                onActivated:root.dispatched(root.node.selectionAction,undefined,currentValue)
+                ToolTip.visible:hovered
+                ToolTip.text:String(root.node.value || root.node.selectionLabel || '')
+            }
         }
     }
     Component { id: hero
