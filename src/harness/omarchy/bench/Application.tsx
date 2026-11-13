@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
 import { Button } from '../../../library/components/Button/Button';
 import { Surface } from '../../../library/primitives/Surface/Surface';
@@ -13,6 +13,8 @@ function Action({node, children}: {node: ApplicationNode; children: React.ReactN
   return <span ref={ref} className="app-action" data-om-action={node.action}>{children}</span>;
 }
 
+const Appearance = createContext('visuals');
+
 export type ApplicationDispatch = (action: string, payload?: unknown, value?: unknown) => void;
 function Icon({name}: {name?: string}) {
   const paths = name ? icons[name] : null;
@@ -20,6 +22,7 @@ function Icon({name}: {name?: string}) {
 }
 const colors = ['var(--accent)', 'var(--draft)', 'var(--kv)', 'var(--system)'];
 function Node({node,dispatch}: {node: ApplicationNode; dispatch: ApplicationDispatch}) {
+  const appearance = useContext(Appearance);
   const children = node.children.map((child,index)=><Node key={child.key || index} node={child} dispatch={dispatch}/>);
   const emit = (value?: unknown) => { if (!node.disabled && node.action) dispatch(node.action,node.payload,value); };
   switch(node.kind) {
@@ -28,7 +31,7 @@ function Node({node,dispatch}: {node: ApplicationNode; dispatch: ApplicationDisp
     case 'surface': return <Surface layer={node.layer || 'raised'} className={node.layer==='float'?'app-toolbar':'telemetry-section'}>{node.label&&<div className="app-section-heading"><strong>{node.label}</strong>{node.aside&&<span>{node.aside}</span>}</div>}{children}</Surface>;
     case 'section': return <section className="app-column"><h2 className="app-section-title">{node.label}</h2>{children}</section>;
     case 'text': return <div role={node.role} className={`app-text ${node.tone==='danger'?'control-error':node.tone==='muted'?'control-caption':''}`}><span style={{fontWeight:node.strong?600:undefined}}>{node.label}</span>{node.detail&&<small>{node.detail}</small>}</div>;
-    case 'button': return <Action node={node}><Button label={node.label || ''} title={node.title} size="cell" variant={node.variant || 'secondary'} hue={node.tone==='danger'?'rec':'t'} disabled={node.disabled} icon={<Icon name={node.icon}/>} onPress={()=>emit()}/></Action>;
+    case 'button': return <Action node={node}><Button label={node.label || ''} title={node.title} size="cell" variant={appearance === 'omarchy' && node.variant !== 'quiet' ? 'secondary' : node.variant || 'secondary'} hue={node.tone==='danger'?'rec':'t'} disabled={node.disabled} icon={<Icon name={node.icon}/>} onPress={()=>emit()}/></Action>;
     case 'hero': return <div className={`panel-hero${node.active?' hero-active':''}`}><span className="hero-icon"><Icon name={node.icon}/></span><div className="hero-copy"><div className="hero-title-row"><h1>{node.label}</h1>{node.detail&&<span className="hero-badge">{node.detail}</span>}</div><p className="hero-meta">{node.meta}</p></div></div>;
     case 'tabs': return <Tabs name={node.label || 'Navigation'} items={(node.options || []).map(o=>({id:o.value,label:o.label}))} value={String(node.value)} panelId="zen-application-content" onChange={value=>emit(value)}/>;
     case 'reading': return <div className="info-pair"><span className="info-label">{node.label}</span><span className="info-value" title={String(node.value)}>{String(node.value)}</span></div>;
@@ -41,14 +44,14 @@ function Node({node,dispatch}: {node: ApplicationNode; dispatch: ApplicationDisp
   }
 }
 
-export function Application({tree,dispatch,handleKey}: {tree:ApplicationNode;dispatch:ApplicationDispatch;handleKey?:(key:string)=>boolean}) {
+export function Application({tree,dispatch,handleKey,appearance='visuals'}: {appearance?:string;tree:ApplicationNode;dispatch:ApplicationDispatch;handleKey?:(key:string)=>boolean}) {
   const content=useRef<HTMLDivElement>(null);
   useEffect(()=>{if(content.current)content.current.scrollTop=0;},[tree.screen]);
-  return <section className="zen-application" aria-label={tree.label} tabIndex={-1} style={{maxWidth:tree.width || 460} as CSSProperties} onKeyDown={event=>{
+  return <Appearance.Provider value={appearance}><section className="zen-application" data-appearance={appearance} aria-label={tree.label} tabIndex={-1} style={{maxWidth:tree.width || 460} as CSSProperties} onKeyDown={event=>{
     if(event.defaultPrevented||event.metaKey||event.ctrlKey||event.altKey||(event.target as HTMLElement).closest('input,textarea,select'))return;
     if(handleKey?.(event.key))event.preventDefault();
   }}>
     <Node node={tree.children[0]} dispatch={dispatch}/>
     <div ref={content} id="zen-application-content" role="tabpanel" aria-label={tree.screen} className="tab-content" tabIndex={0}><div className="application-content"><Node node={tree.children[1]} dispatch={dispatch}/></div></div>
-  </section>;
+  </section></Appearance.Provider>;
 }

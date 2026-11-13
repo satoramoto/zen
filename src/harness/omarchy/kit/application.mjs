@@ -14,3 +14,5 @@ export function iconSvg(name, color) {
 
 // Same plain-data builders, with the richer application type vocabulary.
 export { element, column, row, text, button, section, control } from './ui.mjs';
+
+export const nativeIcons = {brain:'󰧑',up:'󰐊',down:'󰓛',logs:'󰆍',refresh:'󰑓'};

@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import qs.Ui as Ui
 import "application.mjs" as Presentation
 
 // Generic application vocabulary. No application data or actions live here.
@@ -13,29 +14,36 @@ Loader {
     readonly property color ink: theme.foreground
     readonly property color muted: theme.muted
     readonly property color accent: theme.accent
-    readonly property color fill: Qt.rgba(ink.r, ink.g, ink.b, 0.055)
-    readonly property color edge: Qt.rgba(ink.r, ink.g, ink.b, 0.12)
+    function colorRole(name,fallback) {
+        var value=theme[name]
+        if(value===undefined) return fallback
+        var rgba=String(value).match(/^rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\s*\)$/)
+        return rgba?Qt.rgba(Number(rgba[1])/255,Number(rgba[2])/255,Number(rgba[3])/255,Number(rgba[4])):Qt.color(value)
+    }
+    readonly property color fill: colorRole("normalFill",Qt.rgba(ink.r, ink.g, ink.b, 0.055))
+    readonly property color edge: colorRole("normalBorder",Qt.rgba(ink.r, ink.g, ink.b, 0.12))
+    readonly property real controlRadius: theme.controlRadius === undefined ? 6 : theme.controlRadius
     readonly property int gap: Presentation.metrics.gap
     sourceComponent: {
         switch(node.kind) {
         case 'surface': return surface
         case 'column': case 'section': return column
         case 'row': return row
-        case 'button': return button
+        case 'button': return theme.style==='omarchy'?nativeButton:button
         case 'hero': return hero
-        case 'tabs': return tabs
+        case 'tabs': return theme.style==='omarchy'?nativeTabs:tabs
         case 'reading': return reading
         case 'meter': return meter
         case 'stacked-meter': return stacked
-        case 'input': return input
-        case 'select': return select
+        case 'input': return theme.style==='omarchy'?nativeInput:input
+        case 'select': return theme.style==='omarchy'?nativeSelect:select
         case 'code': return code
         case 'text': return text
         default: console.error('Unsupported application element: ' + node.kind); return null
         }
     }
     component Label: Text {
-        color: root.ink; font.family: root.theme.font; font.pixelSize: Presentation.metrics.size
+        color: root.ink; font.family: root.theme.font; font.pixelSize: root.theme.size || Presentation.metrics.size
         textFormat: Text.PlainText; wrapMode: Text.Wrap
     }
     component Child: Loader {
@@ -76,8 +84,8 @@ Loader {
     Component { id: surface
         Rectangle {
             implicitHeight: body.implicitHeight + 32
-            radius: root.node.layer==='float' ? 0 : Presentation.metrics.radius
-            color: root.fill; border.color: root.edge
+            radius: root.node.layer==='float' ? 0 : (root.theme.radius===undefined?Presentation.metrics.radius:root.theme.radius)
+            color:root.colorRole(root.node.layer==='float'?'toolbarFill':'surfaceFill',root.fill); border.color:root.colorRole('surfaceBorder',root.edge)
             Column {
                 id: body; x:16; y:16; width:parent.width-32; spacing:root.gap
                 RowLayout {
@@ -92,22 +100,60 @@ Loader {
     Component { id: text
         Column {
             spacing:4
-            Label { width:parent.width; text:root.node.label || ''; color:root.node.tone==='danger'?root.theme.urgent:root.node.tone==='muted'?root.muted:root.ink; font.bold:!!root.node.strong; font.pixelSize:root.node.tone==='muted'?11:13 }
+            Label { width:parent.width; text:root.node.label || ''; color:root.node.tone==='danger'?root.theme.urgent:root.node.tone==='muted'?root.muted:root.ink; font.bold:!!root.node.strong; font.pixelSize:root.node.tone==='muted'?(root.theme.small || 11):(root.theme.size || 13) }
             Label { visible:!!root.node.detail; width:parent.width; text:root.node.detail || ''; color:root.muted; font.pixelSize:11 }
+        }
+    }
+
+    Component { id:nativeButton
+        Ui.Button {
+            objectName:root.node.action || ""
+            iconText:Presentation.nativeIcons[root.node.icon] || ""
+            text:root.node.label || ""; tooltipText:root.node.title || ""
+            enabled:!root.node.disabled; opacity:enabled?1:0.45
+            focusable:true; bordered:root.node.variant!=="quiet"
+            foreground:root.node.tone==="danger"?root.theme.urgent:root.ink
+            accent:root.accent; fontFamily:root.theme.font; fontSize:root.theme.size
+            onClicked:root.emit(undefined)
+            Component.onCompleted:if(root.node.autoFocus) Qt.callLater(()=>forceActiveFocus())
+        }
+    }
+    Component { id:nativeTabs
+        RowLayout {
+            spacing:4
+            Repeater {
+                model:(root.node.options || []).length
+                Ui.Button {
+                    required property int index
+                    readonly property var option:root.node.options[index]
+                    Layout.fillWidth:true; Layout.minimumWidth:0
+                    text:option.label; selected:option.value===root.node.value
+                    focusable:true; bordered:true
+                    foreground:root.ink; accent:root.accent; fontFamily:root.theme.font; fontSize:root.theme.size
+                    onClicked:root.emit(option.value)
+                }
+            }
+        }
+    }
+    Component { id:nativeSelect
+        Ui.Dropdown {
+            label:root.node.label || ""; options:root.node.options || []; value:String(root.node.value || "")
+            enabled:!root.node.disabled; foreground:root.ink; background:root.theme.background; accent:root.accent; fontFamily:root.theme.font
+            onChanged:function(value) { root.emit(value) }
         }
     }
     Component { id: button
         Button {
             id: control
             objectName:root.node.action || ''; enabled:!root.node.disabled
-            implicitHeight:34; text:root.node.label || ''; focusPolicy:Qt.StrongFocus
+            implicitHeight:root.theme.control || 34; text:root.node.label || ''; focusPolicy:Qt.StrongFocus
             opacity: enabled?1:0.45
             Accessible.name:text
-            background:Rectangle { radius:6; color:control.down?root.accent:root.node.variant==='primary'?root.accent:control.hovered?root.edge:root.node.variant==='quiet'?'transparent':root.fill; border.color:control.activeFocus?root.accent:root.node.variant==='quiet'?'transparent':root.edge }
+            background:Rectangle { radius:root.controlRadius; color:control.down?root.accent:root.node.variant==='primary'?root.colorRole('action',root.accent):control.hovered?root.colorRole('hoverFill',root.edge):root.node.variant==='quiet'?'transparent':root.fill; border.color:control.activeFocus?root.accent:root.node.variant==='quiet'?'transparent':root.edge }
             contentItem:RowLayout {
                 spacing:5
-                Image { visible:!!source.toString(); source:Presentation.iconSvg(root.node.icon,root.node.variant==='primary'?root.theme.background:root.ink.toString()); Layout.preferredWidth:14; Layout.preferredHeight:14 }
-                Label { text:control.text; horizontalAlignment:Text.AlignHCenter; Layout.fillWidth:true; elide:Text.ElideRight; wrapMode:Text.NoWrap; color:root.node.variant==='primary'?root.theme.background:root.node.tone==='danger'?root.theme.urgent:root.ink }
+                Image { visible:!!source.toString(); source:Presentation.iconSvg(root.node.icon,root.node.variant==='primary'?root.colorRole('actionText',root.theme.background):root.ink.toString()); Layout.preferredWidth:14; Layout.preferredHeight:14 }
+                Label { text:control.text; horizontalAlignment:Text.AlignHCenter; Layout.fillWidth:true; elide:Text.ElideRight; wrapMode:Text.NoWrap; color:root.node.variant==='primary'?root.colorRole('actionText',root.theme.background):root.node.tone==='danger'?root.theme.urgent:root.ink }
             }
             onClicked:root.emit(undefined)
             Component.onCompleted:if(root.node.autoFocus) Qt.callLater(()=>forceActiveFocus())
@@ -134,15 +180,15 @@ Loader {
         TabBar {
             id: tabbar; implicitHeight:34; implicitWidth:200
             currentIndex:(root.node.options || []).findIndex(o=>o.value===root.node.value)
-            background:Rectangle { radius:6; color:root.fill; border.color:root.edge }
+            background:Rectangle { radius:root.controlRadius; color:root.fill; border.color:root.edge }
             Repeater {
                 model:(root.node.options || []).length
                 TabButton {
                     required property int index
                     readonly property var option:root.node.options[index]
                     text:option.label; width:tabbar.width/root.node.options.length; height:34
-                    background:Rectangle { radius:6; color:parent.checked?root.accent:'transparent' }
-                    contentItem:Label { text:parent.text; horizontalAlignment:Text.AlignHCenter; verticalAlignment:Text.AlignVCenter; color:parent.checked?root.theme.background:root.ink }
+                    background:Rectangle { radius:root.controlRadius; color:parent.checked?root.colorRole('selected',root.accent):'transparent' }
+                    contentItem:Label { text:parent.text; horizontalAlignment:Text.AlignHCenter; verticalAlignment:Text.AlignVCenter; color:parent.checked?root.colorRole('selectedText',root.theme.background):root.ink }
                     onClicked:root.emit(option.value)
                 }
             }
@@ -187,12 +233,21 @@ Loader {
             }
         }
     }
+    Component { id:nativeInput
+        Ui.TextField {
+            text:String(root.node.value || ""); enabled:!root.node.disabled
+            foreground:root.ink; accent:root.accent; font.family:root.theme.font; font.pixelSize:root.theme.size
+            Accessible.name:root.node.label || ""
+            onTextEdited:root.emit(text)
+            onAccepted:if(root.node.submit && !root.node.disabled) root.dispatched(root.node.submit,undefined,undefined)
+        }
+    }
     Component { id: input
         TextField {
-            implicitHeight:34; text:String(root.node.value || ''); placeholderText:root.node.placeholder || ''
+            implicitHeight:root.theme.control || 34; text:String(root.node.value || ''); placeholderText:root.node.placeholder || ''
             enabled:!root.node.disabled; color:root.ink; font.family:root.theme.font; font.pixelSize:13
             Accessible.name:root.node.label || ''; selectByMouse:true
-            background:Rectangle { color:root.fill; radius:6; border.color:parent.activeFocus?root.accent:root.edge }
+            background:Rectangle { color:root.fill; radius:root.controlRadius; border.color:parent.activeFocus?root.accent:root.edge }
             onTextEdited:root.emit(text)
             onAccepted:if(root.node.submit && !root.node.disabled) root.dispatched(root.node.submit,undefined,undefined)
         }

@@ -18,7 +18,7 @@
 .zen-application .app-input { width:100%;min-width:0;height:34px;padding:6px 10px;font:inherit;color:inherit;background:var(--mat-well-fill);border:1px solid var(--border);border-radius:var(--radius-input); }
 .zen-application .app-input:focus-visible { outline:2px solid var(--focus-ring);outline-offset:2px; }
 .zen-application .lib-tabs { width:100%;height:var(--control-h);--mat-tabs-track-fill:var(--mat-well-fill);--mat-tabs-track-shadow:inset 0 0 0 var(--border-width) var(--border-strong);--mat-tabs-chosen-fill:var(--selected);--mat-tabs-chosen-ink:var(--selected-text);--mat-tabs-pad:var(--space-1);--mat-tabs-gap:var(--space-1);--mat-tabs-tab-pad:0 var(--space-2); }
-.zen-application .lib-tabs__tab { flex:1; }
+.zen-application .lib-tabs__tab { flex:1 1 auto; }
 .zen-application .tab-content { flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;outline:none; }
 .zen-application .tab-content:focus-visible { outline:2px solid var(--focus-ring);outline-offset:-2px; }
 .zen-application .tab-content,.zen-application .engine-logs { scrollbar-width:thin;scrollbar-color:color-mix(in srgb,currentColor 38%,transparent) transparent; }

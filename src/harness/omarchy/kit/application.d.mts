@@ -35,3 +35,5 @@ export function text(label: string, props?: Partial<ApplicationNode>): Applicati
 export function button(label: string, action: string, props?: Partial<ApplicationNode>): ApplicationNode;
 export function section(label: string, children: ApplicationNode[]): ApplicationNode;
 export function control(kind: 'input' | 'select', label: string, value: string, action: string, props?: Partial<ApplicationNode>): ApplicationNode;
+
+export const nativeIcons: Record<string, string>;
