@@ -1,7 +1,7 @@
 // The DOM side of the component registry: every part the DOM renderer draws by name, as its
 // `domPart` (`<Name>.dom.ts`). `reactComponents.ts` and `svelteComponents.ts` are the other two
-// sides, with the same names. The DOM side holds the core alone (the controls in `components/`
-// and the primitives and layers they draw); a name outside it fails, saying so. Built on first
+// sides, with the same names. The DOM side holds the core alone (the controls in `components/`,
+// the primitives and layers they draw, and the chart's TimeChart); a name outside it fails, saying so. Built on first
 // use, as the other two are, since a registered part draws a tree that reads this.
 import { batch, type DomPart } from './Tree.dom';
 import { coreStores } from './coreStores';

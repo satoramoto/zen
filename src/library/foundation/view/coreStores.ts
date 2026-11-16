@@ -1,4 +1,5 @@
-// The stores the core parts bind (the controls in `components/`, the primitives and the layers),
+// The stores the core parts bind (the controls in `components/`, the primitives, the layers and the
+// chart's TimeChart),
 // apart from music's and Yahaha's, so a renderer of the core alone (the DOM renderer's Hotwire
 // build) carries no others. `stores.ts` spreads them into the full registry.
 import { keyed, type Stores } from './keyed';

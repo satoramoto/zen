@@ -38,6 +38,7 @@ export const AREAS: Record<string, string> = {
   graph: 'Graph',
   shader: 'Shader',
   report: 'Report',
+  chart: 'Chart',
   math: 'Math',
   'math/calculator': 'Math/Calculator',
   'math/cymatics': 'Math/Cymatics',
