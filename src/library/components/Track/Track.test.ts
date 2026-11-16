@@ -21,5 +21,6 @@ describe('Track', () => {
     expect(trackTone({ value: 0.5 })).toBe('short');
     expect(trackTone({ value: 0.5, tone: 'good' })).toBe('good');
     expect(trackTone({ value: 0.5, mode: 'share' })).toBe('none');
+    expect(trackTone({ value: 0.85, close: 0.8 })).toBe('close');
   });
 });

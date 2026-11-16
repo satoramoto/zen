@@ -20,19 +20,20 @@ require "cgi"
 
 module ZenStatic
   # A Track: a value on a rail. `mode` :ratio (a log scale around `mark`, a quarter to `range`
-  # times) or :share (0 to 1); `tone` :good, :close, :short, :bad or :none overrides the ratio's.
-  def zen_track(value, label:, mode: :ratio, range: 4, mark: 1, fill: nil, tone: nil, display: nil)
+  # times) or :share (0 to 1); `tone` :good, :close, :short, :bad or :none overrides the ratio's;
+  # `close` is where close starts (0.9 of the mark); `fluid` fills the box (a table cell).
+  def zen_track(value, label:, mode: :ratio, range: 4, mark: 1, fill: nil, tone: nil, display: nil, close: 0.9, fluid: false)
     mode = mode.to_sym
     fill = mode == :ratio if fill.nil?
     at, from, to, mid = ZenStatic.track_position(value, mode, range, mark)
-    tone = (tone || ZenStatic.track_tone(value, mode, mark)).to_s
+    tone = (tone || ZenStatic.track_tone(value, mode, mark, close)).to_s
     rail = []
     rail << ZenStatic.el("span", { "class" => "lib-track__mark", "data-part" => "mark", "style" => "left: #{ZenStatic.pct(mid)}" }) if mode == :ratio && mark != false
     rail << ZenStatic.el("span", { "class" => "lib-track__fill", "data-part" => "fill", "style" => "left: #{ZenStatic.pct(from)}; width: #{ZenStatic.pct(to - from)}" }) if fill && to > from
     rail << ZenStatic.el("span", { "class" => "lib-track__dot", "data-part" => "dot", "style" => "left: #{ZenStatic.pct(at)}" })
     inner = [ZenStatic.el("span", { "class" => "lib-track__rail", "data-part" => "rail", "role" => "img", "aria-label" => display ? "#{label}: #{display}" : label }, rail.join)]
     inner << ZenStatic.text(display, size: "label", tabular: true, class_name: "lib-track__value", attrs: { "data-part" => "value", "aria-hidden" => "true" }) unless display.nil?
-    ZenStatic.safe(ZenStatic.el("span", { "class" => "lib-track", "data-part" => "root", "data-tone" => tone, "data-mode" => mode.to_s }, inner.join))
+    ZenStatic.safe(ZenStatic.el("span", { "class" => "lib-track", "data-part" => "root", "data-tone" => tone, "data-mode" => mode.to_s, "data-fluid" => fluid ? "true" : nil }, inner.join))
   end
 
   # A Sparkline: values as a small line, toned by its direction (:up, :down, :flat).
@@ -88,8 +89,10 @@ module ZenStatic
 
   # A Panel: a titled card. The block is its body (server markup, as is); `actions` is markup for
   # the end of its heading row; `aside` words beside the title; `empty` what it says with no body.
-  def zen_panel(title, href: nil, level: 2, aside: nil, actions: nil, empty: nil, class_name: nil, &body)
-    heading = ZenStatic.text(title, role: "heading", size: nil, class_name: "lib-panel__title")
+  # `title_size` :heading (default), :body or :label (set strong), for a dense dashboard.
+  def zen_panel(title, href: nil, level: 2, title_size: nil, aside: nil, actions: nil, empty: nil, class_name: nil, &body)
+    dense = title_size && title_size.to_s != "heading"
+    heading = ZenStatic.text(title, role: "heading", size: dense ? title_size.to_s : nil, weight: dense ? "strong" : nil, class_name: "lib-panel__title")
     head = [ZenStatic.el("h#{level}", { "class" => "lib-panel__heading" }, href ? ZenStatic.el("a", { "class" => "lib-panel__link", "href" => href }, heading) : heading)]
     head << ZenStatic.text(aside, size: "caption", tone: "muted", class_name: "lib-panel__aside", attrs: { "data-part" => "aside" }) unless aside.nil?
     head << ZenStatic.el("div", { "class" => "lib-panel__actions", "data-part" => "actions" }, actions.to_s) unless actions.nil?
@@ -134,10 +137,10 @@ module ZenStatic
       [at, [50, at].min, [50, at].max, 50]
     end
 
-    def track_tone(value, mode, mark)
+    def track_tone(value, mode, mark, close = 0.9)
       return :none if mode == :share
       base = mark == false ? 1 : mark.to_f
-      value >= base ? :good : (value >= 0.9 * base ? :close : :short)
+      value >= base ? :good : (value >= close.to_f * base ? :close : :short)
     end
 
     def spark_points(values)

@@ -185,7 +185,8 @@ export function bindTimeChart(node: HTMLElement, initial: TimeChartParams) {
     }
     style();
     const last = Math.max(...params.series.flatMap((s) => s.points.map(([t]) => t)));
-    if (start !== null && Number.isFinite(last)) chart.timeScale().setVisibleRange({ from: seconds(start), to: seconds(last) });
+    // A little room after the last reading, so the last time label isn't clipped at the edge.
+    if (start !== null && Number.isFinite(last)) chart.timeScale().setVisibleRange({ from: seconds(start), to: seconds(last + (last - start) * 0.04) });
     else chart.timeScale().fitContent();
   };
 
@@ -209,7 +210,7 @@ export function bindTimeChart(node: HTMLElement, initial: TimeChartParams) {
         if (destroyed) return;
         lib = loaded;
         const measured = typeof ResizeObserver !== 'undefined';
-        chart = loaded.createChart(node, { autoSize: measured, ...(measured ? {} : { width: node.clientWidth || 600, height: params.height }), handleScale: { axisPressedMouseMove: true }, rightPriceScale: { scaleMargins: { top: 0.12, bottom: 0.08 } }, timeScale: { timeVisible: true, secondsVisible: false } });
+        chart = loaded.createChart(node, { autoSize: measured, ...(measured ? {} : { width: node.clientWidth || 600, height: params.height }), handleScale: { axisPressedMouseMove: true }, rightPriceScale: { scaleMargins: { top: 0.12, bottom: 0.08 } }, timeScale: { timeVisible: true, secondsVisible: false, rightOffset: 3 } });
         chart.subscribeCrosshairMove(hover);
         node.dataset.chart = 'drawn';
         data();

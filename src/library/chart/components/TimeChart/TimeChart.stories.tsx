@@ -157,7 +157,7 @@ export const AScreenReadersView: Story = scenario(
     check: async ({ canvasElement }) => {
       const items = [...canvasElement.querySelectorAll('[data-part="summary"] li')].map((li) => li.textContent);
       await expect(items).toHaveLength(3);
-      await expect(items[0]).toMatch(/^KRX: .+, [+-−]?[\d.]+% over the span$/);
+      await expect(items[0]).toMatch(/^KRX: [+-−]?[\d.]+% over the span$/);
       await expect(within(canvasElement).getByRole('img').getAttribute('aria-label')).toContain('Yield per hash, change: KRX');
     },
   },
@@ -224,7 +224,7 @@ export const ABreakEvenLineAndAnEvent: Story = {
   {
     name: 'A break-even line and an event',
     requirement: 'Reference lines and markers',
-    shall: 'A TimeChart SHALL draw each reference line it is given at its value with its label and tone, and each marker at its time on its series with its label and tone.',
+    shall: 'A TimeChart SHALL draw each reference line it is given at its value with its label and tone, and each marker at its time on its series with its label and tone; a line outside the values in view SHALL be named in words with the side it lies on.',
     when: 'a chart is given a reference line and a marker',
     then: 'the line is drawn at its value with its label, and the marker on its series at its time',
     check: async ({ canvasElement }) => {
@@ -266,18 +266,34 @@ export const ACoinsLineLinksToItsPage: Story = scenario(
   {
     name: 'A coin\'s line links to its page',
     requirement: 'A legend of the series',
-    shall: 'A TimeChart SHALL list each series in a legend with its name, its latest value and its change, and a series given a link SHALL link from its name.',
+    shall: 'A TimeChart SHALL list each series in a legend with its name, its latest value and its change (rebased, its change alone), and a series given a link SHALL link from its name.',
     when: 'a series has a link',
     then: 'its legend name is a link to it',
     check: async ({ canvasElement }) => {
       const link = within(canvasElement).getByRole('link', { name: 'KRX' });
       await expect(link).toHaveAttribute('href', '#coin-krx');
       const key = link.closest('[data-series]')!;
-      await expect(key.querySelector('.lib-chart__last')!.textContent).not.toBe('');
+      // Rebased, each series reads as its change alone: its raw value means nothing on a shared percent scale.
+      await expect(key.querySelector('.lib-chart__last')).toBeNull();
       await expect(key.querySelector('[data-direction]')!.textContent).toMatch(/%/);
     },
   },
   story(s.Compare),
+);
+
+export const ABreakEvenOffTheScale: Story = scenario(
+  {
+    name: 'A break-even off the scale',
+    requirement: 'Reference lines and markers',
+    when: 'a reference line lies outside the values in view',
+    then: 'the chart says in words that it is below or above, with its label and value',
+    check: async ({ canvasElement }) => {
+      const ref = canvasElement.querySelector('[data-part="offscale"] li')!;
+      await expect(ref).toHaveAttribute('data-side', 'below');
+      await expect(ref).toHaveTextContent('↓ Break-even at 2× 0.0000004 USD / H/s / day, below the chart');
+    },
+  },
+  story(s.FarAbove),
 );
 
 /** Runs a day as bars, no legend, short. */

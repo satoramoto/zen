@@ -1,6 +1,8 @@
 /* Track: a value on a rail. The rail is a hairline; the mark a short upright at its middle; the
    fill and the dot take the tone: good is success, close is warning, short is quiet (not danger,
-   which is for what failed), bad is danger. The value beside it keeps a fixed width so rows align. */
+   which is for what failed), bad is danger. The value beside it keeps a fixed width so rows align.
+   The rail is `--lib-track-w` wide (set it on a container to size a column of tracks), or, with
+   `fluid`, fills the track's box: a table cell, under a header scale drawn to the same width. */
 .lib-track {
   --lib-track-tone: var(--text-3);
   --lib-track-w: 6rem;
@@ -20,3 +22,5 @@
 .lib-track__dot { position: absolute; inset-block-start: 50%; inline-size: calc(var(--space-2) + var(--border-width)); block-size: calc(var(--space-2) + var(--border-width)); background: var(--lib-track-tone); border-radius: var(--lib-track-round); transform: translate(-50%, -50%); }
 .lib-track[data-tone='short'] .lib-track__dot, .lib-track[data-tone='none'] .lib-track__dot { background: var(--surface-1); box-shadow: inset 0 0 0 var(--border-width) var(--lib-track-tone); }
 .lib-track__value { min-inline-size: 4ch; text-align: end; }
+.lib-track[data-fluid] { display: flex; inline-size: 100%; }
+.lib-track[data-fluid] .lib-track__rail { flex: 1 1 auto; inline-size: auto; min-inline-size: var(--space-6); }

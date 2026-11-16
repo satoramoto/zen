@@ -16,6 +16,10 @@ export const trackStories = defineFixtures<TrackModelProps>()({
   Share: { args: { value: 0.35, mode: 'share', label: 'Share of the network', display: '35%' } },
   /** Past the end of the range: held at the edge. */
   Beyond: { args: { value: 40, label: 'Headroom', display: '40×' } },
+  /** A close threshold of 0.8 of the mark: 0.85 reads close. */
+  CloserAt: { args: { value: 0.85, close: 0.8, label: 'Our multiplier against what XMR needs', display: '0.85×' } },
+  /** The rail fills its box: a table cell. */
+  Fluid: { args: { value: 1.5, fluid: true, label: 'Headroom', display: '1.5×' } },
   /** A wider range and no mark. */
   NoMark: { args: { value: 3, range: 16, mark: false, fill: false, label: 'Against the median' } },
 });

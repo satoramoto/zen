@@ -47,13 +47,13 @@ class ZenStaticTest
   def written(part, props)
     p = props.transform_keys(&:to_sym)
     case part
-    when "Track" then zen_track(p[:value], label: p[:label], mode: p[:mode] || :ratio, range: p[:range] || 4, mark: p.key?(:mark) ? p[:mark] : 1, fill: p[:fill], tone: p[:tone], display: p[:display])
+    when "Track" then zen_track(p[:value], label: p[:label], mode: p[:mode] || :ratio, range: p[:range] || 4, mark: p.key?(:mark) ? p[:mark] : 1, fill: p[:fill], tone: p[:tone], display: p[:display], close: p[:close] || 0.9, fluid: p[:fluid] || false)
     when "Sparkline" then zen_sparkline(p[:values], label: p[:label], direction: p[:direction], area: p[:area] || false, dot: p.key?(:dot) ? p[:dot] : true)
     when "BarList" then zen_bar_list(p[:items], label: p[:label])
     when "FigureStrip" then zen_figure_strip(p[:figures], lead: p[:lead] || false, label: p[:label])
     when "Panel"
       body = p[:children] && -> { CGI.escapeHTML(p[:children]) }
-      zen_panel(p[:title], href: p[:href], level: p[:level] || 2, aside: p[:aside], empty: p[:empty], class_name: p[:className], &body)
+      zen_panel(p[:title], href: p[:href], level: p[:level] || 2, title_size: p[:titleSize], aside: p[:aside], empty: p[:empty], class_name: p[:className], &body)
     else raise "no static helper for #{part}"
     end
   end

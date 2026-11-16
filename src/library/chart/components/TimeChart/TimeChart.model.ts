@@ -14,6 +14,7 @@ import {
   formatTime,
   formatValue,
   lastChange,
+  lineSide,
   prepared,
   spanStart,
   valueAt,
@@ -79,7 +80,12 @@ export function timeChartView(props: TimeChartModelProps, state: TimeChartState 
     const { last, change } = lastChange(s.points, start);
     return { name: s.name, last: read(last), change: formatChange(change), direction: direction(change) };
   });
-  const sentence = summary.map((s) => `${s.name} ${s.last}, ${s.change}`).join('; ');
+  // Rebased, a series reads as its change: its raw last value says nothing on a shared percent scale.
+  const sentence = summary.map((s) => (rebase ? `${s.name} ${s.change}` : `${s.name} ${s.last}, ${s.change}`)).join('; ');
+  const offscale = (lines ?? []).flatMap((line) => {
+    const side = rebase ? 'inside' : lineSide(series, line.value, rebase, start);
+    return side === 'inside' ? [] : [{ ...line, side }];
+  });
   const hovered = state.hover;
 
   return h(
@@ -104,8 +110,24 @@ export function timeChartView(props: TimeChartModelProps, state: TimeChartState 
                   s.href
                     ? h('a', { class: 'lib-chart__name', href: s.href }, small({ weight: 'strong' }, s.name))
                     : small({ weight: 'strong', className: 'lib-chart__name' }, s.name),
-                  small({ tone: 'secondary', tabular: true, className: 'lib-chart__last' }, summary[i].last),
+                  when(!rebase, () => small({ tone: 'secondary', tabular: true, className: 'lib-chart__last' }, summary[i].last)),
                   h('span', { class: 'lib-chart__change', 'data-direction': summary[i].direction }, small({ tone: toneOf(summary[i].direction), tabular: true }, summary[i].change)),
+                ),
+            ),
+          ),
+        ),
+        when(ok && offscale.length > 0, () =>
+          h(
+            'ul',
+            { class: 'lib-chart__offscale', 'data-part': 'offscale' },
+            each(
+              offscale,
+              (line) => `${line.label ?? ''}${line.value}`,
+              (line) =>
+                h(
+                  'li',
+                  { class: 'lib-chart__ref', 'data-side': line.side, 'data-tone': line.tone ?? 'accent' },
+                  small({ tone: 'muted' }, `${line.side === 'above' ? '↑' : '↓'} ${line.label ? `${line.label} ` : ''}${read(line.value)}, ${line.side} the chart`),
                 ),
             ),
           ),
@@ -149,7 +171,7 @@ export function timeChartView(props: TimeChartModelProps, state: TimeChartState 
     h(
       'ul',
       { class: 'lib-chart__summary', 'data-part': 'summary' },
-      each(summary, (s) => s.name, (s) => h('li', {}, `${s.name}: ${s.last}, ${s.change} over the span`)),
+      each(summary, (s) => s.name, (s) => h('li', {}, rebase ? `${s.name}: ${s.change} over the span` : `${s.name}: ${s.last}, ${s.change} over the span`)),
     ),
   );
 }

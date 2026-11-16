@@ -1,6 +1,7 @@
 # chart-time-chart Specification
 
 ## Purpose
+
 A chart of values over time that wears the pack it is drawn in, for dashboards: several series on one axis, a crosshair that reads them as text, and an accessible summary.
 
 ## Requirements
@@ -63,11 +64,15 @@ A drawn chart SHALL take the new colours when its scope's pack or mode changes, 
 
 ### Requirement: Reference lines and markers
 
-A TimeChart SHALL draw each reference line it is given at its value with its label and tone, and each marker at its time on its series with its label and tone.
+A TimeChart SHALL draw each reference line it is given at its value with its label and tone, and each marker at its time on its series with its label and tone; a line outside the values in view SHALL be named in words with the side it lies on.
 
 #### Scenario: A break-even line and an event
 - **WHEN** a chart is given a reference line and a marker
 - **THEN** the line is drawn at its value with its label, and the marker on its series at its time
+
+#### Scenario: A break-even off the scale
+- **WHEN** a reference line lies outside the values in view
+- **THEN** the chart says in words that it is below or above, with its label and value
 
 ### Requirement: Spans window the points
 
@@ -79,7 +84,7 @@ A TimeChart given spans SHALL show the points inside the chosen span from the po
 
 ### Requirement: A legend of the series
 
-A TimeChart SHALL list each series in a legend with its name, its latest value and its change, and a series given a link SHALL link from its name.
+A TimeChart SHALL list each series in a legend with its name, its latest value and its change (rebased, its change alone), and a series given a link SHALL link from its name.
 
 #### Scenario: A coin's line links to its page
 - **WHEN** a series has a link

@@ -63,6 +63,28 @@
   },
   {
     "part": "Track",
+    "story": "CloserAt",
+    "props": {
+      "value": 0.85,
+      "close": 0.8,
+      "label": "Our multiplier against what XMR needs",
+      "display": "0.85×"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"close\">\n  <span aria-label=\"Our multiplier against what XMR needs: 0.85×\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__mark\" data-part=\"mark\" style=\"left: 50%\">\n    <span class=\"lib-track__fill\" data-part=\"fill\" style=\"left: 44.14%; width: 5.86%\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 44.14%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"0.85×\""
+  },
+  {
+    "part": "Track",
+    "story": "Fluid",
+    "props": {
+      "value": 1.5,
+      "fluid": true,
+      "label": "Headroom",
+      "display": "1.5×"
+    },
+    "dom": "<span class=\"lib-track\" data-fluid=\"true\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"good\">\n  <span aria-label=\"Headroom: 1.5×\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__mark\" data-part=\"mark\" style=\"left: 50%\">\n    <span class=\"lib-track__fill\" data-part=\"fill\" style=\"left: 50%; width: 14.62%\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 64.62%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"1.5×\""
+  },
+  {
+    "part": "Track",
     "story": "NoMark",
     "props": {
       "value": 3,
@@ -263,6 +285,17 @@
       "empty": "Nothing yet. The feed starts after the second collector run."
     },
     "dom": "<section class=\"lib-panel lib-surface\" data-border=\"true\" data-layer=\"raised\" data-part=\"root\" data-radius=\"card\">\n  <header class=\"lib-panel__head\" data-part=\"head\">\n    <h2 class=\"lib-panel__heading\">\n      <span class=\"lib-panel__title lib-text lib-tone\" data-role=\"heading\">\n        \"Feed\"\n    <span class=\"lib-panel__aside lib-text lib-tone\" data-part=\"aside\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"0 in the last day\"\n  <p class=\"lib-panel__empty lib-text lib-tone\" data-part=\"empty\" data-role=\"body\" data-text-size=\"label\" data-tone=\"muted\">\n    \"Nothing yet. The feed starts after the second collector run.\""
+  },
+  {
+    "part": "Panel",
+    "story": "Dense",
+    "props": {
+      "title": "Hardware finds",
+      "titleSize": "label",
+      "aside": "cheapest listing against a 20% target",
+      "children": "Twelve listings."
+    },
+    "dom": "<section class=\"lib-panel lib-surface\" data-border=\"true\" data-layer=\"raised\" data-part=\"root\" data-radius=\"card\">\n  <header class=\"lib-panel__head\" data-part=\"head\">\n    <h2 class=\"lib-panel__heading\">\n      <span class=\"lib-panel__title lib-text lib-tone\" data-role=\"heading\" data-text-size=\"label\" data-text-weight=\"strong\">\n        \"Hardware finds\"\n    <span class=\"lib-panel__aside lib-text lib-tone\" data-part=\"aside\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"cheapest listing against a 20% target\"\n  <div class=\"lib-panel__body\" data-part=\"body\">\n    \"Twelve listings.\""
   },
   {
     "part": "Panel",

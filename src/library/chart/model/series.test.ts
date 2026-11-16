@@ -52,3 +52,13 @@ describe('a time chart\'s series', () => {
     expect(formatTime(t0, null)).toBe('1 Nov 2026');
   });
 });
+
+describe('a reference line against the span', () => {
+  it('is inside, or says it is above or below what the chart shows', async () => {
+    const { lineSide } = await import('./series');
+    const coin: ChartSeries = { name: 'KRX', points: [[t0, 2], [t0 + DAY, 3]] };
+    expect(lineSide([coin], 2.5, false, null)).toBe('inside');
+    expect(lineSide([coin], 10, false, null)).toBe('above');
+    expect(lineSide([coin], 0.1, false, null)).toBe('below');
+  });
+});

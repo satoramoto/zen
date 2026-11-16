@@ -23,6 +23,18 @@
     <p class="lib-text lib-tone lib-panel__empty" data-part="empty" data-role="body" data-text-size="label" data-tone="muted">
       "Nothing yet. The feed starts after the second collector run."
 
+## Dense
+<Surface as="section" border=true className="lib-panel" data-part="root" layer="raised" radius="card">
+  #children
+    <header class="lib-panel__head" data-part="head">
+      <h2 class="lib-panel__heading">
+        <span class="lib-text lib-tone lib-panel__title" data-role="heading" data-text-size="label" data-text-weight="strong">
+          "Hardware finds"
+      <span class="lib-text lib-tone lib-panel__aside" data-part="aside" data-role="body" data-text-size="caption" data-tone="muted">
+        "cheapest listing against a 20% target"
+    <div class="lib-panel__body" data-part="body">
+      {children}
+
 ## Nested
 <Surface as="section" border=true className="lib-panel" data-part="root" layer="raised" radius="card">
   #children
