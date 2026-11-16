@@ -5,3 +5,4 @@
 - Ruling: Track's `short` tone is quiet grey with a hollow dot, never red — Market keeps red for negative numbers and failures — cost if wrong: one CSS rule.
 - Ruling: the chart's own TradingView attribution logo stays on, the library's default — its licence notice asks for attribution — cost if wrong: an option to turn off with a credit elsewhere.
 - Ruling: candlesticks and volume are left out of v1 — Market has no OHLC and its volume is a rolling figure (Design's answer) — cost if wrong: two series kinds to add.
+- Market: vendored at zen e76c421 on xmrz main as 8fffbab. Headless shell on /board: no Lightweight Charts request until a TimeChart mounted (the pin needs `preload: false`, now in docs/rails.md), then the plot drew with the axis, the break-even line and the legend; `zen_track` renders through `ApplicationController.helpers`; `bin/rails test` 199 runs, 0 failures; no console errors.
