@@ -9,11 +9,23 @@ import { render as renderSvelte } from '@testing-library/svelte';
 import { createRawSnippet, flushSync, mount, unmount } from 'svelte';
 import { fromStore, writable } from 'svelte/store';
 import { describe, expect, it, vi } from 'vitest';
-import { serialize } from '../../parity';
 import { Tree } from './Tree';
 import TreeSvelte from './Tree.svelte';
 import { component, each, h, slot, when, wire, type Handlers, type Node } from './Tree.model';
 import type { Store, Stores } from './stores';
+import { mountTree, type DomContext, type DomFill } from './Tree.dom';
+import { domComponent, mountPart } from './domComponents';
+import { coreStores } from './coreStores';
+import { maskIds, serialize } from '../../parity';
+
+/** A slot fill of markup, for the DOM renderer (Svelte's `createRawSnippet`). */
+const htmlFill = (html: string): DomFill => (parent, before) => {
+  const template = document.createElement('template');
+  template.innerHTML = html;
+  const nodes = Array.from(template.content.childNodes);
+  parent.insertBefore(template.content, before);
+  return { update() {}, nodes: () => nodes, destroy: () => nodes.forEach((n) => (n as ChildNode).remove()) };
+};
 
 /** A store that logs what the renderer does to it, and calls its `ping` handler key on click. */
 function recorder(log: string[]): Stores {
@@ -282,5 +294,130 @@ describe('Tree: React and Svelte draw any tree the same', () => {
     const tree = wire(h('div'), { bind: [['nope', {}]] });
     expect(() => renderReact(createElement(Tree, { tree, stores: {} }))).toThrow(/no store named "nope"/);
     spy.mockRestore();
+  });
+});
+
+// The DOM renderer (`Tree.dom.ts`), held to React's over the same trees: the same DOM, the same
+// store lifecycle, keyed moves that keep elements, parts drawn by name, slots that come and go.
+describe('Tree: the DOM renderer draws any tree as React does', () => {
+  const domSlots = { icon: htmlFill('<em>icon</em>') };
+  const env = (handlers: Handlers, stores: Stores, slots: DomContext['slots'] = domSlots): DomContext => ({ slots, handlers, stores, components: domComponent, contexts: {}, scope: null, svg: false });
+  const domMount = (tree: Node, handlers: Handlers, stores: Stores, slots?: DomContext['slots']) => {
+    const container = document.createElement('div');
+    document.body.append(container);
+    const mounted = mountTree(container, null, tree, env(handlers, stores, slots));
+    return { container, mounted, unmount: () => (mounted.destroy(), container.remove()) };
+  };
+
+  it('the same DOM: text, nesting, slots, attributes, SVG, a keyed list', () => {
+    const react = renderReact(createElement(Tree, { tree: sample(['a', 'b', 'c']), slots: reactSlots, stores: recorder([]) }));
+    const dom = domMount(sample(['a', 'b', 'c']), {}, recorder([]));
+    expect(serialize(dom.container)).toBe(serialize(react.container));
+    expect(dom.container.querySelector('path')!.namespaceURI).toBe('http://www.w3.org/2000/svg');
+    expect((dom.container.querySelector('button') as HTMLButtonElement).disabled).toBe(true);
+    expect(dom.container.querySelector('button')!.style.getPropertyValue('--yh-x')).toBe('3');
+    react.unmount();
+    dom.unmount();
+  });
+
+  it('handlers by key, and stores: mounted once, updated on new params or handlers, destroyed with their listeners', () => {
+    const log: string[] = [];
+    const calls: string[] = [];
+    const stores = recorder(log);
+    const dom = domMount(sample(['a']), { press: () => calls.push('press'), ping: (what: string) => calls.push(what) }, stores);
+    const button = dom.container.querySelector('button')!;
+    fireEvent.click(button);
+    expect(calls).toEqual(['ping 1', 'press']);
+    dom.mounted.update(sample(['a'], 2), env({ press: () => calls.push('press v2'), ping: (what: string) => calls.push(`${what} v2`) }, stores));
+    expect(log).toEqual(['mount button 1', 'update 2']);
+    expect(dom.container.querySelector('button')).toBe(button);
+    fireEvent.click(button);
+    expect(calls).toEqual(['ping 1', 'press', 'ping 2 v2', 'press v2']);
+    dom.unmount();
+    fireEvent.click(button);
+    expect(calls).toHaveLength(4);
+    expect(log.at(-1)).toBe('destroy');
+    expect(button.isConnected).toBe(false);
+  });
+
+  it('keyed children move, not redraw; a conditional child and a slot fill come and go', () => {
+    const react = renderReact(createElement(Tree, { tree: sample(['a', 'b', 'c']), slots: reactSlots, stores: recorder([]) }));
+    const dom = domMount(sample(['a', 'b', 'c']), {}, recorder([]));
+    const before = Array.from(dom.container.querySelectorAll('li'));
+    react.rerender(createElement(Tree, { tree: sample(['c', 'a', 'b'], 1, true), slots: reactSlots, stores: recorder([]) }));
+    dom.mounted.update(sample(['c', 'a', 'b'], 1, true), env({}, recorder([])));
+    const after = Array.from(dom.container.querySelectorAll('li'));
+    expect(after.map((li) => li.dataset.id)).toEqual(['c', 'a', 'b']);
+    expect(after).toEqual([before[2], before[0], before[1]]);
+    expect(dom.container.querySelector('i')?.textContent).toBe('extra');
+    expect(serialize(dom.container)).toBe(serialize(react.container));
+
+    // The icon slot loses its fill, then gets it back: the rest of the tree stays as it was.
+    const button = dom.container.querySelector('button');
+    dom.mounted.update(sample(['c', 'a', 'b']), env({}, recorder([]), {}));
+    expect(dom.container.querySelector('em')).toBeNull();
+    expect(dom.container.querySelector('i')).toBeNull();
+    dom.mounted.update(sample(['c', 'a', 'b']), env({}, recorder([])));
+    expect(dom.container.querySelector('.slot-host em')?.textContent).toBe('icon');
+    expect(dom.container.querySelector('button')).toBe(button);
+    react.rerender(createElement(Tree, { tree: sample(['c', 'a', 'b']), slots: reactSlots, stores: recorder([]) }));
+    expect(serialize(dom.container)).toBe(serialize(react.container));
+    react.unmount();
+    dom.unmount();
+  });
+
+  it('component nodes: parts by name, callbacks by key, slots filled with subtrees or passed through; form properties', () => {
+    const composite = (value: string, checked: boolean): Node =>
+      h(
+        'div',
+        { class: 'page' },
+        component('SettingsRow', { id: 'upper', label: 'Upper', hint: 'Right hand' }, {
+          slots: {
+            children: [
+              component('LampButton', { label: 'On', name: 'Upper', on: true }, { on: { onToggle: 'toggle' } }),
+              h('input', { type: 'range', min: '0', max: '30', value }),
+              h('input', { type: 'checkbox', checked: checked ? '' : undefined }),
+            ],
+          },
+        }),
+        component('SettingsRow', { id: 'pass', label: 'Passed through' }, { slots: { children: slot('icon') } }),
+      );
+    const calls: unknown[] = [];
+    const react = renderReact(createElement(Tree, { tree: composite('10', true), slots: reactSlots, handlers: { toggle: () => {} } }));
+    const dom = domMount(composite('10', true), { toggle: (on: boolean) => calls.push(on) }, coreStores);
+    expect(maskIds(serialize(dom.container))).toBe(maskIds(serialize(react.container)));
+    fireEvent.click(dom.container.querySelector('.yh-lampbutton')!);
+    expect(calls).toEqual([false]);
+    const range = dom.container.querySelector('input[type=range]') as HTMLInputElement;
+    expect(range.value).toBe('10');
+    expect((dom.container.querySelector('input[type=checkbox]') as HTMLInputElement).checked).toBe(true);
+    dom.mounted.update(composite('12', false), env({ toggle: (on: boolean) => calls.push(on) }, coreStores));
+    expect(dom.container.querySelector('input[type=range]')).toBe(range);
+    expect(range.value).toBe('12');
+    expect((dom.container.querySelector('input[type=checkbox]') as HTMLInputElement).checked).toBe(false);
+    react.unmount();
+    dom.unmount();
+  });
+
+  it('an unknown store or part name throws, naming the registry', () => {
+    expect(() => domMount(wire(h('div'), { bind: [['nope', {}]] }), {}, {})).toThrow(/no store named "nope"/);
+    expect(() => domMount(h('div', {}, component('Stage', {})), {}, {})).toThrow(/no DOM part named "Stage".*domComponents\.ts/);
+  });
+
+  it('a focused part keeps its element and focus when it gets new props', () => {
+    const container = document.createElement('div');
+    document.body.append(container);
+    const props = (index: number) => ({ items: ['One', 'Two', 'Three'], index, label: 'Count', onChange: () => {} });
+    const part = mountPart(container, 'Segmented', props(0));
+    const chosen = () => container.querySelector('[aria-checked="true"], [aria-pressed="true"], [data-chosen]');
+    const focused = container.querySelectorAll('button')[0];
+    focused.focus();
+    part.update(props(1));
+    expect(container.querySelectorAll('button')[0]).toBe(focused);
+    expect(document.activeElement).toBe(focused);
+    expect(chosen()?.textContent).toContain('Two');
+    part.destroy();
+    expect(container.childNodes).toHaveLength(0);
+    container.remove();
   });
 });
