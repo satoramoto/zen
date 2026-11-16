@@ -29,6 +29,9 @@ import type { DomFill, DomScope } from './foundation/view/Tree.dom';
 import { domComponent, domParts, mountPart } from './foundation/view/domComponents';
 import { resolveTheme } from './resolve';
 import { getSystemMode, resolveMode, scopeView, subscribeSystemMode, type ModeChoice } from './theme.model';
+// The scope's own rules, as `ThemeScope` brings them (theme.tsx); each part's DOM binding brings its stylesheet.
+import './library.css';
+import './yahaha/tokens.css';
 
 /** The event a callback prop is dispatched as: `onChange` → `zen:change`, `onchange` → `zen:change`. */
 export const eventName = (callback: string) => `zen:${callback.replace(/^on/, '').toLowerCase()}`;
