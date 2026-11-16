@@ -62,7 +62,7 @@ const meta = {
   title: 'Core/Screens/Hotwire',
   decorators: [withLibraryTheme],
   tags: ['browser'],
-  parameters: { layout: 'padded', spec: { capability: 'library-hotwire', change: 'rails-dom-renderer' } },
+  parameters: { layout: 'padded', spec: { capability: 'library-hotwire', change: 'rails-dom-renderer', purpose: "Lets a server-rendered app built with Turbo and Stimulus, such as a standard Rails 8 app, place zen's parts in its HTML and have them drawn, updated and removed in the browser as Turbo moves the page, with no Node at run time." } },
   render: () => createElement('div', { 'data-testid': 'host' }),
 } satisfies Meta;
 

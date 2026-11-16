@@ -29,7 +29,7 @@ import VoteControlSvelte from '../../components/VoteControl/VoteControl.svelte';
 const meta = {
   title: 'Core/Screens/DOM renderer',
   decorators: [withLibraryTheme],
-  parameters: { layout: 'padded', spec: { capability: 'library-dom-renderer', change: 'rails-dom-renderer' } },
+  parameters: { layout: 'padded', spec: { capability: 'library-dom-renderer', change: 'rails-dom-renderer', purpose: "Draws zen's view trees straight into the browser's DOM with no framework, so a page that is not a React or Svelte app can use zen's parts with the same markup and behaviour." } },
   render: () => createElement('div', { 'data-testid': 'host' }),
 } satisfies Meta;
 

@@ -21,20 +21,20 @@
 - [x] 3.3 Simple controls: Button, ActionButton, LampButton, Separator, StatusDot, CodeImage, SettingsRow, Readout, StepValue; verify three-way parity
 - [x] 3.4 Stateful controls: Select, Segmented, Checkbox, Radio, Toggle, Switch, Disclosure, LineSlider, Slider, NumberField, SearchField, Popover, Modal, Sheet; verify three-way parity
 - [x] 3.5 Remaining converted controls: FolderList, Gate, NamePicker, PageList, VoteControl; verify three-way parity
-- [ ] 3.6 Verify `node src/harness/stories/cli.mjs Core --renderer dom` plays every Core story; fix in the renderer or a binding any play that fails only under `dom`
+- [x] 3.6 Verify `node src/harness/stories/cli.mjs Core --renderer dom` plays every Core story; fix in the renderer or a binding any play that fails only under `dom`
 - [x] 3.7 Add the `--renderer dom` Core run to `.github/workflows/checks.yml` and the checks table in `AGENTS.md`
 
 ## 4. The Hotwire entry
 
-- [ ] 4.1 Write `src/library/hotwire.ts` (`ZenController`, `ZenThemeController`, `registerZen`) per design decision 4: mount, props update, events, value echo with the hidden field, `<template>` slots, morph, cache, theme scope publishing `use.scope()`; add the placeholder's `min-block-size`; verify `npm run typecheck`
-- [ ] 4.2 Write `screens/Hotwire/` (`Core/Screens/Hotwire`, tagged `browser`) with one `scenario()` play per `library-hotwire` scenario, against real Turbo and Stimulus with stubbed responses; verify `node src/harness/stories/cli.mjs Core/Screens/Hotwire` passes
-- [ ] 4.3 Add `scenario()` plays for the `library-dom-renderer` scenarios that the Core plays don't already cover (unknown name error, focus survives update, popover cleaned up on destroy) under the parts they concern; verify they pass with `--renderer dom`
-- [ ] 4.4 Run `story-spec sync --change rails-dom-renderer` and verify the deltas match the stories
+- [x] 4.1 Write `src/library/hotwire.ts` (`ZenController`, `ZenThemeController`, `registerZen`) per design decision 4: mount, props update, events, value echo with the hidden field, `<template>` slots, morph, cache, theme scope publishing `use.scope()`; add the placeholder's `min-block-size`; verify `npm run typecheck`
+- [x] 4.2 Write `screens/Hotwire/` (`Core/Screens/Hotwire`, tagged `browser`) with one `scenario()` play per `library-hotwire` scenario, against real Turbo and Stimulus with stubbed responses; verify `node src/harness/stories/cli.mjs Core/Screens/Hotwire` passes
+- [x] 4.3 Add `scenario()` plays for the `library-dom-renderer` scenarios that the Core plays don't already cover (unknown name error, focus survives update, popover cleaned up on destroy) under the parts they concern; verify they pass with `--renderer dom`
+- [x] 4.4 Run `story-spec sync --change rails-dom-renderer` and verify the deltas match the stories
 
 ## 5. The importmap build
 
-- [ ] 5.1 Write `vite.hotwire.config.ts` (one module, no splitting, Stimulus external, no `emptyOutDir`, shared `joinStyles`, one theme stylesheet per pack) and chain it in `build:lib`; add `./hotwire`, `./hotwire/zen.css` and `./hotwire/themes/*` to `package.json` exports; verify `npm run build:lib` writes `lib/hotwire/zen.js`, `zen.css` and `themes/*.css`
-- [ ] 5.2 Add the rule to `scripts/check-lib-entries.ts` that `lib/hotwire/zen.js` imports nothing but `@hotwired/stimulus` and nothing of React or Svelte; verify `npm run check:lib` passes, and fails with a planted React import
+- [x] 5.1 Write `vite.hotwire.config.ts` (one module, no splitting, Stimulus external, no `emptyOutDir`, shared `joinStyles`, one theme stylesheet per pack) and chain it in `build:lib`; add `./hotwire`, `./hotwire/zen.css` and `./hotwire/themes/*` to `package.json` exports; verify `npm run build:lib` writes `lib/hotwire/zen.js`, `zen.css` and `themes/*.css`
+- [x] 5.2 Add the rule to `scripts/check-lib-entries.ts` that `lib/hotwire/zen.js` imports nothing but `@hotwired/stimulus` and nothing of React or Svelte; verify `npm run check:lib` passes, and fails with a planted React import
 - [ ] 5.3 Write `docs/rails.md` (vendoring, pins, the `zen` helper snippet, labels, events, form fields, morph and cache, the bundle's measured size) and the new entry's line in `AGENTS.md`; verify each snippet against task group 6 as it is done
 
 ## 6. Market (xmrz, `first-mover/market`, branch `change/rails-dom-renderer`)
