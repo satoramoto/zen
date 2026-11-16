@@ -109,6 +109,7 @@
   "files": [
     "lib",
     "src/site",
+    "src/rails",
     "src/harness"
   ],
   "sideEffects": [
@@ -201,6 +202,7 @@
   },
   "dependencies": {
     "@cortex-js/compute-engine": "0.182.0",
+    "lightweight-charts": "5.3.0",
     "mafs": "0.21.0",
     "marked": "18.2.0",
     "mathbox": "2.3.2-rc1",

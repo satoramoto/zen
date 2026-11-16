@@ -12,8 +12,9 @@ const ENTRIES = [
   ...['themes.js', 'view.js', 'checks.js', 'compendium-model.js', 'math-trig-model.js', 'math-expression.js', 'push-model.js'].map((file) => ({
     file, frameworks: /^(?:react(?:-dom)?|svelte|storybook|@storybook\/[^/]+)(?:\/.*)?$/,
   })),
-  // The Hotwire build is pinned whole by an import map: Stimulus, the app's own pin, is its one import.
-  { file: 'hotwire/zen.js', frameworks: /^(?!@hotwired\/stimulus$)(?!\.).*$/ },
+  // The Hotwire build is pinned whole by an import map: its imports are the app's own pins, Stimulus
+  // and Lightweight Charts (loaded when a chart mounts).
+  { file: 'hotwire/zen.js', frameworks: /^(?!@hotwired\/stimulus$)(?!lightweight-charts$)(?!\.).*$/ },
 ];
 /** A static or dynamic import of a module specifier. */
 const IMPORT = /(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"']+)["']/g;

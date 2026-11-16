@@ -53,6 +53,12 @@ import { SoundCell } from '../../music/components/SoundCell/SoundCell';
 import { RackCell } from '../../music/components/RackCell/RackCell';
 import { PageList } from '../../components/PageList/PageList';
 import { FolderList } from '../../components/FolderList/FolderList';
+import { TimeChart } from '../../chart/components/TimeChart/TimeChart';
+import { Track } from '../../components/Track/Track';
+import { Sparkline } from '../../components/Sparkline/Sparkline';
+import { BarList } from '../../components/BarList/BarList';
+import { FigureStrip } from '../../components/FigureStrip/FigureStrip';
+import { Panel } from '../../layouts/Panel/Panel';
 import { Group } from '../../layouts/Group/Group';
 import { Region } from '../../layouts/Region/Region';
 import { Tabs } from '../../layouts/Tabs/Tabs';
@@ -167,6 +173,12 @@ export function reactComponent(name: string): ComponentType<any> {
     RackCell,
     PageList,
     FolderList,
+    TimeChart,
+    Track,
+    Sparkline,
+    BarList,
+    FigureStrip,
+    Panel,
   };
   const found = registry[name] ?? added.get(name);
   if (!found) throw new Error(`view: no component named "${name}" (zen's are listed in src/library/foundation/view/reactComponents.ts and svelteComponents.ts; an app adds its own with registerComponents)`);

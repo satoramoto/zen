@@ -1,0 +1,58 @@
+## Ranked
+<ul aria-label="On the table by algorithm" class="lib-bars" data-part="root">
+  <li key=KeryxHashH6 class="lib-bars__item" data-part="item">
+    <a class="lib-bars__name" href="#keryx">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="label">
+        "KeryxHashH6"
+    <span aria-hidden="true" class="lib-bars__rail">
+      <i class="lib-bars__bar" style="width: 100%">
+    <span class="lib-text lib-tone lib-bars__value" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+      "$2.64k"
+    <span class="lib-text lib-tone lib-bars__note" data-role="body" data-text-size="caption" data-tone="muted">
+      "3 of 4 in reach"
+  <li key=Pearl class="lib-bars__item" data-part="item">
+    <a class="lib-bars__name" href="#pearl">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="label">
+        "Pearl"
+    <span aria-hidden="true" class="lib-bars__rail">
+      <i class="lib-bars__bar" style="width: 50%">
+    <span class="lib-text lib-tone lib-bars__value" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+      "$1.32k"
+    <span class="lib-text lib-tone lib-bars__note" data-role="body" data-text-size="caption" data-tone="muted">
+      "1 of 1 in reach"
+  <li key=RandomX class="lib-bars__item" data-part="item">
+    <a class="lib-bars__name" href="#randomx">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="label">
+        "RandomX"
+    <span aria-hidden="true" class="lib-bars__rail">
+      <i class="lib-bars__bar" style="width: 3.8%">
+    <span class="lib-text lib-tone lib-bars__value" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+      "$101"
+    <span class="lib-text lib-tone lib-bars__note" data-role="body" data-text-size="caption" data-tone="muted">
+      "5 of 9 in reach"
+  <li key=FishHash class="lib-bars__item" data-part="item">
+    <span class="lib-text lib-tone lib-bars__name" data-role="body" data-text-size="label">
+      "FishHash"
+    <span aria-hidden="true" class="lib-bars__rail">
+      <i class="lib-bars__bar" style="width: 0.5%">
+    <span class="lib-text lib-tone lib-bars__value" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+      "$0.40"
+    <span class="lib-text lib-tone lib-bars__note" data-role="body" data-text-size="caption" data-tone="muted">
+      "1 of 2 in reach"
+
+## Plain
+<ul class="lib-bars" data-part="root">
+  <li key=CPU class="lib-bars__item" data-part="item">
+    <span class="lib-text lib-tone lib-bars__name" data-role="body" data-text-size="label">
+      "CPU"
+    <span aria-hidden="true" class="lib-bars__rail">
+      <i class="lib-bars__bar" style="width: 33.3%">
+    <span class="lib-text lib-tone lib-bars__value" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+      "30"
+  <li key=GPU class="lib-bars__item" data-part="item">
+    <span class="lib-text lib-tone lib-bars__name" data-role="body" data-text-size="label">
+      "GPU"
+    <span aria-hidden="true" class="lib-bars__rail">
+      <i class="lib-bars__bar" style="width: 100%">
+    <span class="lib-text lib-tone lib-bars__value" data-role="body" data-tabular="" data-text-size="label" data-text-weight="strong">
+      "90"

@@ -93,7 +93,7 @@ export default defineConfig({
       fileName: (_format, name) => `${name}.js`,
     },
     rollupOptions: {
-      external: [/^node:/, /^react(\/.*)?$/, /^react-dom(\/.*)?$/, /^svelte(\/.*)?$/, /^storybook(\/.*)?$/, /^@storybook\//],
+      external: [/^node:/, /^lightweight-charts$/, /^react(\/.*)?$/, /^react-dom(\/.*)?$/, /^svelte(\/.*)?$/, /^storybook(\/.*)?$/, /^@storybook\//],
       output: { chunkFileNames: 'chunks/zen-[hash].js', assetFileNames: '[name][extname]' },
     },
   },

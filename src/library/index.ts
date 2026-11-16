@@ -57,6 +57,9 @@ export * as Music from './music';
 /** The Ableton Push 3: its surface, display and device over a Set, with the device model (docs/push.md). */
 export * as Push from './push';
 
+// The chart: TimeChart, a time-series chart in the pack's colours (Lightweight Charts, loaded on first mount).
+export * from './chart';
+
 // The graph: the node-graph view (Graph, GraphNode, Port, Device, NodeSheet) and the Circuit model it draws.
 export * from './graph';
 

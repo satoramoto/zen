@@ -1,0 +1,17 @@
+/* Sparkline: a small line that stretches to its box with a stroke that keeps its width. Up is
+   success, down is danger, flat is quiet. */
+.lib-spark {
+  --lib-spark-tone: var(--text-3);
+  --lib-spark-round: 50%;
+  position: relative;
+  display: inline-block;
+  inline-size: 5rem;
+  block-size: 1.25rem;
+  vertical-align: middle;
+}
+.lib-spark[data-direction='up'] { --lib-spark-tone: var(--success); }
+.lib-spark[data-direction='down'] { --lib-spark-tone: var(--danger); }
+.lib-spark__svg { display: block; inline-size: 100%; block-size: 100%; overflow: visible; }
+.lib-spark__line { fill: none; stroke: var(--lib-spark-tone); stroke-width: calc(var(--border-width) * 1.5); stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.lib-spark__area { fill: var(--lib-spark-tone); opacity: 0.14; stroke: none; }
+.lib-spark__dot { position: absolute; inline-size: var(--space-1); block-size: var(--space-1); background: var(--lib-spark-tone); border-radius: var(--lib-spark-round); transform: translate(-50%, -50%); }

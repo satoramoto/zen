@@ -1,0 +1,7 @@
+/* FigureStrip: figures side by side, wrapping, divided by hairlines; a leading figure on a raised ground. */
+.lib-strip { display: flex; flex-wrap: wrap; margin: 0; background: var(--surface-1); border: var(--border-width) solid var(--border); border-radius: var(--radius-card); }
+.lib-strip__figure { display: grid; gap: var(--space-1); align-content: start; flex: 1 1 10rem; padding: var(--space-3) var(--space-4); border-inline-start: var(--border-width) solid var(--border); }
+.lib-strip__figure:first-child { border-inline-start: 0; }
+.lib-strip__figure[data-lead] { background: var(--surface-2); }
+.lib-strip__body { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-2); margin: 0; }
+.lib-strip__link { color: inherit; text-decoration-color: var(--border-strong); text-underline-offset: 0.2em; }

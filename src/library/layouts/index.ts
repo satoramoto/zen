@@ -4,6 +4,8 @@ export { Screen, type ScreenProps } from './Screen/Screen';
 export { Region, RegionView, type RegionProps, type RegionViewProps } from './Region/Region';
 export { Group, type GroupProps } from './Group/Group';
 export { Tabs, type TabsProps, type TabItem } from './Tabs/Tabs';
+/** A titled card for a dashboard: heading (a link), aside, actions and body, or its empty message. */
+export { Panel, type PanelProps } from './Panel/Panel';
 // Stack, Opaque and Hole are primitives (../primitives); exporting them here too would clash in
 // the library's `export *` of both folders. `Layer` is a deprecated alias of `<Surface layer>`.
 export { Layer, type LayerProps } from './Layer/Layer';

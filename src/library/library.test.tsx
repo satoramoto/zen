@@ -30,6 +30,7 @@ const COMPONENT_SOURCES = [
   ...filesUnder('layouts', /\.(tsx?|css)$/),
   ...filesUnder('yahaha', /\.(tsx?|css)$/),
   ...filesUnder('report', /\.(tsx?|css)$/),
+  ...filesUnder('chart', /\.(tsx?|css)$/),
   ...filesUnder('compendium', /\.(tsx?|css)$/),
   ...filesUnder('openspec', /\.(tsx?|css)$/),
   ...filesUnder('push', /\.(tsx?|css)$/),

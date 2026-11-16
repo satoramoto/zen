@@ -63,6 +63,9 @@ jobs:
         run: node scripts/build-application-themes.mjs --check
       - if: steps.scope.outputs.docs_only != 'true'
         run: npm run check:site && node scripts/check-site.mjs --stories storybook-static
+      # The static form of the dashboard parts (src/rails/zen_static.rb) against their goldens.
+      - if: steps.scope.outputs.docs_only != 'true'
+        run: ruby src/rails/static_test.rb
       # The Core plays again, drawn by the DOM renderer (the Hotwire build's): a play that fails
       # only here is the DOM renderer's or a DOM binding's.
       - if: steps.scope.outputs.docs_only != 'true'

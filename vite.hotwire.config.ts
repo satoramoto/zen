@@ -2,8 +2,9 @@
 // map pins whole, for a server-rendered app with no bundler (Rails 8: importmap and Propshaft).
 // Run after the library build (`npm run build:lib`), into `lib/hotwire/`:
 //
-// - `zen.js`: the Stimulus controllers, the DOM renderer and the core parts, no code split; its one
-//   import is `@hotwired/stimulus`, which the app already pins (`check:lib` holds it to that).
+// - `zen.js`: the Stimulus controllers, the DOM renderer and the core parts, no code split; its
+//   imports are `@hotwired/stimulus`, which the app already pins, and `lightweight-charts`, loaded
+//   only when a chart mounts, which the app pins from the file zen-vendor copies (`check:lib`).
 // - `zen.css`: the scope's rules and every bundled part's stylesheet.
 // - `themes/<pack>.css`: each pack's custom properties, light and dark, under
 //   `.lib-scope[data-zen-pack="<pack>"][data-mode="…"]`, so a page that keeps one pack can skip the
@@ -60,7 +61,7 @@ export default defineConfig({
       fileName: () => 'zen.js',
     },
     rollupOptions: {
-      external: ['@hotwired/stimulus'],
+      external: ['@hotwired/stimulus', 'lightweight-charts'],
       output: { inlineDynamicImports: true, assetFileNames: '[name][extname]' },
     },
   },

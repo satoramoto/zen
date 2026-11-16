@@ -1,4 +1,5 @@
-// The stores the core parts bind (the controls in `components/`, the primitives and the layers),
+// The stores the core parts bind (the controls in `components/`, the primitives, the layers and the
+// chart's TimeChart),
 // apart from music's and Yahaha's, so a renderer of the core alone (the DOM renderer's Hotwire
 // build) carries no others. `stores.ts` spreads them into the full registry.
 import { keyed, type Stores } from './keyed';
@@ -23,6 +24,7 @@ import { bindSearchClear, type SearchClearParams } from '../../components/Search
 import { bindPageList, type PageListParams } from '../../components/PageList/pageListKeys';
 import { bindFolderList, type FolderListParams } from '../../components/FolderList/folderListKeys';
 import { bindGateFocus, type GateFocusParams } from '../../components/Gate/gateFocus';
+import { bindTimeChart, type TimeChartParams } from '../../chart/components/TimeChart/timeChart';
 
 /** The core parts' stores, by name. */
 export const coreStores = {
@@ -76,4 +78,6 @@ export const coreStores = {
   folderList: keyed<FolderListParams, 'onChoose' | 'onActive'>(bindFolderList, ['onChoose', 'onActive']),
   /** Gate's field: focused at mount and when a submit ends (`Gate/gateFocus.ts`). */
   gateFocus: keyed<GateFocusParams, never>(bindGateFocus, []),
+  /** TimeChart's plot: Lightweight Charts, loaded on first mount (`chart/components/TimeChart/timeChart.ts`). */
+  timeChart: keyed<TimeChartParams, 'onHover'>(bindTimeChart, ['onHover']),
 } satisfies Stores;

@@ -22,6 +22,13 @@ zen ships its Hotwire build in `lib/hotwire/` (`npm run build:lib`):
 | `zen.css` | the theme scope's rules and every part's stylesheet | 80 kB, 12 kB gzipped |
 | `themes/<pack>.css` | one pack's custom properties, light and dark | about 21 kB |
 
+Charts need one more file. TimeChart draws with Lightweight Charts (Apache-2.0), which `zen.js`
+imports only the first time a chart mounts, as `lightweight-charts`, so a page with no chart
+never loads it. Copy `node_modules/lightweight-charts/dist/lightweight-charts.standalone.production.mjs`
+(the standalone build: no imports of its own, about 63 kB gzipped) to
+`vendor/javascript/lightweight-charts.js` and pin it. Without the pin a chart's plot stays empty
+(`data-chart="unavailable"`) and the console names the pin; its legend and summary still read.
+
 Copy them in with a script in the app. Market's, `script/zen-vendor <zen checkout> [pack]`, builds
 the checkout and copies:
 
@@ -40,6 +47,7 @@ Node is needed on the machine that vendors, never by the app.
 ```ruby
 # config/importmap.rb
 pin "zen", to: "zen.js"
+pin "lightweight-charts", to: "lightweight-charts.js"
 ```
 
 ```js
@@ -82,6 +90,53 @@ end
 - `zen_slot(:icon) { … }` fills a slot with server markup, cloned each time the part draws it.
 - `zen_select(:basis, [["Best published", "top"], …], selected: "top", label: "Figure to beat")`
   maps Rails-style choices onto Select's `items` and `index`. The values become its field's.
+
+## 3a. Static parts, for many rows
+
+Track, Sparkline, BarList, FigureStrip and Panel also have a static form: markup the server
+writes and zen.css styles, with no controller, for pages that draw hundreds of them and redraw
+them often (a table where every row has a track, swapped while a slider moves).
+`src/rails/zen_static.rb` holds the helpers; copy it into `app/helpers/` and include it:
+
+```ruby
+module ApplicationHelper
+  include ZenStatic
+end
+```
+
+```erb
+<%= zen_track(row.headroom, label: "Our multiplier against what #{row.coin.tag} needs", display: Numbers.multiplier(row.headroom)) %>
+<%= zen_track(0.97, tone: :good, label: "Margin against the target", display: "+12%") %>
+<%= zen_track(share, mode: :share, label: "Share of the network") %>
+<%= zen_sparkline(values, label: "#{coin.tag} yield, 7 days") %>
+<%= zen_bar_list(algorithms.map { |a| { name: a.name, value: a.ceiling, display: Numbers.usd(a.ceiling), note: "#{a.in_reach} of #{a.coins} in reach", href: board_path(group: "algo") } }, label: "On the table by algorithm") %>
+<%= zen_figure_strip([{ label: "Coins in reach", value: counts["reach"], note: "of #{counts['ranked']} ranked", href: board_path }, …], lead: true) %>
+<%= zen_panel("Coins in reach", href: board_path, aside: "most headroom first", empty: "No coin has a figure yet.") do %>
+  <table>…</table>
+<% end %>
+```
+
+Each helper writes exactly the DOM the part draws: zen's CI renders every fixture with the Ruby
+and compares it with the part (`ruby src/rails/static_test.rb` against `src/rails/goldens.json`).
+A part that changes in zen changes its helper in the same commit.
+
+## 3b. TimeChart
+
+```erb
+<%= zen :TimeChart, label: "#{@coin.tag} yield per hash",
+      series: [{ name: @coin.tag, kind: "area", points: points }],
+      format: { unit: "USD / H/s / day", digits: 2 },
+      lines: [{ value: break_even, label: "Break-even at #{Numbers.multiplier(what_if)}", tone: "good" }],
+      markers: events.map { |e| { time: e.occurred_at.to_i * 1000, label: e.kind.humanize, tone: "accent" } } %>
+```
+
+- `series`: `{ name, kind: line | area | baseline | histogram, points: [[epoch ms, value], …], base, href, marks }`.
+  A baseline is success above `base` and danger below; `marks` draws each reading (sparse runs).
+- `rebase: true` draws every series as its change from its first reading in the span.
+- `spans` (default 1D, 1W, 1M, All; `false` for none) window the points sent once and rebase to the
+  span's first point. `onSpan` is the `zen:span` event.
+- `format`: `{ style: number | percent | currency, digits, scale, unit }`. `height`, `label`,
+  `empty`, `legend: false`.
 
 ## 4. Theme scope
 

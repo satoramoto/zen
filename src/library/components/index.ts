@@ -10,6 +10,18 @@ export { CodeImage, type CodeImageProps } from './CodeImage/CodeImage';
 export { encodeCode, CODE_IMAGE_MAX_BYTES } from './CodeImage/CodeImage.model';
 export { SearchField, type SearchFieldProps } from './SearchField/SearchField';
 export { StatusDot, type StatusDotProps, type StatusDotHue } from './StatusDot/StatusDot';
+/** A value on a rail against a mark (a ratio on a log scale, or a share), toned good, close, short or bad. */
+export { Track, type TrackProps } from './Track/Track';
+export type { TrackTone } from './Track/Track.model';
+/** Values as a small line, toned by direction. */
+export { Sparkline, type SparklineProps } from './Sparkline/Sparkline';
+export type { SparklineDirection } from './Sparkline/Sparkline.model';
+/** Ranked bars against the largest, each with a name, value and note. */
+export { BarList, type BarListProps } from './BarList/BarList';
+export type { BarListItem } from './BarList/BarList.model';
+/** A strip of figures: label, value, note, an optional lead. */
+export { FigureStrip, type FigureStripProps } from './FigureStrip/FigureStrip';
+export type { Figure } from './FigureStrip/FigureStrip.model';
 export { StepValue, type StepValueProps, type StepHue } from './StepValue/StepValue';
 export { LineSlider, type LineSliderProps } from './LineSlider/LineSlider';
 export { Readout, type ReadoutProps } from './Readout/Readout';

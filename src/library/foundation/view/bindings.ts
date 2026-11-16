@@ -9,7 +9,7 @@
 import { stripTsComments, type FileSource } from '../../tiers';
 
 /** The folders whose renderers are held to the rule, under `src/library`. */
-export const BINDING_FOLDERS = ['primitives', 'components', 'music', 'layouts', 'yahaha', 'push'] as const;
+export const BINDING_FOLDERS = ['primitives', 'components', 'music', 'layouts', 'yahaha', 'push', 'chart'] as const;
 
 /** Stories, story markup (`*.story.svelte`, `*.story.tsx`: a story's own harness, never shipped)
  *  and tests are not renderers. */

@@ -1,7 +1,7 @@
 // The DOM side of the component registry: every part the DOM renderer draws by name, as its
 // `domPart` (`<Name>.dom.ts`). `reactComponents.ts` and `svelteComponents.ts` are the other two
-// sides, with the same names. The DOM side holds the core alone (the controls in `components/`
-// and the primitives and layers they draw); a name outside it fails, saying so. Built on first
+// sides, with the same names. The DOM side holds the core alone (the controls in `components/`,
+// the primitives and layers they draw, and the chart's TimeChart); a name outside it fails, saying so. Built on first
 // use, as the other two are, since a registered part draws a tree that reads this.
 import { batch, type DomPart } from './Tree.dom';
 import { coreStores } from './coreStores';
@@ -41,6 +41,12 @@ import { OpaqueDom } from '../../primitives/Opaque/Opaque.dom';
 import { StackDom } from '../../primitives/Stack/Stack.dom';
 import { SurfaceDom } from '../../primitives/Surface/Surface.dom';
 import { TextDom } from '../../primitives/Text/Text.dom';
+import { TimeChartDom } from '../../chart/components/TimeChart/TimeChart.dom';
+import { TrackDom } from '../../components/Track/Track.dom';
+import { SparklineDom } from '../../components/Sparkline/Sparkline.dom';
+import { BarListDom } from '../../components/BarList/BarList.dom';
+import { FigureStripDom } from '../../components/FigureStrip/FigureStrip.dom';
+import { PanelDom } from '../../layouts/Panel/Panel.dom';
 
 let registry: Record<string, DomPartDefinition> | undefined;
 
@@ -84,6 +90,12 @@ export function domParts(): Readonly<Record<string, DomPartDefinition>> {
     Stack: StackDom,
     Surface: SurfaceDom,
     Text: TextDom,
+    TimeChart: TimeChartDom,
+    Track: TrackDom,
+    Sparkline: SparklineDom,
+    BarList: BarListDom,
+    FigureStrip: FigureStripDom,
+    Panel: PanelDom,
   });
 }
 

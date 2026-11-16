@@ -33,6 +33,12 @@ import { iconStories } from '../../primitives/Icon/Icon.fixtures';
 import { stackStories } from '../../primitives/Stack/Stack.fixtures';
 import { surfaceStories } from '../../primitives/Surface/Surface.fixtures';
 import { textStories } from '../../primitives/Text/Text.fixtures';
+import { timeChartStories } from '../../chart/components/TimeChart/TimeChart.fixtures';
+import { trackStories } from '../../components/Track/Track.fixtures';
+import { sparklineStories } from '../../components/Sparkline/Sparkline.fixtures';
+import { barListStories } from '../../components/BarList/BarList.fixtures';
+import { figureStripStories } from '../../components/FigureStrip/FigureStrip.fixtures';
+import { panelStories } from '../../layouts/Panel/Panel.fixtures';
 
 /** Each part's fixtures, or null for a part with no fixtures of its own (drawn by another's). */
 export const DOM_FIXTURES: Record<string, Fixtures<any> | null> = {
@@ -74,5 +80,11 @@ export const DOM_FIXTURES: Record<string, Fixtures<any> | null> = {
   Stack: stackStories,
   Surface: surfaceStories,
   Text: textStories,
+  TimeChart: timeChartStories,
+  Track: trackStories,
+  Sparkline: sparklineStories,
+  BarList: barListStories,
+  FigureStrip: figureStripStories,
+  Panel: panelStories,
 };
 
