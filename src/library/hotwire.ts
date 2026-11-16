@@ -50,6 +50,8 @@ const scopeOf = (element: Element): DomScope | null => {
 /** The placeholder's own children the controller keeps: its slot templates, and nothing it drew. */
 const PART = 'data-zen-drawn';
 const FIELD = 'data-zen-field';
+/** On the placeholder while its part is drawn (library.css holds a control's height until then). */
+const READY = 'data-zen-ready';
 
 /**
  * Draws the part `part` names with `props`: the placeholder's controller (`data-controller="zen"`).
@@ -96,6 +98,7 @@ export class ZenController extends Controller<HTMLElement> {
       this.writeField();
     }
     this.drawn = mountPart(host, this.partValue, this.partProps(), { scope: scopeOf(this.element) });
+    this.element.setAttribute(READY, '');
     this.watching = new MutationObserver((records) => {
       if (records.some((r) => [...r.addedNodes, ...r.removedNodes].some((n) => n instanceof HTMLTemplateElement))) {
         this.readSlots();
@@ -202,6 +205,7 @@ export class ZenController extends Controller<HTMLElement> {
     this.watching = null;
     this.drawn?.destroy();
     this.drawn = null;
+    this.element.removeAttribute(READY);
     for (const child of Array.from(this.element.children)) if (child.hasAttribute(PART) || child.hasAttribute(FIELD)) child.remove();
     this.host = null;
     this.input = null;

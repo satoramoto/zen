@@ -4,7 +4,7 @@
 // and Turbo's page cache is played as Turbo does it: `turbo:before-cache`, a copy of the page
 // taken, the page replaced, the copy put back. Each story is a scenario of `library-hotwire`.
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { createElement } from 'react';
+import { createElement, useLayoutEffect } from 'react';
 import { Application, Controller } from '@hotwired/stimulus';
 import { morphChildren, renderStreamMessage, session } from '@hotwired/turbo';
 import { expect, userEvent, waitFor } from 'storybook/test';
@@ -26,9 +26,21 @@ class Probe extends Controller<HTMLElement> {
   }
 }
 
+/** The applications a story started, stopped when it goes (its parts with them). */
+const started = new Set<Application>();
+
+function Host() {
+  useLayoutEffect(() => () => {
+    for (const application of started) application.stop();
+    started.clear();
+  }, []);
+  return createElement('div', { 'data-testid': 'host' });
+}
+
 /** A Stimulus application on the story's host, with zen's controllers and the probe. */
 function start(host: HTMLElement) {
   const application = Application.start(host);
+  started.add(application);
   registerZen(application);
   application.register('probe', Probe);
   return application;
@@ -63,7 +75,7 @@ const meta = {
   decorators: [withLibraryTheme],
   tags: ['browser'],
   parameters: { layout: 'padded', spec: { capability: 'library-hotwire', change: 'rails-dom-renderer', purpose: "Lets a server-rendered app built with Turbo and Stimulus, such as a standard Rails 8 app, place zen's parts in its HTML and have them drawn, updated and removed in the browser as Turbo moves the page, with no Node at run time." } },
-  render: () => createElement('div', { 'data-testid': 'host' }),
+  render: () => createElement(Host),
 } satisfies Meta;
 
 export default meta;

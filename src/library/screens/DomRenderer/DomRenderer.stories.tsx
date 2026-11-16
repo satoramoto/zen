@@ -3,7 +3,7 @@
 // `library-dom-renderer`; the Core plays drawn with `--renderer dom` show the rest of its parts'
 // behaviour. A story draws into a host element of its own, React drawing only the host.
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { createElement, type ComponentType } from 'react';
+import { createElement, useLayoutEffect, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { flushSync } from 'react-dom';
 import { flushSync as flushSvelte, mount, unmount, type Component } from 'svelte';
@@ -14,7 +14,7 @@ import { instances } from '../../fixtures';
 import Render from '../../foundation/svelte/stories/Render.svelte';
 import { textFill } from '../../foundation/view/dom';
 import { DOM_FIXTURES } from '../../foundation/view/domFixtures';
-import { domParts, mountPart } from '../../foundation/view/domComponents';
+import { domParts, mountPart as mountPartNow } from '../../foundation/view/domComponents';
 import { maskIds, serialize } from '../../foundation/view/domText';
 import { reactComponent } from '../../foundation/view/reactComponents';
 import { svelteComponent } from '../../foundation/view/svelteComponents';
@@ -26,11 +26,32 @@ import OpaqueSvelte from '../../primitives/Opaque/Opaque.svelte';
 import { VoteControl } from '../../components/VoteControl/VoteControl';
 import VoteControlSvelte from '../../components/VoteControl/VoteControl.svelte';
 
+/** Every part a story draws, destroyed when the story goes, so nothing it bound (a popover's
+ *  document listeners) reaches the next story. */
+const drawn = new Set<{ destroy(): void }>();
+const mountPart = (...args: Parameters<typeof mountPartNow>) => {
+  const part = mountPartNow(...args);
+  const destroy = part.destroy;
+  part.destroy = () => {
+    drawn.delete(part);
+    destroy();
+  };
+  drawn.add(part);
+  return part;
+};
+
+function Host() {
+  useLayoutEffect(() => () => {
+    for (const part of [...drawn]) part.destroy();
+  }, []);
+  return createElement('div', { 'data-testid': 'host' });
+}
+
 const meta = {
   title: 'Core/Screens/DOM renderer',
   decorators: [withLibraryTheme],
   parameters: { layout: 'padded', spec: { capability: 'library-dom-renderer', change: 'rails-dom-renderer', purpose: "Draws zen's view trees straight into the browser's DOM with no framework, so a page that is not a React or Svelte app can use zen's parts with the same markup and behaviour." } },
-  render: () => createElement('div', { 'data-testid': 'host' }),
+  render: () => createElement(Host),
 } satisfies Meta;
 
 export default meta;
@@ -53,7 +74,7 @@ function threeWays(host: HTMLElement, name: string, props: Record<string, unknow
   const app = mount(Render, { target: boxes[1], props: { component: svelte as Component<any>, props } });
   flushSvelte();
   const { children, ...rest } = props;
-  const part = mountPart(boxes[2], name, typeof children === 'string' ? { ...rest, children: textFill(children) } : props);
+  const part = mountPartNow(boxes[2], name, typeof children === 'string' ? { ...rest, children: textFill(children) } : props);
   const drawn = boxes.map((box) => mask(serialize(box)));
   root.unmount();
   void unmount(app);
