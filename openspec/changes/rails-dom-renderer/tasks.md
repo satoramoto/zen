@@ -49,7 +49,7 @@
 ## 7. Merge
 
 - [x] 7.1 zen: `npm run typecheck`, `npx vitest run src/library/foundation/view src/library/parity.test.tsx src/library/structure.test.ts src/library/tiers.test.ts`, `npm run build:lib && npm run check:lib`, `npm run build:storybook`, `node src/harness/stories/cli.mjs Core` and `... Core --renderer dom`, `openspec validate rails-dom-renderer --strict`, `story-spec sync --change rails-dom-renderer --check` pass; pull request from `change/rails-dom-renderer` set to auto-merge and merged, branch deleted
-- [ ] 7.2 xmrz: re-vendor from zen's merged `main`, `bin/rails test` passes; `git merge --no-ff change/rails-dom-renderer` into `main`, pushed, branch deleted
+- [x] 7.2 xmrz: re-vendor from zen's merged `main`, `bin/rails test` passes; `git merge --no-ff change/rails-dom-renderer` into `main`, pushed, branch deleted
 
 ## Workflow follow-up
 
