@@ -1,0 +1,7 @@
+schema: zen-flow
+created: 2026-11-16
+goal: zen's parts work in a Rails 8 app with Turbo and Stimulus, drawn in the browser without React
+affected_areas:
+  - zen
+  - xmrz
+x-review: look
