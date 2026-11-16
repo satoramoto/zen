@@ -44,9 +44,9 @@
 
 ## 6. Market
 
-- [ ] 6.1 Extend `script/zen-vendor` in xmrz to copy Lightweight Charts and `zen_static.rb`, and pin `lightweight-charts`. Re-vendor from zen main. Verify `bin/rails test` passes, and that the headless shell draws a TimeChart and a static Track on a Market page with no console errors.
+- [x] 6.1 Extend `script/zen-vendor` in xmrz to copy Lightweight Charts and `zen_static.rb`, and pin `lightweight-charts`. Re-vendor from zen main. Verify `bin/rails test` passes, and that the headless shell draws a TimeChart and a static Track on a Market page with no console errors.
 
 ## 7. Merge
 
-- [ ] 7.1 zen: `npm test`, `npm run typecheck`, the story runs, `build:lib`/`check:lib`, `build:storybook`, `openspec validate --strict` and `story-spec sync --check` pass. The pull request merges.
-- [ ] 7.2 xmrz: the re-vendor is merged locally and pushed. Tell Design.
+- [x] 7.1 zen: `npm test`, `npm run typecheck`, the story runs, `build:lib`/`check:lib`, `build:storybook`, `openspec validate --strict` and `story-spec sync --check` pass. The pull request merges.
+- [x] 7.2 xmrz: the re-vendor is merged locally and pushed. Tell Design.

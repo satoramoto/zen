@@ -47,7 +47,7 @@ Node is needed on the machine that vendors, never by the app.
 ```ruby
 # config/importmap.rb
 pin "zen", to: "zen.js"
-pin "lightweight-charts", to: "lightweight-charts.js"
+pin "lightweight-charts", to: "lightweight-charts.js", preload: false   # fetched only when a chart mounts
 ```
 
 ```js
