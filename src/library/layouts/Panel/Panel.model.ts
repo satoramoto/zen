@@ -9,6 +9,8 @@ export interface PanelModelProps {
   href?: string;
   /** The heading's level. Default 2. */
   level?: 2 | 3 | 4;
+  /** The title's type size: `heading` (default), or `body` or `label` (set strong) for a dense dashboard of many panels. */
+  titleSize?: 'heading' | 'body' | 'label';
   /** Words beside the title (an `aside` slot takes their place). */
   aside?: string;
   /** What it says with no body. */
@@ -23,8 +25,8 @@ export interface PanelSlots {
   aside?: boolean;
 }
 
-export function panelView({ title, href, level = 2, aside, empty, className }: PanelModelProps, slots: PanelSlots = {}): ComponentNode {
-  const heading = textNode({ role: 'heading', className: 'lib-panel__title' }, {}, title);
+export function panelView({ title, href, level = 2, titleSize, aside, empty, className }: PanelModelProps, slots: PanelSlots = {}): ComponentNode {
+  const heading = textNode({ role: 'heading', size: titleSize === 'heading' ? undefined : titleSize, weight: titleSize && titleSize !== 'heading' ? 'strong' : undefined, className: 'lib-panel__title' }, {}, title);
   // The card is a raised Surface: a layout paints nothing itself.
   const body = [
     h(

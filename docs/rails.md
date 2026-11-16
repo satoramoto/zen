@@ -108,10 +108,11 @@ end
 <%= zen_track(row.headroom, label: "Our multiplier against what #{row.coin.tag} needs", display: Numbers.multiplier(row.headroom)) %>
 <%= zen_track(0.97, tone: :good, label: "Margin against the target", display: "+12%") %>
 <%= zen_track(share, mode: :share, label: "Share of the network") %>
+<%= zen_track(ratio, close: 0.8, fluid: true, label: "Headroom") %>   <%# close from 0.8 of the mark; the rail fills its cell %>
 <%= zen_sparkline(values, label: "#{coin.tag} yield, 7 days") %>
 <%= zen_bar_list(algorithms.map { |a| { name: a.name, value: a.ceiling, display: Numbers.usd(a.ceiling), note: "#{a.in_reach} of #{a.coins} in reach", href: board_path(group: "algo") } }, label: "On the table by algorithm") %>
 <%= zen_figure_strip([{ label: "Coins in reach", value: counts["reach"], note: "of #{counts['ranked']} ranked", href: board_path }, …], lead: true) %>
-<%= zen_panel("Coins in reach", href: board_path, aside: "most headroom first", empty: "No coin has a figure yet.") do %>
+<%= zen_panel("Coins in reach", href: board_path, title_size: :label, aside: "most headroom first", empty: "No coin has a figure yet.") do %>
   <table>…</table>
 <% end %>
 ```
@@ -132,7 +133,10 @@ A part that changes in zen changes its helper in the same commit.
 
 - `series`: `{ name, kind: line | area | baseline | histogram, points: [[epoch ms, value], …], base, href, marks }`.
   A baseline is success above `base` and danger below; `marks` draws each reading (sparse runs).
-- `rebase: true` draws every series as its change from its first reading in the span.
+- `rebase: true` draws every series as its change from its first reading in the span; the legend
+  then gives each series' change alone.
+- A reference line outside the values in view is named above the plot in words (`↓ Break-even …,
+  below the chart`), so it isn't lost off the scale.
 - `spans` (default 1D, 1W, 1M, All; `false` for none) window the points sent once and rebase to the
   span's first point. `onSpan` is the `zen:span` event.
 - `format`: `{ style: number | percent | currency, digits, scale, unit }`. `height`, `label`,

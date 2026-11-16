@@ -34,6 +34,8 @@ export const timeChartStories = defineFixtures<TimeChartModelProps>()({
   Compare: { args: { series: coins, rebase: true, label: 'Yield per hash, change', markers: [{ time: START + 20 * DAY, label: 'In reach', tone: 'good', series: 0 }] } },
   /** Measured runs, a few irregular points, against the published median as a baseline. */
   Measured: { args: { series: [{ name: 'Measured', kind: 'baseline', base: 100, marks: true, points: runs }], spans: false, label: 'Measured hashrate against the published median', format: { unit: 'kH/s' }, lines: [{ value: 100, label: 'Published median', tone: 'none' }] } },
+  /** A coin far above its break-even: the line is off the scale, so the chart says where it is. */
+  FarAbove: { args: { series: [yieldSeries], spans: false, label: 'KRX yield per hash', format: { unit: 'USD / H/s / day', digits: 2 }, lines: [{ value: 0.0000004, label: 'Break-even at 2×', tone: 'good' }] } },
   /** One reading so far: the empty message, no plot. */
   Empty: { args: { series: [{ name: 'KRX', points: [[START, 1]] }], label: 'KRX yield per hash', empty: 'One reading so far. The line starts with the next collector run.' } },
   /** Volume-like bars, no legend, short. */

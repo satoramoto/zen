@@ -24,6 +24,10 @@ export interface TrackModelProps {
   label: string;
   /** The value as it reads beside the rail (`2.4×`). */
   display?: string;
+  /** Where `close` starts, as a share of the mark. Default 0.9. */
+  close?: number;
+  /** The rail fills its box (a table cell) instead of its fixed width. */
+  fluid?: boolean;
 }
 
 /** Where the dot sits and the fill runs, as percentages along the rail. */
@@ -39,23 +43,23 @@ export function trackPosition({ value, mode = 'ratio', range = 4, mark = 1 }: Pi
 }
 
 /** A ratio's tone when none is given. */
-export function trackTone({ value, mode = 'ratio', mark = 1, tone }: Pick<TrackModelProps, 'value' | 'mode' | 'mark' | 'tone'>): TrackTone {
+export function trackTone({ value, mode = 'ratio', mark = 1, tone, close = 0.9 }: Pick<TrackModelProps, 'value' | 'mode' | 'mark' | 'tone' | 'close'>): TrackTone {
   if (tone) return tone;
   if (mode === 'share') return 'none';
   const base = mark === false ? 1 : mark;
-  return value >= base ? 'good' : value >= 0.9 * base ? 'close' : 'short';
+  return value >= base ? 'good' : value >= close * base ? 'close' : 'short';
 }
 
 const round = (n: number) => `${Number(n.toFixed(2))}%`;
 
 export function trackView(props: TrackModelProps): Node {
-  const { mode = 'ratio', mark = 1, label, display } = props;
+  const { mode = 'ratio', mark = 1, label, display, fluid = false } = props;
   const fill = props.fill ?? mode === 'ratio';
   const { at, from, to, mid } = trackPosition(props);
   const tone = trackTone(props);
   return h(
     'span',
-    { class: 'lib-track', 'data-part': 'root', 'data-tone': tone, 'data-mode': mode },
+    { class: 'lib-track', 'data-part': 'root', 'data-tone': tone, 'data-mode': mode, 'data-fluid': fluid ? 'true' : undefined },
     h(
       'span',
       { class: 'lib-track__rail', 'data-part': 'rail', role: 'img', 'aria-label': display ? `${label}: ${display}` : label },

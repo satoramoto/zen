@@ -46,3 +46,12 @@ export const Coins: Story = {
 };
 /** A third-level heading. */
 export const Nested: Story = story(s.Nested);
+/** A dense dashboard's panel: the title at label size, set strong. */
+export const Dense: Story = {
+  ...story(s.Dense),
+  play: async ({ canvasElement }) => {
+    const title = canvasElement.querySelector('.lib-panel__title')!;
+    await expect(title).toHaveAttribute('data-text-size', 'label');
+    await expect(title).toHaveAttribute('data-text-weight', 'strong');
+  },
+};

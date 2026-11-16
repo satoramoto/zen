@@ -156,3 +156,14 @@ export function formatTime(ms: number, spanMs: number | null): string {
   const withTime = spanMs !== null && spanMs < 2 * DAY;
   return new Intl.DateTimeFormat('en-GB', withTime ? { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' } : { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(ms);
 }
+
+/** Where a reference line sits against what the span shows: inside it, or above or below it (off
+ *  the scale, so the chart says where in words). */
+export function lineSide(series: readonly ChartSeries[], value: number, rebased: boolean, start: number | null): 'inside' | 'above' | 'below' {
+  const shown = series.flatMap((s) => windowed(prepared(s, rebased, start), start).map(([, v]) => v));
+  if (!shown.length) return 'inside';
+  const low = Math.min(...shown);
+  const high = Math.max(...shown);
+  const pad = (high - low) * 0.08;
+  return value > high + pad ? 'above' : value < low - pad ? 'below' : 'inside';
+}

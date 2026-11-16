@@ -51,3 +51,19 @@ export const Share: Story = story(s.Share);
 export const Beyond: Story = story(s.Beyond);
 /** No mark, no fill, a wider range. */
 export const NoMark: Story = story(s.NoMark);
+/** A close threshold set lower: 0.85 of the mark reads close at 0.8. */
+export const CloserAt: Story = {
+  ...story(s.CloserAt),
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('.lib-track')).toHaveAttribute('data-tone', 'close');
+  },
+};
+/** Fluid: the rail fills its box (a table cell), the value keeping its width. */
+export const Fluid: Story = {
+  ...story(s.Fluid),
+  parameters: { layout: 'padded' },
+  play: async ({ canvasElement }) => {
+    const track = canvasElement.querySelector<HTMLElement>('.lib-track')!;
+    await expect(track).toHaveAttribute('data-fluid', 'true');
+  },
+};

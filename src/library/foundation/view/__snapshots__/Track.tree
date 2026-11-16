@@ -50,6 +50,24 @@
   <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
     "40×"
 
+## CloserAt
+<span class="lib-track" data-mode="ratio" data-part="root" data-tone="close">
+  <span aria-label="Our multiplier against what XMR needs: 0.85×" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__mark" data-part="mark" style="left: 50%">
+    <span class="lib-track__fill" data-part="fill" style="left: 44.14%; width: 5.86%">
+    <span class="lib-track__dot" data-part="dot" style="left: 44.14%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "0.85×"
+
+## Fluid
+<span class="lib-track" data-fluid="true" data-mode="ratio" data-part="root" data-tone="good">
+  <span aria-label="Headroom: 1.5×" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__mark" data-part="mark" style="left: 50%">
+    <span class="lib-track__fill" data-part="fill" style="left: 50%; width: 14.62%">
+    <span class="lib-track__dot" data-part="dot" style="left: 64.62%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "1.5×"
+
 ## NoMark
 <span class="lib-track" data-mode="ratio" data-part="root" data-tone="good">
   <span aria-label="Against the median" class="lib-track__rail" data-part="rail" role="img">
