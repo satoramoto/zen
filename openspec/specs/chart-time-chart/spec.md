@@ -1,6 +1,7 @@
 # chart-time-chart Specification
 
 ## Purpose
+
 A chart of values over time that wears the pack it is drawn in, for dashboards: several series on one axis, a crosshair that reads them as text, and an accessible summary.
 
 ## Requirements
@@ -68,6 +69,10 @@ A TimeChart SHALL draw each reference line it is given at its value with its lab
 #### Scenario: A break-even line and an event
 - **WHEN** a chart is given a reference line and a marker
 - **THEN** the line is drawn at its value with its label, and the marker on its series at its time
+
+#### Scenario: A break-even off the scale
+- **WHEN** a reference line lies outside the values in view
+- **THEN** the chart says in words that it is below or above, with its label and value
 
 ### Requirement: Spans window the points
 
