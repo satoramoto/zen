@@ -9,3 +9,7 @@
 - Ruling: plays for the DOM renderer come from a `--renderer` flag on the story runner, not new stories per part — the existing Core plays already describe the behaviour — cost if wrong: Core takes about twice as long in CI.
 - Ruling: vendor files with a script, not a gem — one app today — cost if wrong: package the script as a gem later.
 - Open, asked of the person: which pack Market wears (no pack is named `zen`; my pick is `linear`).
+- Ruling: Market wears `linear`, the pick I offered when I asked which pack — the person answered by asking for the change to be applied, not with a pack — cost if wrong: re-vendor with another pack's stylesheet and change one attribute on `<body>`.
+- Ruling: the import-map requirement ("imports nothing but Stimulus") leaves the spec and stays a build check (`check:lib`) — the stories are the spec, and no story can read the built bundle — cost if wrong: nothing behaves differently; only where the rule is written.
+- Ruling: plays of the browser-tagged Core stories under `--renderer dom` are run locally, not in CI — CI's pull-request run is the virtual DOM only — cost if wrong: a DOM-only browser failure is found on main, as for React today.
+- Ruling: the zen worktree and an xmrz worktree, not the checkouts — other agents are in both — cost if wrong: none.

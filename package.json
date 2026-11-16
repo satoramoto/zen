@@ -92,6 +92,13 @@
       "types": "./lib/push/model/index.d.ts",
       "import": "./lib/push-model.js"
     },
+    "./hotwire": {
+      "zen-source": "./src/library/hotwire.ts",
+      "types": "./lib/hotwire.d.ts",
+      "import": "./lib/hotwire/zen.js"
+    },
+    "./hotwire/zen.css": "./lib/hotwire/zen.css",
+    "./hotwire/themes/*": "./lib/hotwire/themes/*",
     "./harness/*": "./src/harness/*",
     "./package.json": "./package.json"
   },
@@ -108,7 +115,7 @@
     "*.css"
   ],
   "scripts": {
-    "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json",
+    "build:lib": "vite build -c vite.lib.config.ts && vite build -c vite.hotwire.config.ts && tsc -p tsconfig.lib.json",
     "check:lib": "tsx scripts/check-lib-entries.ts",
     "build:site-fixture": "astro build --root fixtures/site",
     "check:site": "node --test src/site/content.check.mjs && npm run build:site-fixture && node scripts/check-site.mjs",

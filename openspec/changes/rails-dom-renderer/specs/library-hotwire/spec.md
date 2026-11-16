@@ -85,11 +85,3 @@ system's light or dark setting when the mode says so.
 #### Scenario: The system turns dark
 - **WHEN** the scope's mode follows the system and the system switches to dark
 - **THEN** the scoped element's colours switch to the pack's dark ones without a reload
-
-### Requirement: Usable with importmap and no Node
-The Hotwire build SHALL be a script, a stylesheet and theme stylesheets that load in a browser
-through an import map, importing nothing but Stimulus, which the app provides.
-
-#### Scenario: The bundle's imports
-- **WHEN** the Hotwire build's script is read
-- **THEN** its only import is `@hotwired/stimulus`
