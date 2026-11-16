@@ -59,6 +59,13 @@ Options:
 - `--viewport WxH`: the browser's page size, 1600x1000 by default. For stories drawn for one
   screen: wavedude-web's are an iPad's, `--viewport 1180x820`.
 - `--timeout MS`: per story, 90000 by default.
+- `--globals K:V,…`: plays every story with these Storybook globals, over the preview's own
+  initial ones. On the virtual DOM they are the composed stories' initial globals; in the browser,
+  the story page's `globals` parameter.
+- `--renderer NAME`: shorthand for `--globals renderer:NAME`, zen's Renderer toolbar: `react`
+  (the default), `svelte` or `dom`. `node src/harness/stories/cli.mjs Core --renderer dom` plays
+  zen's Core plays against the DOM renderer; a story whose parts the DOM renderer does not draw
+  says so and draws in React.
 
 Each story gets one line, `pass` or `FAIL`, with its time, and `[browser]` when it played in
 the headless shell. Under a failure is what it threw. The last line counts what passed on the

@@ -31,10 +31,11 @@ export type DomFill = (parent: globalThis.Node, before: globalThis.Node | null, 
 
 /** The theme a scope publishes to the parts inside it (`zen-theme`): read with `use.scope()`. */
 export interface DomScope {
-  pack: string;
-  facets: { materials: { shaders?: unknown } } & Record<string, unknown>;
-  mode: 'light' | 'dark';
+  facets: { materials: { shaders?: unknown } };
   principles?: unknown;
+  /** The pack's id, when the scope names one. */
+  pack?: string;
+  mode?: 'light' | 'dark';
 }
 
 /** What every part drawn in a tree shares: the stores, the parts by name, the contexts in force and the theme scope. */
