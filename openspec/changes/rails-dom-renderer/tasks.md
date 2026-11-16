@@ -2,27 +2,27 @@
 
 ## 1. Shared files first (zen, each its own small commit)
 
-- [ ] 1.1 Declare `hotwire.ts` in `structure.ts` `ROOT_FILES` and verify `npx vitest run src/library/structure.test.ts` passes
-- [ ] 1.2 Split the core stores out of `stores.ts` into their own module that the full registry spreads, and add the framework-free context registry (`foundation/view/contexts.ts`: `control`, `opaque`, `surface`, `form` with their defaults); verify `npx vitest run src/library/foundation/view` and `npm run typecheck` pass unchanged
-- [ ] 1.3 Add `@hotwired/stimulus` and `@hotwired/turbo` (the version turbo-rails 2.0.23 vendors) as devDependencies and verify `npm ci` is clean
+- [x] 1.1 Declare `hotwire.ts` in `structure.ts` `ROOT_FILES` and verify `npx vitest run src/library/structure.test.ts` passes
+- [x] 1.2 Split the core stores out of `stores.ts` into their own module that the full registry spreads, and add the framework-free context registry (`foundation/view/contexts.ts`: `control`, `opaque`, `surface`, `form` with their defaults); verify `npx vitest run src/library/foundation/view` and `npm run typecheck` pass unchanged
+- [x] 1.3 Add `@hotwired/stimulus` and `@hotwired/turbo` (the version turbo-rails 2.0.23 vendors) as devDependencies and verify `npm ci` is clean
 
 ## 2. The DOM renderer
 
-- [ ] 2.1 Write `foundation/view/Tree.dom.ts` (`mountTree` with elements, text, holes, keyed matching by `childKey`, SVG namespace, root props, slot fills, `Context` nodes, component nodes) and `foundation/view/dom.ts` (`domPart` and `use`: `state`, `id`, `context`, `provide`, `scope`); verify `npm run typecheck`
-- [ ] 2.2 Add the DOM renderer to `Tree.parity.test.tsx`, add a keyed reorder and a slot that comes and goes to its every-feature tree if missing, and verify it passes for all three renderers
-- [ ] 2.3 Teach the bindings-only rule that a `.dom.ts` is a binding (only `domPart`, `use`, models and handlers; no `document.*`, `innerHTML` or element creation), at zero in `view.baseline.json`; verify `npx vitest run src/library/foundation/view` passes and fails on a planted `document.createElement` in a `.dom.ts`
-- [ ] 2.4 Teach `parity.ts` a third renderer (`renderDom`) and `GENERATED_ID` the `«z\d+»` form, comparing three renderers only for the parts `domComponents.ts` lists; verify `npx vitest run src/library/parity.test.tsx` passes with the list empty
-- [ ] 2.5 Add the `dom` value to the Renderer toolbar (`withRenderer`) and `--renderer <react|svelte|dom>` to `src/harness/stories/cli.mjs`, documented in `docs/harness-stories.md`; verify `node src/harness/stories/cli.mjs Core/Components/Button --renderer svelte` plays
+- [x] 2.1 Write `foundation/view/Tree.dom.ts` (`mountTree` with elements, text, holes, keyed matching by `childKey`, SVG namespace, root props, slot fills, `Context` nodes, component nodes) and `foundation/view/dom.ts` (`domPart` and `use`: `state`, `id`, `context`, `provide`, `scope`); verify `npm run typecheck`
+- [x] 2.2 Add the DOM renderer to `Tree.parity.test.tsx`, add a keyed reorder and a slot that comes and goes to its every-feature tree if missing, and verify it passes for all three renderers
+- [x] 2.3 Teach the bindings-only rule that a `.dom.ts` is a binding (only `domPart`, `use`, models and handlers; no `document.*`, `innerHTML` or element creation), at zero in `view.baseline.json`; verify `npx vitest run src/library/foundation/view` passes and fails on a planted `document.createElement` in a `.dom.ts`
+- [x] 2.4 Teach `parity.ts` a third renderer (`renderDom`) and `GENERATED_ID` the `«z\d+»` form, comparing three renderers only for the parts `domComponents.ts` lists; verify `npx vitest run src/library/parity.test.tsx` passes with the list empty
+- [x] 2.5 Add the `dom` value to the Renderer toolbar (`withRenderer`) and `--renderer <react|svelte|dom>` to `src/harness/stories/cli.mjs`, documented in `docs/harness-stories.md`; verify `node src/harness/stories/cli.mjs Core/Components/Button --renderer svelte` plays
 
 ## 3. DOM bindings for the parts in scope
 
-- [ ] 3.1 Primitives: `Text`, `Icon`, `Stack`, `Surface`, `Hole`, `Opaque` get a `.dom.ts` and a `domComponents.ts` line; verify the parity test passes three-way for each
-- [ ] 3.2 Layouts: `Group`, `Layer`, `Tabs`; verify three-way parity
-- [ ] 3.3 Simple controls: Button, ActionButton, LampButton, Separator, StatusDot, CodeImage, SettingsRow, Readout, StepValue; verify three-way parity
-- [ ] 3.4 Stateful controls: Select, Segmented, Checkbox, Radio, Toggle, Switch, Disclosure, LineSlider, Slider, NumberField, SearchField, Popover, Modal, Sheet; verify three-way parity
-- [ ] 3.5 Remaining converted controls: FolderList, Gate, NamePicker, PageList, VoteControl; verify three-way parity
+- [x] 3.1 Primitives: `Text`, `Icon`, `Stack`, `Surface`, `Hole`, `Opaque` get a `.dom.ts` and a `domComponents.ts` line; verify the parity test passes three-way for each
+- [x] 3.2 Layouts: `Group`, `Layer`, `Tabs`; verify three-way parity
+- [x] 3.3 Simple controls: Button, ActionButton, LampButton, Separator, StatusDot, CodeImage, SettingsRow, Readout, StepValue; verify three-way parity
+- [x] 3.4 Stateful controls: Select, Segmented, Checkbox, Radio, Toggle, Switch, Disclosure, LineSlider, Slider, NumberField, SearchField, Popover, Modal, Sheet; verify three-way parity
+- [x] 3.5 Remaining converted controls: FolderList, Gate, NamePicker, PageList, VoteControl; verify three-way parity
 - [ ] 3.6 Verify `node src/harness/stories/cli.mjs Core --renderer dom` plays every Core story; fix in the renderer or a binding any play that fails only under `dom`
-- [ ] 3.7 Add the `--renderer dom` Core run to `.github/workflows/checks.yml` and the checks table in `AGENTS.md`
+- [x] 3.7 Add the `--renderer dom` Core run to `.github/workflows/checks.yml` and the checks table in `AGENTS.md`
 
 ## 4. The Hotwire entry
 
