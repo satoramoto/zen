@@ -218,7 +218,7 @@ export const TypedAndLabelled: Story = {
     await userEvent.type(entry, '1/2{Enter}');
     await expect(args.onChange).toHaveBeenLastCalledWith(-1);
     await expect(args.onRelease).toHaveBeenCalled();
-    const back = within(root as HTMLElement).getByRole('button', { name: 'Speed ½×, type a value' });
+    const back = await within(root as HTMLElement).findByRole('button', { name: 'Speed ½×, type a value' });
     await waitFor(() => expect(back).toHaveFocus());
 
     // Type, Escape: nothing set.
@@ -226,7 +226,7 @@ export const TypedAndLabelled: Story = {
     await userEvent.keyboard('{Enter}');
     await userEvent.type(within(root as HTMLElement).getByRole('textbox'), '4{Escape}');
     await expect(args.onChange).toHaveBeenCalledTimes(calls);
-    await expect(within(root as HTMLElement).getByRole('button', { name: 'Speed ½×, type a value' })).toBeInTheDocument();
+    await expect(await within(root as HTMLElement).findByRole('button', { name: 'Speed ½×, type a value' })).toBeInTheDocument();
   },
 };
 
