@@ -41,6 +41,7 @@ import { OpaqueDom } from '../../primitives/Opaque/Opaque.dom';
 import { StackDom } from '../../primitives/Stack/Stack.dom';
 import { SurfaceDom } from '../../primitives/Surface/Surface.dom';
 import { TextDom } from '../../primitives/Text/Text.dom';
+import { TimeChartDom } from '../../chart/components/TimeChart/TimeChart.dom';
 
 let registry: Record<string, DomPartDefinition> | undefined;
 
@@ -84,6 +85,7 @@ export function domParts(): Readonly<Record<string, DomPartDefinition>> {
     Stack: StackDom,
     Surface: SurfaceDom,
     Text: TextDom,
+    TimeChart: TimeChartDom,
   });
 }
 

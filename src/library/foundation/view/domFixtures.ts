@@ -33,6 +33,7 @@ import { iconStories } from '../../primitives/Icon/Icon.fixtures';
 import { stackStories } from '../../primitives/Stack/Stack.fixtures';
 import { surfaceStories } from '../../primitives/Surface/Surface.fixtures';
 import { textStories } from '../../primitives/Text/Text.fixtures';
+import { timeChartStories } from '../../chart/components/TimeChart/TimeChart.fixtures';
 
 /** Each part's fixtures, or null for a part with no fixtures of its own (drawn by another's). */
 export const DOM_FIXTURES: Record<string, Fixtures<any> | null> = {
@@ -74,5 +75,6 @@ export const DOM_FIXTURES: Record<string, Fixtures<any> | null> = {
   Stack: stackStories,
   Surface: surfaceStories,
   Text: textStories,
+  TimeChart: timeChartStories,
 };
 

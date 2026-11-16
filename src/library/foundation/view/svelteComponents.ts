@@ -53,6 +53,7 @@ import SoundCell from '../../music/components/SoundCell/SoundCell.svelte';
 import RackCell from '../../music/components/RackCell/RackCell.svelte';
 import PageList from '../../components/PageList/PageList.svelte';
 import FolderList from '../../components/FolderList/FolderList.svelte';
+import TimeChart from '../../chart/components/TimeChart/TimeChart.svelte';
 import Group from '../../layouts/Group/Group.svelte';
 import Region from '../../layouts/Region/Region.svelte';
 import Tabs from '../../layouts/Tabs/Tabs.svelte';
@@ -170,6 +171,7 @@ export function svelteComponent(name: string): Component<any> {
     RackCell,
     PageList,
     FolderList,
+    TimeChart,
   } as Record<string, Component<any>>;
   const found = registry[name] ?? added.get(name);
   if (!found) throw new Error(`view: no component named "${name}" (zen's are listed in src/library/foundation/view/reactComponents.ts and svelteComponents.ts; an app adds its own with registerComponents)`);

@@ -304,3 +304,6 @@ import { traceView } from '../../push/components/Trace/Trace.model';
 import { traceStories } from '../../push/components/Trace/Trace.fixtures';
 snapshot('PushDisplay', (props) => pushDisplayView(props as Parameters<typeof pushDisplayView>[0]), pushDisplayStories);
 snapshot('PushTrace', (props) => traceView(props as Parameters<typeof traceView>[0]), traceStories);
+import { timeChartView } from '../../chart/components/TimeChart/TimeChart.model';
+import { timeChartStories } from '../../chart/components/TimeChart/TimeChart.fixtures';
+snapshot('TimeChart', (props) => timeChartView(props as Parameters<typeof timeChartView>[0]), timeChartStories);
