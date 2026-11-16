@@ -775,4 +775,63 @@ export const push3: Palette = {
   },
 };
 
-export const palettes: Palette[] = [push, elektron, ableton, linear, classic, frost, claudeCode, bigRed, mixflow, console, blueprint, push3];
+// Market (ryangavin/xmrz, first-mover/market, app/assets/stylesheets/application.css): a light
+// trading dashboard that turns dark with the system. Blue is for controls and what is selected;
+// success and danger say which side of a line a number is on, warning that it is close. The
+// values are Market's own; what its stylesheet left to the pack (the text on a filled state, the
+// role hues, bloom and keys) is taken from Linear's, which Market wore before it had a pack.
+export const market: Palette = {
+  id: 'market',
+  label: 'Market',
+  light: {
+    surface: ['#eef1f5', '#ffffff', '#f5f7fa', '#e9edf2'],
+    text: ['#17202b', '#4a5665', '#76828f', '#8b95a3'],
+    border: '#e3e7ed',
+    borderStrong: '#c3cad4',
+    action: '#1668dc',
+    actionText: '#ffffff',
+    selected: '#e9edf2',
+    selectedText: '#17202b',
+    accent: '#1668dc',
+    success: '#0a7a3d',
+    warning: '#946c00', // changed from Market's #a86200, which read as its danger red
+    danger: '#c8322b',
+    successText: '#ffffff', // added: from Linear's light
+    warningText: '#ffffff', // added: white, as black on Market's amber is 4.4:1
+    dangerText: '#ffffff', // added: from Linear's light
+    // Changed from Market's series (blue, orange, green, amber, pink): each read as the accent or a
+    // state; these are kept apart from both and from each other (0.12 in OKLab).
+    hues: ['#43afc1', '#8972b3', '#78b31c', '#e8777a', '#ce74e3'],
+    onHue: '#000000', // added: the light hues are pale enough for black
+    roles: ['#8e35a1', '#cb9317'], // added: a plum and an ochre, apart from the hues and states
+    roleText: ['#ffffff', '#000000'], // added
+    bloom: '0px', // added
+    keys: { white: '#ffffff', black: '#17202b' }, // added: white, and Market's ink
+  },
+  dark: {
+    surface: ['#10151c', '#171d26', '#1e2530', '#1f2733'],
+    text: ['#e6e9ee', '#a9b3c0', '#738092', '#6b7686'],
+    border: '#252d39',
+    borderStrong: '#364151',
+    action: '#4c9aff',
+    actionText: '#0c1118',
+    selected: '#1f2733',
+    selectedText: '#e6e9ee',
+    accent: '#4c9aff',
+    success: '#2fbf71',
+    warning: '#e0a030',
+    danger: '#f0635a',
+    successText: '#000000', // added: from Linear's dark
+    warningText: '#000000', // added: from Linear's dark
+    dangerText: '#000000', // added: from Linear's dark
+    // Changed from Market's series, as in light.
+    hues: ['#13dcf6', '#eca5fc', '#b6d431', '#feaaa9', '#1c989e'],
+    onHue: '#0c1118', // added: Market's dark action text
+    roles: ['#b45bc8', '#948739'], // added: as in light
+    roleText: ['#000000', '#000000'], // added
+    bloom: '0px', // added
+    keys: { white: '#a9b3c0', black: '#10151c' }, // added: Market's second ink and ground
+  },
+};
+
+export const palettes: Palette[] = [push, elektron, ableton, linear, market, classic, frost, claudeCode, bigRed, mixflow, console, blueprint, push3];

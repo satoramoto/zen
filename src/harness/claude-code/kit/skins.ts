@@ -339,6 +339,48 @@ export const SKINS = {
       "#ff8a3d"
     ]
   },
+  market: {
+    label: "Market",
+    ok: "#2fbf71",
+    warn: "#e0a030",
+    bad: "#f0635a",
+    blue: "#4c9aff",
+    purple: "#b45bc8",
+    cyan: "#13dcf6",
+    slate: "#92add0",
+    orchid: "#eca5fc",
+    ramp: {
+      blue: [
+        "#4c9aff",
+        "#3974bf",
+        "#8bbdff",
+        "#2a558c"
+      ],
+      slate: [
+        "#92add0",
+        "#6e829c",
+        "#b8cae0",
+        "#505f72"
+      ]
+    },
+    muted: "#738092",
+    gray: {
+      light: "#a9b3c0",
+      mid: "#738092",
+      dark: "#6b7686"
+    },
+    hues: [
+      "#13dcf6",
+      "#eca5fc",
+      "#b6d431",
+      "#feaaa9",
+      "#1c989e"
+    ],
+    roles: [
+      "#b45bc8",
+      "#948739"
+    ]
+  },
   "claude-code": {
     label: "Claude Code",
     ok: "#5bc08a",
