@@ -16,6 +16,8 @@
 //   --static DIR     the built Storybook `--browser-all` serves when none is served (storybook-static)
 //   --config-dir DIR the Storybook config (.storybook)
 //   --list           print the stories and where each would be played, and play nothing
+//   --globals K:V,…  Storybook globals every story is played with (`renderer:dom`)
+//   --renderer NAME  shorthand for `--globals renderer:NAME`: zen's Renderer toolbar (react, svelte, dom)
 //
 // A prefix matches a story id or title ("core-primitives", "Core/Primitives"). STORY_FILTER, as the
 // scripts this replaces read it, keeps the stories whose id contains its text.
@@ -43,6 +45,8 @@ const { values, positionals } = parseArgs({
     viewport: { type: 'string', default: '1600x1000' },
     retries: { type: 'string', default: '0' },
     shard: { type: 'string' },
+    globals: { type: 'string' },
+    renderer: { type: 'string' },
   },
 });
 if (values['no-browser'] && values['browser-all']) { console.error('--no-browser and --browser-all are two different runs: pick one'); process.exit(2); }
@@ -57,6 +61,12 @@ const size = /^(\d+)x(\d+)$/.exec(values.viewport);
 if (!size) { console.error(`--viewport is a width and height in pixels, as 1180x820, not ${values.viewport}`); process.exit(2); }
 const viewport = { width: Number(size[1]), height: Number(size[2]) };
 const retries = Math.max(0, Number(values.retries) || 0);
+const globals = Object.fromEntries((values.globals ?? '').split(',').filter(Boolean).map((pair) => {
+  const at = pair.indexOf(':');
+  if (at < 1) { console.error(`--globals is name:value pairs, as renderer:dom, not ${pair}`); process.exit(2); }
+  return [pair.slice(0, at), pair.slice(at + 1)];
+}));
+if (values.renderer) globals.renderer = values.renderer;
 
 const answers = async (url, what) => {
   try { const res = await fetch(url, { signal: AbortSignal.timeout(3000) }); return res.ok && (res.headers.get('content-type') ?? '').includes(what); } catch { return false; }
@@ -118,7 +128,7 @@ const unplayed = (list, why, fix) => {
 // One pass after the other, so no more than `workers` stories are ever being played.
 if (todo.virtual.length) {
   const { playVirtual } = await import('./virtual.mjs');
-  try { await playVirtual({ root, configDir, stories: todo.virtual, workers, timeout, stageUrl: stage ? base : null, retries, report: report('virtual') }); } catch (e) {
+  try { await playVirtual({ root, configDir, stories: todo.virtual, workers, timeout, stageUrl: stage ? base : null, retries, globals, report: report('virtual') }); } catch (e) {
     console.error(e.message);
     process.exit(2);
   }
@@ -132,7 +142,7 @@ if (todo.browser.length) {
     else unplayed(todo.browser, `no built Storybook in ${values.static}`, 'Build it first, or name a served one with --url.');
   } else if (!base) unplayed(todo.browser, 'no Storybook is being served for them', 'Start the project\'s Storybook, or name one with --url.');
   if (base) {
-    const not = await playInBrowser({ base, stories: todo.browser, workers, timeout, gpu: values.gpu, viewport, retries, report: report('browser') });
+    const not = await playInBrowser({ base, stories: todo.browser, workers, timeout, gpu: values.gpu, viewport, retries, globals, report: report('browser') });
     if (not) unplayed(todo.browser, not.why, `Run: ${not.fix}`);
   }
   await built?.close();
@@ -141,5 +151,6 @@ if (todo.browser.length) {
 const reasons = new Map();
 for (const { why } of todo.skipped) reasons.set(why, (reasons.get(why) ?? 0) + 1);
 for (const [why, n] of reasons) console.log(`skipped ${n}: ${why}`);
+if (Object.keys(globals).length) console.log(`played with globals ${Object.entries(globals).map(([k, v]) => `${k}:${v}`).join(', ')}`);
 console.log(`\n${count.virtual} passed on the virtual DOM, ${count.browser} in the browser, ${todo.skipped.length} skipped, ${count.failed} failed${count.unplayed ? `, ${count.unplayed} not played` : ''}${count.flaky ? `, ${count.flaky} flaky` : ''}`);
 process.exit(count.failed || count.unplayed ? 1 : 0);

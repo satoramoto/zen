@@ -42,7 +42,7 @@ export const libraryGlobalTypes = {
 };
 
 /** Zen's own Storybook only (not in `libraryGlobalTypes`, so an app's Storybook doesn't get it): which
- *  renderer draws a component converted to a view tree, React's `Tree` or Svelte's (`withRenderer`,
+ *  renderer draws a component converted to a view tree, React's `Tree`, Svelte's or the DOM renderer's (`withRenderer`,
  *  `src/library/foundation/stories/story.tsx`). Other stories draw in React either way. */
 export const rendererGlobalTypes = {
   renderer: {
@@ -54,6 +54,7 @@ export const rendererGlobalTypes = {
       items: [
         { value: 'react', title: 'Renderer: React' },
         { value: 'svelte', title: 'Renderer: Svelte' },
+        { value: 'dom', title: 'Renderer: DOM' },
       ],
     },
   },

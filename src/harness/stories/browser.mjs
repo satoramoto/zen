@@ -36,7 +36,7 @@ function observe() {
 const FAILING = new Set(['storyThrewException', 'storyErrored', 'playFunctionThrewException', 'unhandledErrorsWhilePlaying', 'storyMissing']);
 
 // Each story gets a context of its own: storage one story leaves would otherwise reach the next.
-async function play(browser, viewport, base, story, timeout) {
+async function play(browser, viewport, base, story, timeout, withGlobals = '') {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   const errors = [];
@@ -45,7 +45,7 @@ async function play(browser, viewport, base, story, timeout) {
   const started = Date.now();
   try {
     // A dev server's first page can take longer than Playwright's 30 s while it prepares modules.
-    await page.goto(`${base}/iframe.html?id=${story.id}&viewMode=story`, { waitUntil: 'domcontentloaded', timeout });
+    await page.goto(`${base}/iframe.html?id=${story.id}&viewMode=story${withGlobals}`, { waitUntil: 'domcontentloaded', timeout });
     await page.waitForFunction((id) => {
       const ev = window.__STORY_RUN__?.events ?? [];
       return ev.some((e) => e.type === 'storyFinished' && e.args[0]?.storyId === id)
@@ -76,7 +76,8 @@ const cutShort = (r) => r.reloaded || r.problems.some((p) => /storyHotUpdated|th
  * Plays `stories` in the headless shell against the Storybook at `base`, `workers` at a time.
  * Resolves to null, or to why nothing was played ({ why, fix }) when the shell is not installed.
  */
-export async function playInBrowser({ base, stories, workers, timeout, gpu = false, viewport = { width: 1600, height: 1000 }, retries = 0, report }) {
+export async function playInBrowser({ base, stories, workers, timeout, gpu = false, viewport = { width: 1600, height: 1000 }, retries = 0, globals = {}, report }) {
+  const withGlobals = Object.keys(globals).length ? `&globals=${Object.entries(globals).map(([k, v]) => `${encodeURIComponent(k)}:${encodeURIComponent(v)}`).join(';')}` : '';
   if (!stories.length) return null;
   let chromium;
   // `playwright`, or `@playwright/test`, which a project with Playwright's test runner has instead.
@@ -96,11 +97,11 @@ export async function playInBrowser({ base, stories, workers, timeout, gpu = fal
   try {
     await Promise.all(Array.from({ length: Math.max(1, workers) }, async () => {
       for (let s = queue.shift(); s; s = queue.shift()) {
-        let r = await play(browser, viewport, base, s, timeout);
-        for (let again = 0; !r.ok && cutShort(r) && again < 2; again++) r = await play(browser, viewport, base, s, timeout);
+        let r = await play(browser, viewport, base, s, timeout, withGlobals);
+        for (let again = 0; !r.ok && cutShort(r) && again < 2; again++) r = await play(browser, viewport, base, s, timeout, withGlobals);
         // A story that failed gets `retries` more tries; one that then passes is flaky, and says so.
         let failed = 0;
-        for (; !r.ok && failed < retries; failed++) r = await play(browser, viewport, base, s, timeout);
+        for (; !r.ok && failed < retries; failed++) r = await play(browser, viewport, base, s, timeout, withGlobals);
         report({ story: r.story, ok: r.ok, ms: r.ms, problems: r.problems, flaky: r.ok ? failed : 0 });
       }
     }));

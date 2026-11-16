@@ -32,7 +32,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { sharedAliases } from './vite.aliases';
 
 /** Gathers every chunk's stylesheet into `zen.css`, shared chunks first. */
-function joinStyles(): Plugin {
+export function joinStyles(): Plugin {
   return {
     name: 'zen-join-styles',
     apply: 'build',

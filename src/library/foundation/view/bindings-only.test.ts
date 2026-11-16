@@ -39,6 +39,16 @@ export const X = () => createElement('div', null, h('span'));`;
 <Tree {tree} />{@html raw}`;
     expect(markupCount('components/X/X.svelte', svelte)).toBe(2);
   });
+
+  it('counts a DOM binding\'s element building and document writes, not its model calls', () => {
+    const dom = `// document.createElement in a comment
+export const XDom = domPart({}, (props, use) => ({ tree: xView(props, use.id()), handlers: xHandlers(props) }));
+const el = document.createElement('div');
+host.innerHTML = '<b>x</b>';
+parent.appendChild(h('i'));`;
+    expect(markupCount('components/X/X.dom.ts', dom)).toBe(4);
+    expect(markupCount('components/X/X.dom.ts', 'export const XDom = domPart({}, (props) => ({ tree: xView(props) }));')).toBe(0);
+  });
 });
 
 it('no binding has more markup than its baseline (view.baseline.json)', () => {

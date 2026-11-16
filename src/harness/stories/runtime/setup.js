@@ -9,7 +9,9 @@ import * as preview from 'virtual:zen-stories/preview';
 globalThis.__OMARCHY_STAGE__ = { url: process.env.ZEN_STORIES_STAGE_URL || undefined, headless: true, closing: new Set() };
 
 const { default: byDefault, ...named } = preview;
-const annotations = setProjectAnnotations([byDefault ?? named]);
+// The run's globals (`--globals`, `--renderer`), over the preview's own initial ones.
+const globals = process.env.ZEN_STORIES_GLOBALS ? JSON.parse(process.env.ZEN_STORIES_GLOBALS) : null;
+const annotations = setProjectAnnotations([byDefault ?? named, ...(globals ? [{ initialGlobals: globals }] : [])]);
 beforeAll(() => annotations.beforeAll?.());
 
 // A composed story is unmounted when the next one runs. Running an empty story after each one

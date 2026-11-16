@@ -70,7 +70,7 @@ const literal = (p) => p.replace(/[\\()[\]{}!*?@+|]/g, '\\$&');
  * Plays `stories` (index entries) on the virtual DOM, at most `workers` files at a time.
  * `report(result)` is called once per story: { story, ok, ms, problems }.
  */
-export async function playVirtual({ root, configDir, stories, workers, timeout, stageUrl, retries = 0, report }) {
+export async function playVirtual({ root, configDir, stories, workers, timeout, stageUrl, retries = 0, globals = {}, report }) {
   if (!stories.length) return;
   const { startVitest } = await need('vitest/node', 'Vitest');
   await need('jsdom', 'jsdom');
@@ -129,7 +129,7 @@ export async function playVirtual({ root, configDir, stories, workers, timeout, 
 
   const vite = await import('vite');
   const base = await projectVite(root, main);
-  const env = { ...(stageUrl ? { ZEN_STORIES_STAGE_URL: stageUrl } : {}) };
+  const env = { ...(stageUrl ? { ZEN_STORIES_STAGE_URL: stageUrl } : {}), ...(Object.keys(globals).length ? { ZEN_STORIES_GLOBALS: JSON.stringify(globals) } : {}) };
   const vitest = await startVitest('test', [], {
     config: false,
     root,

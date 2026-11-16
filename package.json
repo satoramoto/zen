@@ -92,6 +92,13 @@
       "types": "./lib/push/model/index.d.ts",
       "import": "./lib/push-model.js"
     },
+    "./hotwire": {
+      "zen-source": "./src/library/hotwire.ts",
+      "types": "./lib/hotwire.d.ts",
+      "import": "./lib/hotwire/zen.js"
+    },
+    "./hotwire/zen.css": "./lib/hotwire/zen.css",
+    "./hotwire/themes/*": "./lib/hotwire/themes/*",
     "./harness/*": "./src/harness/*",
     "./package.json": "./package.json"
   },
@@ -108,7 +115,7 @@
     "*.css"
   ],
   "scripts": {
-    "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json",
+    "build:lib": "vite build -c vite.lib.config.ts && vite build -c vite.hotwire.config.ts && tsc -p tsconfig.lib.json",
     "check:lib": "tsx scripts/check-lib-entries.ts",
     "build:site-fixture": "astro build --root fixtures/site",
     "check:site": "node --test src/site/content.check.mjs && npm run build:site-fixture && node scripts/check-site.mjs",
@@ -132,11 +139,11 @@
   "peerDependencies": {
     "@astrojs/react": "^7.1.0",
     "astro": "^7.4.0",
+    "jsdom": ">=26",
+    "playwright": ">=1.64",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "svelte": "^5.57.0",
-    "jsdom": ">=26",
-    "playwright": ">=1.64",
     "vitest": ">=4"
   },
   "peerDependenciesMeta": {
@@ -162,6 +169,8 @@
   "devDependencies": {
     "@astrojs/react": "7.1.5",
     "@fontsource-variable/recursive": "5.3.0",
+    "@hotwired/stimulus": "3.2.2",
+    "@hotwired/turbo": "8.0.23",
     "@storybook/addon-a11y": "10.6.1",
     "@storybook/addon-docs": "10.6.1",
     "@storybook/react-vite": "10.6.1",

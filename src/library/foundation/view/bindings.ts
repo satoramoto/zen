@@ -1,9 +1,11 @@
-// The bindings-only rule's scanner: a component's `.tsx` and `.svelte` are bindings, so the only
+// The bindings-only rule's scanner: a component's `.tsx`, `.svelte` and `.dom.ts` are bindings, so the only
 // element markup in them is `<Tree …/>`; everything they draw is the model's tree. Counted per file
 // under the component folders (stories, story markup and tests aside) and held to
 // `view.baseline.json` by `bindings-only.test.ts`: a count may go down, never up. Markup written
 // without tags counts too: `createElement(` and `h(` calls (a model file, `*.model.ts`, is never a
-// binding, so the tree's `h` is free there) and Svelte's `{@html …}`.
+// binding, so the tree's `h` is free there) and Svelte's `{@html …}`. A DOM binding (`.dom.ts`)
+// counts those calls and any reach for the document or for placing nodes: it calls `domPart`,
+// `use`, its model and its handlers, and `Tree.dom.ts` does the drawing.
 import { stripTsComments, type FileSource } from '../../tiers';
 
 /** The folders whose renderers are held to the rule, under `src/library`. */
@@ -25,6 +27,9 @@ const SVELTE_TAG = /<([A-Za-z][\w.:-]*)/g;
 const BUILD_CALL = /(?<![\w$.])(?:createElement|h)\s*\(/g;
 /** Svelte's raw markup. */
 const SVELTE_HTML = /\{@html\b/g;
+/** What a DOM binding (`<Name>.dom.ts`) may not do itself: reach the document, write markup, or
+ *  put nodes anywhere; drawing is `Tree.dom.ts`'s. */
+const DOM_WRITE = /(?<![\w$.])document\s*\.|\.(?:innerHTML|outerHTML)\b|\.(?:appendChild|insertBefore|append|prepend|replaceWith|replaceChildren|insertAdjacentHTML|cloneNode)\s*\(/g;
 
 const count = (src: string, pattern: RegExp) => [...src.matchAll(pattern)].filter((m) => !ALLOWED.has(m[1] ?? '')).length;
 
@@ -32,6 +37,10 @@ const count = (src: string, pattern: RegExp) => [...src.matchAll(pattern)].filte
  *  `.tsx` (comments aside); markup and `{@html}` in a `.svelte` (its `<style>` and comments aside),
  *  and calls in its `<script>`. */
 export function markupCount(file: string, src: string): number {
+  if (file.endsWith('.dom.ts')) {
+    const code = stripTsComments(src);
+    return count(code, BUILD_CALL) + count(code, DOM_WRITE);
+  }
   if (file.endsWith('.svelte')) {
     const uncommented = src.replace(/<!--[\s\S]*?-->/g, '');
     const scripts = [...uncommented.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map((m) => stripTsComments(m[1])).join('\n');
@@ -48,7 +57,7 @@ export function scanBindings(source: FileSource, folders: readonly string[] = BI
   for (const folder of folders) {
     for (const f of source.files(folder)) {
       const rel = `${folder}/${f}`;
-      if (!/\.(?:tsx|svelte)$/.test(rel) || SKIP.test(rel)) continue;
+      if (!/\.(?:tsx|svelte|dom\.ts)$/.test(rel) || SKIP.test(rel)) continue;
       const n = markupCount(rel, source.read(rel));
       if (n > 0) counts[rel] = n;
     }

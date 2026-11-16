@@ -1,6 +1,6 @@
 // Fails when a framework-free or Svelte entry of the built package reaches React: `lib/svelte.js`
 // and `lib/themes.js` (when built), and every chunk they import, must not import `react`,
-// `react-dom` or `react/jsx-runtime`. Run after `npm run build:lib` (`npm run check:lib`).
+// `react-dom` or `react/jsx-runtime`; `lib/hotwire/zen.js` imports nothing but `@hotwired/stimulus`. Run after `npm run build:lib` (`npm run check:lib`).
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 
@@ -12,6 +12,8 @@ const ENTRIES = [
   ...['themes.js', 'view.js', 'checks.js', 'compendium-model.js', 'math-trig-model.js', 'math-expression.js', 'push-model.js'].map((file) => ({
     file, frameworks: /^(?:react(?:-dom)?|svelte|storybook|@storybook\/[^/]+)(?:\/.*)?$/,
   })),
+  // The Hotwire build is pinned whole by an import map: Stimulus, the app's own pin, is its one import.
+  { file: 'hotwire/zen.js', frameworks: /^(?!@hotwired\/stimulus$)(?!\.).*$/ },
 ];
 /** A static or dynamic import of a module specifier. */
 const IMPORT = /(?:\bfrom\s*|\bimport\s*\(?\s*)["']([^"']+)["']/g;
