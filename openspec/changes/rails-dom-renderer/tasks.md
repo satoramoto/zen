@@ -35,16 +35,16 @@
 
 - [x] 5.1 Write `vite.hotwire.config.ts` (one module, no splitting, Stimulus external, no `emptyOutDir`, shared `joinStyles`, one theme stylesheet per pack) and chain it in `build:lib`; add `./hotwire`, `./hotwire/zen.css` and `./hotwire/themes/*` to `package.json` exports; verify `npm run build:lib` writes `lib/hotwire/zen.js`, `zen.css` and `themes/*.css`
 - [x] 5.2 Add the rule to `scripts/check-lib-entries.ts` that `lib/hotwire/zen.js` imports nothing but `@hotwired/stimulus` and nothing of React or Svelte; verify `npm run check:lib` passes, and fails with a planted React import
-- [ ] 5.3 Write `docs/rails.md` (vendoring, pins, the `zen` helper snippet, labels, events, form fields, morph and cache, the bundle's measured size) and the new entry's line in `AGENTS.md`; verify each snippet against task group 6 as it is done
+- [x] 5.3 Write `docs/rails.md` (vendoring, pins, the `zen` helper snippet, labels, events, form fields, morph and cache, the bundle's measured size) and the new entry's line in `AGENTS.md`; verify each snippet against task group 6 as it is done
 
 ## 6. Market (xmrz, `first-mover/market`, branch `change/rails-dom-renderer`)
 
-- [ ] 6.1 Add `script/zen-vendor`, vendor the zen branch's build with the chosen pack, pin `zen` in `config/importmap.rb` and call `registerZen` in `controllers/index.js`; verify `bin/importmap json` lists `zen` and the server boots
-- [ ] 6.2 Add the `zen` and `zen_select` helpers with helper tests (placeholder attributes, props JSON, `html:` merge, choices split into items, values and index); verify `bin/rails test test/helpers`
-- [ ] 6.3 Put `zen-theme` on `<body>` and move `application.css`'s colours, type and spacing onto contract variables; verify by eye in Playwright's headless shell on Board, Hardware, Heatmap and a coin page in light and dark
-- [ ] 6.4 Draw the selects in `board/_controls`, `hardware/_controls` and `shared/_filters` with `zen_select` (labels to divs, native selects kept in `<noscript>`); verify the integration tests in `test/integration` still pass and add ones that the filter pages render the placeholders and filter by query
-- [ ] 6.5 Add `get :watch`, the lazy watch frame on `coins/show`, the zen `Button` watch control and the `watch` action submitting its form, with the PATCH stream replacing it; verify an integration test for the GET and the stream response
-- [ ] 6.6 In the headless shell against a running server: choose a filter on Board, Hardware and Heatmap and see the results change; on a coin page see the frame load and the star toggle; go back and forth to check nothing is drawn twice; report what was seen
+- [x] 6.1 Add `script/zen-vendor`, vendor the zen branch's build with the chosen pack, pin `zen` in `config/importmap.rb` and call `registerZen` in `controllers/index.js`; verify `bin/importmap json` lists `zen` and the server boots
+- [x] 6.2 Add the `zen` and `zen_select` helpers with helper tests (placeholder attributes, props JSON, `html:` merge, choices split into items, values and index); verify `bin/rails test test/helpers`
+- [ ] 6.3 (Handed to Market's sessions: the Design session's `change/design` is editing `application.css` and the coin and device pages now.) Put `zen-theme` on `<body>` and move `application.css`'s colours, type and spacing onto contract variables; verify by eye in Playwright's headless shell on Board, Hardware, Heatmap and a coin page in light and dark
+- [ ] 6.4 (Handed to Market's sessions, with 6.3: a zen control needs the scope 6.3 sets.) Draw the selects in `board/_controls`, `hardware/_controls` and `shared/_filters` with `zen_select` (labels to divs, native selects kept in `<noscript>`); verify the integration tests in `test/integration` still pass and add ones that the filter pages render the placeholders and filter by query
+- [ ] 6.5 (Handed to Market's sessions: `coins/show` is being redesigned on `change/design`.) Add `get :watch`, the lazy watch frame on `coins/show`, the zen `Button` watch control and the `watch` action submitting its form, with the PATCH stream replacing it; verify an integration test for the GET and the stream response
+- [ ] 6.6 (Handed to Market's sessions, after 6.3–6.5. Done here for the vendored build alone: `/tmp` check on /board drew a Select in a `linear` scope, ArrowDown wrote `basis=median` and fired `change`, no console errors.) In the headless shell against a running server: choose a filter on Board, Hardware and Heatmap and see the results change; on a coin page see the frame load and the star toggle; go back and forth to check nothing is drawn twice; report what was seen
 
 ## 7. Merge
 
