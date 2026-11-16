@@ -100,6 +100,18 @@ import CheckboxSvelte from './components/Checkbox/Checkbox.svelte';
 import RadioSvelte from './components/Radio/Radio.svelte';
 import type { CheckModelProps } from './components/Checkbox/Checkbox.model';
 import StatusDotSvelte from './components/StatusDot/StatusDot.svelte';
+import TrackSvelte from './components/Track/Track.svelte';
+import SparklineSvelte from './components/Sparkline/Sparkline.svelte';
+import BarListSvelte from './components/BarList/BarList.svelte';
+import FigureStripSvelte from './components/FigureStrip/FigureStrip.svelte';
+import PanelSvelte from './layouts/Panel/Panel.svelte';
+import TimeChartSvelte from './chart/components/TimeChart/TimeChart.svelte';
+import type { TrackModelProps } from './components/Track/Track.model';
+import type { SparklineModelProps } from './components/Sparkline/Sparkline.model';
+import type { BarListModelProps } from './components/BarList/BarList.model';
+import type { FigureStripModelProps } from './components/FigureStrip/FigureStrip.model';
+import type { PanelModelProps } from './layouts/Panel/Panel.model';
+import type { TimeChartModelProps } from './chart/components/TimeChart/TimeChart.model';
 import SeparatorSvelte from './components/Separator/Separator.svelte';
 import CodeImageSvelte from './components/CodeImage/CodeImage.svelte';
 import SettingsRowSvelte from './components/SettingsRow/SettingsRow.svelte';
@@ -449,6 +461,18 @@ export const Popover = PopoverSvelte as unknown as Component<PopoverProps>;
 
 export type StatusDotProps = StatusDotModelProps;
 export const StatusDot = StatusDotSvelte as unknown as Component<StatusDotProps>;
+/** A value on a rail against a mark. */
+export const Track = TrackSvelte as unknown as Component<TrackModelProps>;
+/** Values as a small line. */
+export const Sparkline = SparklineSvelte as unknown as Component<SparklineModelProps>;
+/** Ranked bars against the largest. */
+export const BarList = BarListSvelte as unknown as Component<BarListModelProps>;
+/** A strip of figures. */
+export const FigureStrip = FigureStripSvelte as unknown as Component<FigureStripModelProps>;
+/** A titled card: heading, aside, actions and body (snippets). */
+export const Panel = PanelSvelte as unknown as Component<Omit<PanelModelProps, 'aside'> & { aside?: string | Snippet; actions?: Snippet; children?: Snippet }>;
+/** A time-series chart in the pack's colours (Lightweight Charts, loaded on first mount). */
+export const TimeChart = TimeChartSvelte as unknown as Component<TimeChartModelProps & { emptySlot?: Snippet }>;
 
 export type SeparatorProps = SeparatorModelProps;
 export const Separator = SeparatorSvelte as unknown as Component<SeparatorProps>;
