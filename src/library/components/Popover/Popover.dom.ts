@@ -3,6 +3,9 @@ import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { CONTROL_FIELD } from '../../primitives/control';
 import { popoverHandlers, popoverView, type PopoverBindingProps } from './Popover.model';
+import '../../primitives/Text/Text.css';
+import '../../primitives/Surface/Surface.css';
+import './Popover.css';
 
 // A popover is a new surface: controls in it are fields again, even when it opens from a toolbar.
 export const PopoverDom = domPart<PopoverBindingProps & { children?: DomFill }>({ events: ['onDismiss'] }, ({ children, ...props }, use) => {

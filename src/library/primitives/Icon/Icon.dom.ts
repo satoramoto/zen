@@ -3,6 +3,8 @@ import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { slot } from '../../foundation/view/Tree.model';
 import { iconNode, type IconModelProps } from './Icon.model';
+import '../Text/Text.css';
+import './Icon.css';
 
 type Props = Omit<IconModelProps, 'className'> & { class?: string; className?: string; children?: DomFill } & Record<string, unknown>;
 

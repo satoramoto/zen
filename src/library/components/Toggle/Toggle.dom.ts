@@ -2,6 +2,10 @@
 import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { switchHandlers, switchView, toggleHandlers, toggleView, type SwitchModelProps, type ToggleModelProps } from './Toggle.model';
+import '../../primitives/Text/Text.css';
+import '../../primitives/Surface/Surface.css';
+import './size.css';
+import './Toggle.css';
 
 export const ToggleDom = domPart<ToggleModelProps & { children?: DomFill }>({ events: ['onChange'], value: { prop: 'on', on: 'onChange' } }, ({ children, ...props }) => ({
   tree: toggleView(props, children !== undefined),

@@ -2,6 +2,8 @@
 import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { actionButtonHandlers, actionButtonView, type ActionButtonModelProps } from './ActionButton.model';
+import '../../primitives/Text/Text.css';
+import './ActionButton.css';
 
 export const ActionButtonDom = domPart<ActionButtonModelProps & { children?: DomFill }>({ events: ['onPress'] }, ({ children, ...props }) => ({
   tree: actionButtonView(props),

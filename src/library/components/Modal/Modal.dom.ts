@@ -2,6 +2,10 @@
 import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { modalHandlers, modalView, sheetView, type ModalModelProps, type SheetModelProps } from './Modal.model';
+import '../../primitives/Text/Text.css';
+import '../../primitives/Surface/Surface.css';
+import '../ActionButton/ActionButton.css';
+import './Modal.css';
 
 export const ModalDom = domPart<ModalModelProps & { actions?: DomFill; children?: DomFill }>({ events: ['onClose'] }, ({ actions, children, ...props }) => ({
   tree: modalView(props, { actions: actions !== undefined }),

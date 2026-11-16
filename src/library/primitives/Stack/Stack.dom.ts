@@ -3,6 +3,7 @@ import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { slot } from '../../foundation/view/Tree.model';
 import { stackNode, type StackModelProps } from './Stack.model';
+import './Stack.css';
 
 type Props = Omit<StackModelProps, 'className'> & { as?: string; class?: string; className?: string; children?: DomFill } & Record<string, unknown>;
 

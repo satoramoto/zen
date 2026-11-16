@@ -2,6 +2,10 @@
 import { domPart } from '../../foundation/view/dom';
 import type { ControlContextValue } from '../../primitives/control';
 import { SELECT_CLOSED, selectHandlers, selectView, type SelectModelProps } from './Select.model';
+import '../../primitives/Text/Text.css';
+import '../../primitives/Surface/Surface.css';
+import '../Popover/Popover.css';
+import './Select.css';
 
 export const SelectDom = domPart<SelectModelProps>({ events: ['onChange'], value: { prop: 'index', on: 'onChange' } }, (props, use) => {
   const state = use.state(SELECT_CLOSED);

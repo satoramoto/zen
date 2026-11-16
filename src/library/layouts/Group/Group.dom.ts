@@ -4,6 +4,9 @@ import type { DomFill } from '../../foundation/view/Tree.dom';
 import { styleAttr } from '../../foundation/view/style';
 import { groupView, type GroupModelProps } from './Group.model';
 import { isSlotContent } from '../Region/Region.model';
+import '../../primitives/Stack/Stack.css';
+import '../../primitives/Text/Text.css';
+import './Group.css';
 
 type Props = Omit<GroupModelProps, 'className' | 'label' | 'aside' | 'style'> & {
   label?: string | DomFill | false;

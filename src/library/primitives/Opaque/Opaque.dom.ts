@@ -2,6 +2,7 @@
 import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { opaqueTree } from '../Hole/Hole.model';
+import '../Surface/Surface.css';
 
 type Props = { class?: string; className?: string; style?: string; children?: DomFill };
 

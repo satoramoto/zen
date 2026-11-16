@@ -2,6 +2,10 @@
 import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { gateHandlers, gateState, gateView, type GateModelProps } from './Gate.model';
+import '../../primitives/Text/Text.css';
+import '../../primitives/Stack/Stack.css';
+import '../../primitives/Surface/Surface.css';
+import './Gate.css';
 
 type Props = GateModelProps & { title?: DomFill; message?: DomFill; children?: DomFill };
 

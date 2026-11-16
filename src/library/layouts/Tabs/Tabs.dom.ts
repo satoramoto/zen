@@ -2,6 +2,8 @@
 import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { tabsHandlers, tabsSlots, tabsView, type TabsModelProps } from './Tabs.model';
+import '../../primitives/Text/Text.css';
+import './Tabs.css';
 
 export const TabsDom = domPart<TabsModelProps<string | DomFill>>({ events: ['onChange'], value: { prop: 'value', on: 'onChange' } }, (props) => ({
   tree: tabsView(props),

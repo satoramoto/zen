@@ -2,6 +2,7 @@
 import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { layerHandlers, layerView, type LayerModelProps } from './Layer.model';
+import '../../primitives/Surface/Surface.css';
 
 type Props = Omit<LayerModelProps, 'className'> & { class?: string; className?: string; children?: DomFill } & Record<string, unknown>;
 

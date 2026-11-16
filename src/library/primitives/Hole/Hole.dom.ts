@@ -3,6 +3,7 @@ import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { slot } from '../../foundation/view/Tree.model';
 import { holeNode } from './Hole.model';
+import '../Surface/Surface.css';
 
 type Props = { class?: string; className?: string; style?: string; name?: string; children?: DomFill };
 

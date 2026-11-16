@@ -5,6 +5,7 @@ import type { ShaderMaterialName, ShaderSource } from '../../shader/types';
 import { shaderSupported } from '../../shader/supported';
 import { surfaceTree, type SurfaceModelProps } from './Surface.model';
 import { SHADER_ERROR, chosenShader, surfaceShader, type SurfaceShader } from '../surfaceShader';
+import './Surface.css';
 
 type Props = Omit<SurfaceModelProps, 'className'> & { shader?: SurfaceShader; as?: string; class?: string; className?: string; children?: DomFill } & Record<string, unknown>;
 

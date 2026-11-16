@@ -3,6 +3,7 @@ import { domPart } from '../../foundation/view/dom';
 import type { DomFill } from '../../foundation/view/Tree.dom';
 import { slot } from '../../foundation/view/Tree.model';
 import { textNode, type TextModelProps } from './Text.model';
+import './Text.css';
 
 type Props = Omit<TextModelProps, 'className'> & { as?: string; class?: string; className?: string; children?: DomFill } & Record<string, unknown>;
 
