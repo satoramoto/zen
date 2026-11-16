@@ -1,0 +1,22 @@
+## Up
+<span aria-label="KRX yield, 7 days, up" class="lib-spark" data-direction="up" data-part="root" role="img">
+  <svg aria-hidden="true" class="lib-spark__svg" preserveAspectRatio="none" viewBox="0 0 100 24">
+    <path class="lib-spark__line" d="M0 22 L16.67 17 L33.33 19.5 L50 12 L66.67 7 L83.33 9.5 L100 2">
+  <span class="lib-spark__dot" data-part="dot" style="left: 100%; top: 8.33%">
+
+## Down
+<span aria-label="PRL yield, 7 days, down" class="lib-spark" data-direction="down" data-part="root" role="img">
+  <svg aria-hidden="true" class="lib-spark__svg" preserveAspectRatio="none" viewBox="0 0 100 24">
+    <path class="lib-spark__area" d="M0 2 L16.67 6 L33.33 4 L50 14 L66.67 18 L83.33 17.2 L100 22 L100 24 L0 24 Z">
+    <path class="lib-spark__line" d="M0 2 L16.67 6 L33.33 4 L50 14 L66.67 18 L83.33 17.2 L100 22">
+  <span class="lib-spark__dot" data-part="dot" style="left: 100%; top: 91.67%">
+
+## Flat
+<span aria-label="EPIC yield, 4 days, flat" class="lib-spark" data-direction="flat" data-part="root" role="img">
+  <svg aria-hidden="true" class="lib-spark__svg" preserveAspectRatio="none" viewBox="0 0 100 24">
+    <path class="lib-spark__line" d="M0 12 L33.33 2 L66.67 22 L100 12">
+
+## Single
+<span aria-label="New coin, flat" class="lib-spark" data-direction="flat" data-part="root" role="img">
+  <svg aria-hidden="true" class="lib-spark__svg" preserveAspectRatio="none" viewBox="0 0 100 24">
+  <span class="lib-spark__dot" data-part="dot" style="left: 0%; top: 50%">

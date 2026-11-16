@@ -1,0 +1,63 @@
+## Today
+<dl aria-label="Today" class="lib-strip" data-part="root">
+  <div key=Coins in reach class="lib-strip__figure" data-lead="true" data-part="figure">
+    <dt class="lib-strip__label">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="caption" data-tone="muted">
+        "Coins in reach"
+    <dd class="lib-strip__body">
+      <a class="lib-strip__link" href="#board">
+        <span class="lib-text lib-tone lib-strip__value" data-role="numeral" data-tabular="" data-text-size="display">
+          "16"
+      <span class="lib-text lib-tone lib-strip__note" data-role="body" data-text-size="caption" data-tone="muted">
+        "of 58 ranked"
+  <div key=On the table class="lib-strip__figure" data-part="figure">
+    <dt class="lib-strip__label">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="caption" data-tone="muted">
+        "On the table"
+    <dd class="lib-strip__body">
+      <span class="lib-text lib-tone lib-strip__value" data-role="numeral" data-tabular="" data-text-size="heading">
+        "$236k"
+      <span class="lib-text lib-tone lib-strip__note" data-role="body" data-text-size="caption" data-tone="muted">
+        "a day"
+  <div key=Hardware clearing 20% class="lib-strip__figure" data-part="figure">
+    <dt class="lib-strip__label">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="caption" data-tone="muted">
+        "Hardware clearing 20%"
+    <dd class="lib-strip__body">
+      <span class="lib-text lib-tone lib-strip__value" data-role="numeral" data-tabular="" data-text-size="heading">
+        "41"
+      <span class="lib-text lib-tone lib-strip__note" data-role="body" data-text-size="caption" data-tone="muted">
+        "of 312 on offer"
+  <div key=Yield 24h class="lib-strip__figure" data-part="figure">
+    <dt class="lib-strip__label">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="caption" data-tone="muted">
+        "Yield 24h"
+    <dd class="lib-strip__body">
+      <span class="lib-text lib-tone lib-strip__value" data-role="numeral" data-tabular="" data-text-size="heading" data-tone="success">
+        "+4.7%"
+  <div key=Network class="lib-strip__figure" data-part="figure">
+    <dt class="lib-strip__label">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="caption" data-tone="muted">
+        "Network"
+    <dd class="lib-strip__body">
+      <span class="lib-text lib-tone lib-strip__value" data-role="numeral" data-tabular="" data-text-size="heading" data-tone="danger">
+        "−2.1%"
+      <span class="lib-text lib-tone lib-strip__note" data-role="body" data-text-size="caption" data-tone="muted">
+        "hashrate"
+
+## Even
+<dl class="lib-strip" data-part="root">
+  <div key=Price class="lib-strip__figure" data-part="figure">
+    <dt class="lib-strip__label">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="caption" data-tone="muted">
+        "Price"
+    <dd class="lib-strip__body">
+      <span class="lib-text lib-tone lib-strip__value" data-role="numeral" data-tabular="" data-text-size="heading">
+        "$0.42"
+  <div key=Emission / day class="lib-strip__figure" data-part="figure">
+    <dt class="lib-strip__label">
+      <span class="lib-text lib-tone" data-role="body" data-text-size="caption" data-tone="muted">
+        "Emission / day"
+    <dd class="lib-strip__body">
+      <span class="lib-text lib-tone lib-strip__value" data-role="numeral" data-tabular="" data-text-size="heading">
+        "$2.64k"

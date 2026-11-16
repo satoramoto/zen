@@ -1,0 +1,56 @@
+## Ahead
+<span class="lib-track" data-mode="ratio" data-part="root" data-tone="good">
+  <span aria-label="Our multiplier against what KRX needs: 2×" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__mark" data-part="mark" style="left: 50%">
+    <span class="lib-track__fill" data-part="fill" style="left: 50%; width: 25%">
+    <span class="lib-track__dot" data-part="dot" style="left: 75%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "2×"
+
+## Close
+<span class="lib-track" data-mode="ratio" data-part="root" data-tone="close">
+  <span aria-label="Our multiplier against what PRL needs: 0.94×" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__mark" data-part="mark" style="left: 50%">
+    <span class="lib-track__fill" data-part="fill" style="left: 47.77%; width: 2.23%">
+    <span class="lib-track__dot" data-part="dot" style="left: 47.77%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "0.94×"
+
+## Short
+<span class="lib-track" data-mode="ratio" data-part="root" data-tone="short">
+  <span aria-label="Our multiplier against what EPIC needs: 0.3×" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__mark" data-part="mark" style="left: 50%">
+    <span class="lib-track__fill" data-part="fill" style="left: 6.58%; width: 43.42%">
+    <span class="lib-track__dot" data-part="dot" style="left: 6.58%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "0.3×"
+
+## Cleared
+<span class="lib-track" data-mode="ratio" data-part="root" data-tone="good">
+  <span aria-label="Margin against the target: +12%" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__mark" data-part="mark" style="left: 50%">
+    <span class="lib-track__fill" data-part="fill" style="left: 48.9%; width: 1.1%">
+    <span class="lib-track__dot" data-part="dot" style="left: 48.9%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "+12%"
+
+## Share
+<span class="lib-track" data-mode="share" data-part="root" data-tone="none">
+  <span aria-label="Share of the network: 35%" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__dot" data-part="dot" style="left: 35%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "35%"
+
+## Beyond
+<span class="lib-track" data-mode="ratio" data-part="root" data-tone="good">
+  <span aria-label="Headroom: 40×" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__mark" data-part="mark" style="left: 50%">
+    <span class="lib-track__fill" data-part="fill" style="left: 50%; width: 50%">
+    <span class="lib-track__dot" data-part="dot" style="left: 100%">
+  <span aria-hidden="true" class="lib-text lib-tone lib-track__value" data-part="value" data-role="body" data-tabular="" data-text-size="label">
+    "40×"
+
+## NoMark
+<span class="lib-track" data-mode="ratio" data-part="root" data-tone="good">
+  <span aria-label="Against the median" class="lib-track__rail" data-part="rail" role="img">
+    <span class="lib-track__dot" data-part="dot" style="left: 69.81%">

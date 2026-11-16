@@ -1,0 +1,9 @@
+/* Panel: a card with a heading row (title, aside, actions to the end) over its body. */
+.lib-panel { display: grid; gap: var(--space-3); align-content: start; min-width: 0; padding: var(--space-4); }
+.lib-panel__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3); }
+.lib-panel__heading { margin: 0; }
+.lib-panel__link { color: inherit; text-decoration: none; }
+.lib-panel__link:hover { text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 0.2em; }
+.lib-panel__actions { margin-inline-start: auto; }
+.lib-panel__body { min-width: 0; }
+.lib-panel__empty { margin: 0; }

@@ -42,6 +42,11 @@ import { StackDom } from '../../primitives/Stack/Stack.dom';
 import { SurfaceDom } from '../../primitives/Surface/Surface.dom';
 import { TextDom } from '../../primitives/Text/Text.dom';
 import { TimeChartDom } from '../../chart/components/TimeChart/TimeChart.dom';
+import { TrackDom } from '../../components/Track/Track.dom';
+import { SparklineDom } from '../../components/Sparkline/Sparkline.dom';
+import { BarListDom } from '../../components/BarList/BarList.dom';
+import { FigureStripDom } from '../../components/FigureStrip/FigureStrip.dom';
+import { PanelDom } from '../../layouts/Panel/Panel.dom';
 
 let registry: Record<string, DomPartDefinition> | undefined;
 
@@ -86,6 +91,11 @@ export function domParts(): Readonly<Record<string, DomPartDefinition>> {
     Surface: SurfaceDom,
     Text: TextDom,
     TimeChart: TimeChartDom,
+    Track: TrackDom,
+    Sparkline: SparklineDom,
+    BarList: BarListDom,
+    FigureStrip: FigureStripDom,
+    Panel: PanelDom,
   });
 }
 
