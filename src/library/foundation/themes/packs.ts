@@ -138,6 +138,15 @@ export const packs: ThemePack[] = [
     principles: principles.studio,
   },
   {
+    id: 'market',
+    label: 'Market',
+    source: { name: 'Market (ryangavin/xmrz first-mover/market)', url: 'https://github.com/ryangavin/xmrz' },
+    northStar: 'A light trading desk that turns dark with the system: dense tables, one blue for controls, green and red for which side of a line a number is on.',
+    keep: ['Blue only for controls and what is selected.', 'Success and danger mark which side of a line a number is on; warning that it is close.', 'Archivo throughout, no tracking.'],
+    facets: facets('market', 'market', 'compact', 'linear'),
+    principles: principles.studio,
+  },
+  {
     id: 'claude-code',
     label: 'Claude Code',
     source: { name: 'awesome-claude mods (the Claude Code pane)', url: 'https://github.com/satoramoto/awesome-claude' },

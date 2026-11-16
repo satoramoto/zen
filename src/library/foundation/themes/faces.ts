@@ -94,6 +94,27 @@ const linear: Faces = {
   labelCase: 'none',
 };
 
+// Market: Archivo for everything, one variable file Market serves itself (wdth 62–125, wght
+// 100–900); its tables set it condensed, its titles wide. No tracking.
+const market: Faces = {
+  id: 'market',
+  label: 'Market (Archivo)',
+  sans: '"Archivo", system-ui, sans-serif',
+  display: '"Archivo", system-ui, sans-serif',
+  mono: 'ui-monospace, monospace',
+  readout: '"Archivo", system-ui, sans-serif',
+  math: MATH, // added
+  weightBody: 400,
+  weightMedium: 500,
+  weightStrong: 600,
+  weightBold: 700,
+  weightNumeral: 700,
+  weightDisplay: 800,
+  tracking: '0',
+  trackingDisplay: '0',
+  labelCase: 'none',
+};
+
 // visual[flow] 1.0 (openflowfm/visuals app/src/app.css, decision 69): one humane sans for UI,
 // titles and numbers, Instrument Sans (wdth 75–100, wght 400–700). Numbers take tabular figures
 // (`font-variant-numeric: tabular-nums`) rather than a monospace; the mono is only for code.
@@ -196,4 +217,4 @@ const push3: Faces = {
   labelCase: 'none', // added: the legends are printed in mixed case
 };
 
-export const faces: Faces[] = [push, classic, elektron, ableton, linear, instrument, mixflowFaces, consoleFaces, blueprintFaces, push3];
+export const faces: Faces[] = [push, classic, elektron, ableton, linear, market, instrument, mixflowFaces, consoleFaces, blueprintFaces, push3];
