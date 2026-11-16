@@ -109,6 +109,7 @@
   "files": [
     "lib",
     "src/site",
+    "src/rails",
     "src/harness"
   ],
   "sideEffects": [

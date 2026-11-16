@@ -1,0 +1,277 @@
+[
+  {
+    "part": "Track",
+    "story": "Ahead",
+    "props": {
+      "value": 2,
+      "label": "Our multiplier against what KRX needs",
+      "display": "2×"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"good\">\n  <span aria-label=\"Our multiplier against what KRX needs: 2×\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__mark\" data-part=\"mark\" style=\"left: 50%\">\n    <span class=\"lib-track__fill\" data-part=\"fill\" style=\"left: 50%; width: 25%\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 75%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"2×\""
+  },
+  {
+    "part": "Track",
+    "story": "Close",
+    "props": {
+      "value": 0.94,
+      "label": "Our multiplier against what PRL needs",
+      "display": "0.94×"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"close\">\n  <span aria-label=\"Our multiplier against what PRL needs: 0.94×\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__mark\" data-part=\"mark\" style=\"left: 50%\">\n    <span class=\"lib-track__fill\" data-part=\"fill\" style=\"left: 47.77%; width: 2.23%\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 47.77%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"0.94×\""
+  },
+  {
+    "part": "Track",
+    "story": "Short",
+    "props": {
+      "value": 0.3,
+      "label": "Our multiplier against what EPIC needs",
+      "display": "0.3×"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"short\">\n  <span aria-label=\"Our multiplier against what EPIC needs: 0.3×\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__mark\" data-part=\"mark\" style=\"left: 50%\">\n    <span class=\"lib-track__fill\" data-part=\"fill\" style=\"left: 6.58%; width: 43.42%\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 6.58%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"0.3×\""
+  },
+  {
+    "part": "Track",
+    "story": "Cleared",
+    "props": {
+      "value": 0.97,
+      "tone": "good",
+      "label": "Margin against the target",
+      "display": "+12%"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"good\">\n  <span aria-label=\"Margin against the target: +12%\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__mark\" data-part=\"mark\" style=\"left: 50%\">\n    <span class=\"lib-track__fill\" data-part=\"fill\" style=\"left: 48.9%; width: 1.1%\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 48.9%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"+12%\""
+  },
+  {
+    "part": "Track",
+    "story": "Share",
+    "props": {
+      "value": 0.35,
+      "mode": "share",
+      "label": "Share of the network",
+      "display": "35%"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"share\" data-part=\"root\" data-tone=\"none\">\n  <span aria-label=\"Share of the network: 35%\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 35%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"35%\""
+  },
+  {
+    "part": "Track",
+    "story": "Beyond",
+    "props": {
+      "value": 40,
+      "label": "Headroom",
+      "display": "40×"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"good\">\n  <span aria-label=\"Headroom: 40×\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__mark\" data-part=\"mark\" style=\"left: 50%\">\n    <span class=\"lib-track__fill\" data-part=\"fill\" style=\"left: 50%; width: 50%\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 100%\">\n  <span aria-hidden=\"true\" class=\"lib-text lib-tone lib-track__value\" data-part=\"value\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\">\n    \"40×\""
+  },
+  {
+    "part": "Track",
+    "story": "NoMark",
+    "props": {
+      "value": 3,
+      "range": 16,
+      "mark": false,
+      "fill": false,
+      "label": "Against the median"
+    },
+    "dom": "<span class=\"lib-track\" data-mode=\"ratio\" data-part=\"root\" data-tone=\"good\">\n  <span aria-label=\"Against the median\" class=\"lib-track__rail\" data-part=\"rail\" role=\"img\">\n    <span class=\"lib-track__dot\" data-part=\"dot\" style=\"left: 69.81%\">"
+  },
+  {
+    "part": "Sparkline",
+    "story": "Up",
+    "props": {
+      "values": [
+        3,
+        4,
+        3.5,
+        5,
+        6,
+        5.5,
+        7
+      ],
+      "label": "KRX yield, 7 days"
+    },
+    "dom": "<span aria-label=\"KRX yield, 7 days, up\" class=\"lib-spark\" data-direction=\"up\" data-part=\"root\" role=\"img\">\n  <svg aria-hidden=\"true\" class=\"lib-spark__svg\" preserveAspectRatio=\"none\" viewBox=\"0 0 100 24\">\n    <path class=\"lib-spark__line\" d=\"M0 22 L16.67 17 L33.33 19.5 L50 12 L66.67 7 L83.33 9.5 L100 2\">\n  <span class=\"lib-spark__dot\" data-part=\"dot\" style=\"left: 100%; top: 8.33%\">"
+  },
+  {
+    "part": "Sparkline",
+    "story": "Down",
+    "props": {
+      "values": [
+        9,
+        8,
+        8.5,
+        6,
+        5,
+        5.2,
+        4
+      ],
+      "label": "PRL yield, 7 days",
+      "area": true
+    },
+    "dom": "<span aria-label=\"PRL yield, 7 days, down\" class=\"lib-spark\" data-direction=\"down\" data-part=\"root\" role=\"img\">\n  <svg aria-hidden=\"true\" class=\"lib-spark__svg\" preserveAspectRatio=\"none\" viewBox=\"0 0 100 24\">\n    <path class=\"lib-spark__area\" d=\"M0 2 L16.67 6 L33.33 4 L50 14 L66.67 18 L83.33 17.2 L100 22 L100 24 L0 24 Z\">\n    <path class=\"lib-spark__line\" d=\"M0 2 L16.67 6 L33.33 4 L50 14 L66.67 18 L83.33 17.2 L100 22\">\n  <span class=\"lib-spark__dot\" data-part=\"dot\" style=\"left: 100%; top: 91.67%\">"
+  },
+  {
+    "part": "Sparkline",
+    "story": "Flat",
+    "props": {
+      "values": [
+        2,
+        3,
+        1,
+        2
+      ],
+      "label": "EPIC yield, 4 days",
+      "dot": false
+    },
+    "dom": "<span aria-label=\"EPIC yield, 4 days, flat\" class=\"lib-spark\" data-direction=\"flat\" data-part=\"root\" role=\"img\">\n  <svg aria-hidden=\"true\" class=\"lib-spark__svg\" preserveAspectRatio=\"none\" viewBox=\"0 0 100 24\">\n    <path class=\"lib-spark__line\" d=\"M0 12 L33.33 2 L66.67 22 L100 12\">"
+  },
+  {
+    "part": "Sparkline",
+    "story": "Single",
+    "props": {
+      "values": [
+        4
+      ],
+      "label": "New coin"
+    },
+    "dom": "<span aria-label=\"New coin, flat\" class=\"lib-spark\" data-direction=\"flat\" data-part=\"root\" role=\"img\">\n  <svg aria-hidden=\"true\" class=\"lib-spark__svg\" preserveAspectRatio=\"none\" viewBox=\"0 0 100 24\">\n  <span class=\"lib-spark__dot\" data-part=\"dot\" style=\"left: 0%; top: 50%\">"
+  },
+  {
+    "part": "BarList",
+    "story": "Ranked",
+    "props": {
+      "label": "On the table by algorithm",
+      "items": [
+        {
+          "name": "KeryxHashH6",
+          "value": 2640,
+          "display": "$2.64k",
+          "note": "3 of 4 in reach",
+          "href": "#keryx"
+        },
+        {
+          "name": "Pearl",
+          "value": 1320,
+          "display": "$1.32k",
+          "note": "1 of 1 in reach",
+          "href": "#pearl"
+        },
+        {
+          "name": "RandomX",
+          "value": 101,
+          "display": "$101",
+          "note": "5 of 9 in reach",
+          "href": "#randomx"
+        },
+        {
+          "name": "FishHash",
+          "value": 0.4,
+          "display": "$0.40",
+          "note": "1 of 2 in reach"
+        }
+      ]
+    },
+    "dom": "<ul aria-label=\"On the table by algorithm\" class=\"lib-bars\" data-part=\"root\">\n  <li class=\"lib-bars__item\" data-part=\"item\">\n    <a class=\"lib-bars__name\" href=\"#keryx\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"label\">\n        \"KeryxHashH6\"\n    <span aria-hidden=\"true\" class=\"lib-bars__rail\">\n      <i class=\"lib-bars__bar\" style=\"width: 100%\">\n    <span class=\"lib-bars__value lib-text lib-tone\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\" data-text-weight=\"strong\">\n      \"$2.64k\"\n    <span class=\"lib-bars__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"3 of 4 in reach\"\n  <li class=\"lib-bars__item\" data-part=\"item\">\n    <a class=\"lib-bars__name\" href=\"#pearl\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"label\">\n        \"Pearl\"\n    <span aria-hidden=\"true\" class=\"lib-bars__rail\">\n      <i class=\"lib-bars__bar\" style=\"width: 50%\">\n    <span class=\"lib-bars__value lib-text lib-tone\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\" data-text-weight=\"strong\">\n      \"$1.32k\"\n    <span class=\"lib-bars__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"1 of 1 in reach\"\n  <li class=\"lib-bars__item\" data-part=\"item\">\n    <a class=\"lib-bars__name\" href=\"#randomx\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"label\">\n        \"RandomX\"\n    <span aria-hidden=\"true\" class=\"lib-bars__rail\">\n      <i class=\"lib-bars__bar\" style=\"width: 3.8%\">\n    <span class=\"lib-bars__value lib-text lib-tone\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\" data-text-weight=\"strong\">\n      \"$101\"\n    <span class=\"lib-bars__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"5 of 9 in reach\"\n  <li class=\"lib-bars__item\" data-part=\"item\">\n    <span class=\"lib-bars__name lib-text lib-tone\" data-role=\"body\" data-text-size=\"label\">\n      \"FishHash\"\n    <span aria-hidden=\"true\" class=\"lib-bars__rail\">\n      <i class=\"lib-bars__bar\" style=\"width: 0.5%\">\n    <span class=\"lib-bars__value lib-text lib-tone\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\" data-text-weight=\"strong\">\n      \"$0.40\"\n    <span class=\"lib-bars__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"1 of 2 in reach\""
+  },
+  {
+    "part": "BarList",
+    "story": "Plain",
+    "props": {
+      "items": [
+        {
+          "name": "CPU",
+          "value": 30
+        },
+        {
+          "name": "GPU",
+          "value": 90
+        }
+      ]
+    },
+    "dom": "<ul class=\"lib-bars\" data-part=\"root\">\n  <li class=\"lib-bars__item\" data-part=\"item\">\n    <span class=\"lib-bars__name lib-text lib-tone\" data-role=\"body\" data-text-size=\"label\">\n      \"CPU\"\n    <span aria-hidden=\"true\" class=\"lib-bars__rail\">\n      <i class=\"lib-bars__bar\" style=\"width: 33.3%\">\n    <span class=\"lib-bars__value lib-text lib-tone\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\" data-text-weight=\"strong\">\n      \"30\"\n  <li class=\"lib-bars__item\" data-part=\"item\">\n    <span class=\"lib-bars__name lib-text lib-tone\" data-role=\"body\" data-text-size=\"label\">\n      \"GPU\"\n    <span aria-hidden=\"true\" class=\"lib-bars__rail\">\n      <i class=\"lib-bars__bar\" style=\"width: 100%\">\n    <span class=\"lib-bars__value lib-text lib-tone\" data-role=\"body\" data-tabular=\"\" data-text-size=\"label\" data-text-weight=\"strong\">\n      \"90\""
+  },
+  {
+    "part": "FigureStrip",
+    "story": "Today",
+    "props": {
+      "lead": true,
+      "label": "Today",
+      "figures": [
+        {
+          "label": "Coins in reach",
+          "value": "16",
+          "note": "of 58 ranked",
+          "href": "#board"
+        },
+        {
+          "label": "On the table",
+          "value": "$236k",
+          "note": "a day"
+        },
+        {
+          "label": "Hardware clearing 20%",
+          "value": "41",
+          "note": "of 312 on offer"
+        },
+        {
+          "label": "Yield 24h",
+          "value": "+4.7%",
+          "direction": "up"
+        },
+        {
+          "label": "Network",
+          "value": "−2.1%",
+          "direction": "down",
+          "note": "hashrate"
+        }
+      ]
+    },
+    "dom": "<dl aria-label=\"Today\" class=\"lib-strip\" data-part=\"root\">\n  <div class=\"lib-strip__figure\" data-lead=\"true\" data-part=\"figure\">\n    <dt class=\"lib-strip__label\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"Coins in reach\"\n    <dd class=\"lib-strip__body\">\n      <a class=\"lib-strip__link\" href=\"#board\">\n        <span class=\"lib-strip__value lib-text lib-tone\" data-role=\"numeral\" data-tabular=\"\" data-text-size=\"display\">\n          \"16\"\n      <span class=\"lib-strip__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"of 58 ranked\"\n  <div class=\"lib-strip__figure\" data-part=\"figure\">\n    <dt class=\"lib-strip__label\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"On the table\"\n    <dd class=\"lib-strip__body\">\n      <span class=\"lib-strip__value lib-text lib-tone\" data-role=\"numeral\" data-tabular=\"\" data-text-size=\"heading\">\n        \"$236k\"\n      <span class=\"lib-strip__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"a day\"\n  <div class=\"lib-strip__figure\" data-part=\"figure\">\n    <dt class=\"lib-strip__label\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"Hardware clearing 20%\"\n    <dd class=\"lib-strip__body\">\n      <span class=\"lib-strip__value lib-text lib-tone\" data-role=\"numeral\" data-tabular=\"\" data-text-size=\"heading\">\n        \"41\"\n      <span class=\"lib-strip__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"of 312 on offer\"\n  <div class=\"lib-strip__figure\" data-part=\"figure\">\n    <dt class=\"lib-strip__label\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"Yield 24h\"\n    <dd class=\"lib-strip__body\">\n      <span class=\"lib-strip__value lib-text lib-tone\" data-role=\"numeral\" data-tabular=\"\" data-text-size=\"heading\" data-tone=\"success\">\n        \"+4.7%\"\n  <div class=\"lib-strip__figure\" data-part=\"figure\">\n    <dt class=\"lib-strip__label\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"Network\"\n    <dd class=\"lib-strip__body\">\n      <span class=\"lib-strip__value lib-text lib-tone\" data-role=\"numeral\" data-tabular=\"\" data-text-size=\"heading\" data-tone=\"danger\">\n        \"−2.1%\"\n      <span class=\"lib-strip__note lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"hashrate\""
+  },
+  {
+    "part": "FigureStrip",
+    "story": "Even",
+    "props": {
+      "figures": [
+        {
+          "label": "Price",
+          "value": "$0.42"
+        },
+        {
+          "label": "Emission / day",
+          "value": "$2.64k"
+        }
+      ]
+    },
+    "dom": "<dl class=\"lib-strip\" data-part=\"root\">\n  <div class=\"lib-strip__figure\" data-part=\"figure\">\n    <dt class=\"lib-strip__label\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"Price\"\n    <dd class=\"lib-strip__body\">\n      <span class=\"lib-strip__value lib-text lib-tone\" data-role=\"numeral\" data-tabular=\"\" data-text-size=\"heading\">\n        \"$0.42\"\n  <div class=\"lib-strip__figure\" data-part=\"figure\">\n    <dt class=\"lib-strip__label\">\n      <span class=\"lib-text lib-tone\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n        \"Emission / day\"\n    <dd class=\"lib-strip__body\">\n      <span class=\"lib-strip__value lib-text lib-tone\" data-role=\"numeral\" data-tabular=\"\" data-text-size=\"heading\">\n        \"$2.64k\""
+  },
+  {
+    "part": "Panel",
+    "story": "Coins",
+    "props": {
+      "title": "Coins in reach",
+      "href": "#board",
+      "aside": "most headroom first",
+      "children": "Sixteen coins."
+    },
+    "dom": "<section class=\"lib-panel lib-surface\" data-border=\"true\" data-layer=\"raised\" data-part=\"root\" data-radius=\"card\">\n  <header class=\"lib-panel__head\" data-part=\"head\">\n    <h2 class=\"lib-panel__heading\">\n      <a class=\"lib-panel__link\" href=\"#board\">\n        <span class=\"lib-panel__title lib-text lib-tone\" data-role=\"heading\">\n          \"Coins in reach\"\n    <span class=\"lib-panel__aside lib-text lib-tone\" data-part=\"aside\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"most headroom first\"\n  <div class=\"lib-panel__body\" data-part=\"body\">\n    \"Sixteen coins.\""
+  },
+  {
+    "part": "Panel",
+    "story": "Empty",
+    "props": {
+      "title": "Feed",
+      "aside": "0 in the last day",
+      "empty": "Nothing yet. The feed starts after the second collector run."
+    },
+    "dom": "<section class=\"lib-panel lib-surface\" data-border=\"true\" data-layer=\"raised\" data-part=\"root\" data-radius=\"card\">\n  <header class=\"lib-panel__head\" data-part=\"head\">\n    <h2 class=\"lib-panel__heading\">\n      <span class=\"lib-panel__title lib-text lib-tone\" data-role=\"heading\">\n        \"Feed\"\n    <span class=\"lib-panel__aside lib-text lib-tone\" data-part=\"aside\" data-role=\"body\" data-text-size=\"caption\" data-tone=\"muted\">\n      \"0 in the last day\"\n  <p class=\"lib-panel__empty lib-text lib-tone\" data-part=\"empty\" data-role=\"body\" data-text-size=\"label\" data-tone=\"muted\">\n    \"Nothing yet. The feed starts after the second collector run.\""
+  },
+  {
+    "part": "Panel",
+    "story": "Nested",
+    "props": {
+      "title": "Sources",
+      "level": 3,
+      "children": "Three collectors."
+    },
+    "dom": "<section class=\"lib-panel lib-surface\" data-border=\"true\" data-layer=\"raised\" data-part=\"root\" data-radius=\"card\">\n  <header class=\"lib-panel__head\" data-part=\"head\">\n    <h3 class=\"lib-panel__heading\">\n      <span class=\"lib-panel__title lib-text lib-tone\" data-role=\"heading\">\n        \"Sources\"\n  <div class=\"lib-panel__body\" data-part=\"body\">\n    \"Three collectors.\""
+  }
+]
