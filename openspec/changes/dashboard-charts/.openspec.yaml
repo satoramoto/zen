@@ -1,0 +1,7 @@
+schema: zen-flow
+created: 2026-11-16
+goal: TradingView-grade charts and the dashboard parts Market built, as zen parts every renderer and the Hotwire build draw
+affected_areas:
+  - zen
+  - xmrz
+x-review: look
