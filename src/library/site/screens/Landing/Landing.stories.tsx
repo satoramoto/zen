@@ -30,12 +30,13 @@ export const ComputeObservatoryPage: Story = {
       const canvas = within(canvasElement);
       await expect(canvas.getByText('$0.00011 / s')).toBeVisible();
       await userEvent.click(canvas.getByRole('button', { name: /vast-fra-h100-07/i }));
+      await userEvent.click(canvas.getByRole('button', { name: 'ZK Prover' }));
       await userEvent.click(canvas.getByRole('button', { name: 'Hourly / flat' }));
     },
     check: async ({ canvasElement }) => {
       const canvas = within(canvasElement);
       await expect(canvas.getByRole('heading', { level: 1 })).toHaveTextContent('One Unix command across every idle GPU');
-      await expect(canvas.getByText('41.2 k/s')).toBeVisible();
+      await expect(canvas.getAllByText('EXEC_GRAPH · P0 · zk-prove').length).toBe(2);
       await expect(canvas.getByText('$0.39 / hr')).toBeVisible();
       await expect(canvas.getByText('$5.00 / mo flat')).toBeVisible();
     },

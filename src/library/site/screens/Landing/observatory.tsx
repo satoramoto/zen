@@ -1,13 +1,39 @@
 import { useState } from 'react';
 
+const PRESETS = [
+  {
+    id: 'infer',
+    label: 'Batch Inference',
+    cmd: 'opal map --gpus 8x4090 --graph infer.spv < prompts.jsonl',
+    slot: 'P0 · infer.spv',
+    rate: '18.4 k tok/s',
+    util: 94,
+  },
+  {
+    id: 'zk',
+    label: 'ZK Prover',
+    cmd: 'opal exec --gpus 4xH100 --graph groth16.ptx witnesses.bin',
+    slot: 'P0 · zk-prove',
+    rate: '41.2 k/s',
+    util: 98,
+  },
+  {
+    id: 'wasm',
+    label: 'WASM Wake',
+    cmd: 'opal spawn --wasm site-bundle.wasm --wal r2://sites/toast',
+    slot: 'P0 · wasm-wake',
+    rate: '110 ms wake',
+    util: 36,
+  },
+] as const;
+
 const MESH_NODES = [
-  { id: 'vast-iad-4090-01', gpu: 'RTX 4090 · 24 GB', quicRtt: '14 ms', prio: 'P0 · infer.spv', util: '94%', rate: '18.4 k tok/s' },
-  { id: 'vast-fra-h100-07', gpu: 'H100 SXM · 80 GB', quicRtt: '22 ms', prio: 'P0 · zk-prove', util: '98%', rate: '41.2 k/s' },
-  { id: 'salad-ord-3090-19', gpu: 'RTX 3090 · 24 GB', quicRtt: '19 ms', prio: 'P1 · jade-fill', util: '91%', rate: '44.7 TH/s' },
-  { id: 'colo-sjc-395-02', gpu: 'Strix Halo · 128 GB', quicRtt: '8 ms', prio: 'P0 · wasm-wake', util: '12%', rate: '110 ms wake' },
+  { id: 'vast-iad-4090-01', gpu: 'RTX 4090 · 24 GB', quicRtt: '14 ms', prio: 'P0 · infer.spv', util: 94, rate: '18.4 k tok/s' },
+  { id: 'vast-fra-h100-07', gpu: 'H100 SXM · 80 GB', quicRtt: '22 ms', prio: 'P0 · zk-prove', util: 98, rate: '41.2 k/s' },
+  { id: 'salad-ord-3090-19', gpu: 'RTX 3090 · 24 GB', quicRtt: '19 ms', prio: 'P1 · jade-fill', util: 91, rate: '44.7 TH/s' },
+  { id: 'colo-sjc-395-02', gpu: 'Strix Halo · 128 GB', quicRtt: '8 ms', prio: 'P0 · wasm-wake', util: 36, rate: '110 ms wake' },
 ];
 
-/** Dense Modal-inspired glyph light field rendered inside the interactive workbench. */
 function GlyphLattice({ compact = false, highlightIndex = 0 }: { compact?: boolean; highlightIndex?: number }) {
   const pts: Array<{ x: number; y: number; kind: 'dot' | 'hex' | 'plus'; alpha: number; lit: boolean }> = [];
   const planes = compact ? 2 : 3;
@@ -21,14 +47,14 @@ function GlyphLattice({ compact = false, highlightIndex = 0 }: { compact?: boole
         const x = 250 + ox + (c - r) * 14;
         const y = 128 + oy + (c + r) * 7.2;
         const lit = p === (highlightIndex % planes) && (Math.abs(r) === 5 || (r === 0 && Math.abs(c) <= 2));
-        const alpha = lit ? 0.95 : 0.2 + ((Math.abs(r * c + p) % 5) * 0.12);
+        const alpha = lit ? 0.96 : 0.22 + ((Math.abs(r * c + p) % 5) * 0.12);
         const kind = (r + c) % 3 === 0 ? 'hex' : (r - c) % 2 === 0 ? 'plus' : 'dot';
         pts.push({ x, y, kind, alpha, lit });
       }
     }
   }
   return (
-    <svg viewBox="0 0 500 256" width="100%" height={compact ? 190 : 230} aria-hidden="true" style={{ display: 'block' }}>
+    <svg viewBox="0 0 500 256" width="100%" height={compact ? 190 : 228} aria-hidden="true" style={{ display: 'block' }}>
       <defs>
         <radialGradient id="obs-mesh-glow" cx="50%" cy="50%" r="55%">
           <stop offset="0%" stopColor="#7fee64" stopOpacity="0.28" />
@@ -37,6 +63,12 @@ function GlyphLattice({ compact = false, highlightIndex = 0 }: { compact?: boole
         </radialGradient>
       </defs>
       <ellipse cx="250" cy="128" rx="220" ry="96" fill="url(#obs-mesh-glow)" />
+      <polygon
+        points="250,42 406,128 250,214 94,128"
+        fill="none"
+        stroke="rgba(127,238,100,0.16)"
+        strokeDasharray="3 4"
+      />
       {pts.map((n, i) => {
         const color = n.lit ? '#7fee64' : '#9ea39b';
         if (n.kind === 'plus') {
@@ -133,9 +165,11 @@ const RATES = [
 export function ComputeObservatory() {
   const [billingUnit, setBillingUnit] = useState<'second' | 'hour'>('second');
   const [selectedNode, setSelectedNode] = useState(0);
+  const [presetIdx, setPresetIdx] = useState(0);
   const [selectedSlice, setSelectedSlice] = useState(0);
 
   const node = MESH_NODES[selectedNode];
+  const preset = PRESETS[presetIdx];
 
   return (
     <div className="zen-lp zen-lp-obs">
@@ -144,28 +178,26 @@ export function ComputeObservatory() {
         <a href="#rates">Read the wire spec →</a>
       </div>
 
-      <div className="zen-lp-obs__nav-wrap">
-        <div className="zen-lp-obs__container">
-          <nav className="zen-lp-obs__nav" aria-label="Primary">
-            <a className="zen-lp-obs__brand" href="#top">
-              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-                <polygon points="9,1 16,5 16,13 9,17 2,13 2,5" fill="none" stroke="#7fee64" strokeWidth="1.6" />
-                <circle cx="9" cy="9" r="2.2" fill="#7fee64" />
-              </svg>
-              <span>opal fabric</span>
-            </a>
-            <ul className="zen-lp-obs__nav-links">
-              <li><a href="#architecture">Architecture</a></li>
-              <li><a href="#wire">Wire ABI</a></li>
-              <li><a href="#rates">Rates</a></li>
-              <li><a href="#proof">Benchmarks</a></li>
-            </ul>
-            <div className="zen-lp-obs__nav-actions">
-              <a className="zen-lp-obs__btn zen-lp-obs__btn--secondary zen-lp-obs__btn--sm" href="#wire">Docs</a>
-              <a className="zen-lp-obs__btn zen-lp-obs__btn--primary zen-lp-obs__btn--sm" href="#launch">Get started</a>
-            </div>
-          </nav>
-        </div>
+      <div className="zen-lp-obs__nav-sticky">
+        <nav className="zen-lp-obs__nav" aria-label="Primary">
+          <a className="zen-lp-obs__brand" href="#top">
+            <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+              <polygon points="9,1 16,5 16,13 9,17 2,13 2,5" fill="none" stroke="#7fee64" strokeWidth="1.6" />
+              <circle cx="9" cy="9" r="2.2" fill="#7fee64" />
+            </svg>
+            <span>opal fabric</span>
+          </a>
+          <ul className="zen-lp-obs__nav-links">
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#wire">Wire ABI</a></li>
+            <li><a href="#rates">Rates</a></li>
+            <li><a href="#proof">Benchmarks</a></li>
+          </ul>
+          <div className="zen-lp-obs__nav-actions">
+            <a className="zen-lp-obs__btn zen-lp-obs__btn--secondary zen-lp-obs__btn--sm" href="#wire">Docs</a>
+            <a className="zen-lp-obs__btn zen-lp-obs__btn--primary zen-lp-obs__btn--sm" href="#launch">Get started</a>
+          </div>
+        </nav>
       </div>
 
       <header id="top" className="zen-lp-obs__hero">
@@ -189,15 +221,29 @@ export function ComputeObservatory() {
             </div>
           </div>
 
-          {/* Interactive Linear/Modal Workbench Stage fading into canvas */}
           <div className="zen-lp-obs__theater-wrap">
             <div className="zen-lp-obs__theater-glow" aria-hidden="true" />
             <div className="zen-lp-obs__workbench" role="region" aria-label="Live fleet workbench">
-              <div className="zen-lp-obs__wb-bar">
-                <div className="zen-lp-obs__wb-dots"><i /><i /><i /></div>
-                <span>relay://iad-01.opal.run:443 · mTLS 0-RTT</span>
-                <span className="zen-lp-obs__green-text">● {node.prio}</span>
+              <div className="zen-lp-obs__wb-cmdbar">
+                <div className="zen-lp-obs__wb-cmd">
+                  <span className="zen-lp-obs__green-text">$</span>
+                  <span>{preset.cmd}</span>
+                </div>
+                <div className="zen-lp-obs__wb-presets" role="group" aria-label="Workload preset">
+                  {PRESETS.map((p, idx) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      className="zen-lp-obs__wb-preset"
+                      aria-pressed={presetIdx === idx}
+                      onClick={() => setPresetIdx(idx)}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
               </div>
+
               <div className="zen-lp-obs__wb-body">
                 <div className="zen-lp-obs__wb-rail">
                   <div className="zen-lp-obs__wb-rail-title">FLEET NODES</div>
@@ -215,9 +261,9 @@ export function ComputeObservatory() {
                   ))}
                 </div>
                 <div className="zen-lp-obs__wb-center">
-                  <GlyphLattice highlightIndex={selectedNode} />
+                  <GlyphLattice highlightIndex={selectedNode + presetIdx} />
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--obs-mono)', fontSize: 11.5, color: 'var(--obs-secondary)' }}>
-                    <span>EXEC_GRAPH · stream #04</span>
+                    <span>EXEC_GRAPH · {preset.slot}</span>
                     <span>{node.gpu}</span>
                   </div>
                 </div>
@@ -226,8 +272,16 @@ export function ComputeObservatory() {
                   <div className="zen-lp-obs__wb-kv"><span>NODE</span><span>{node.id}</span></div>
                   <div className="zen-lp-obs__wb-kv"><span>HARDWARE</span><span>{node.gpu}</span></div>
                   <div className="zen-lp-obs__wb-kv"><span>PREEMPT SLOT</span><span className="zen-lp-obs__green-text">{node.prio}</span></div>
-                  <div className="zen-lp-obs__wb-kv"><span>UTILIZATION</span><span>{node.util}</span></div>
                   <div className="zen-lp-obs__wb-kv"><span>THROUGHPUT</span><span className="zen-lp-obs__green-text">{node.rate}</span></div>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, color: 'var(--obs-muted)' }}>
+                      <span>SM UTILIZATION</span>
+                      <span style={{ color: 'var(--obs-primary)' }}>{node.util}%</span>
+                    </div>
+                    <div className="zen-lp-obs__meter-track">
+                      <div className="zen-lp-obs__meter-fill" style={{ width: `${node.util}%` }} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -329,7 +383,7 @@ export function ComputeObservatory() {
             <div className="zen-lp-obs__stage">
               <div className="zen-lp-obs__terminal-panel" role="region" aria-label="Wire session trace">
                 <div className="zen-lp-obs__terminal-line">
-                  <span className="zen-lp-obs__green-text">$ opal map --gpus 8x4090 --graph infer.spv &lt; prompts.jsonl</span>
+                  <span className="zen-lp-obs__green-text">$ {preset.cmd}</span>
                   <span>QUIC 0-RTT</span>
                 </div>
                 <div className="zen-lp-obs__terminal-line">
@@ -341,8 +395,8 @@ export function ComputeObservatory() {
                   <span>yielded in 38 ms</span>
                 </div>
                 <div className="zen-lp-obs__terminal-line">
-                  <span>EXEC_GRAPH stream=3 · 8 nodes · 4096 batches</span>
-                  <span className="zen-lp-obs__green-text">18.4 k tok/s</span>
+                  <span>EXEC_GRAPH · {preset.slot}</span>
+                  <span className="zen-lp-obs__green-text">{preset.rate}</span>
                 </div>
               </div>
             </div>
@@ -427,11 +481,27 @@ export function ComputeObservatory() {
             </svg>
           </div>
 
-          <div className="zen-lp-obs__proof-tiles">
-            <div className="zen-lp-obs__proof-tile">PTX / CUDA sm_80+</div>
-            <div className="zen-lp-obs__proof-tile">SPIR-V Cooperative</div>
-            <div className="zen-lp-obs__proof-tile">Wasmtime WASI</div>
-            <div className="zen-lp-obs__proof-tile">QUIC + TLS/443</div>
+          <div className="zen-lp-obs__compare-table">
+            <div className="zen-lp-obs__compare-row zen-lp-obs__compare-head">
+              <span>METRIC</span>
+              <span>CONTAINER PULLS (KUBELET)</span>
+              <span>OPAL WIRE FABRIC</span>
+            </div>
+            <div className="zen-lp-obs__compare-row">
+              <strong>Workload cold switch</strong>
+              <span>180 – 360 s</span>
+              <strong style={{ color: '#124f11' }}>38 ms (Priority 1 → 0)</strong>
+            </div>
+            <div className="zen-lp-obs__compare-row">
+              <strong>Host payload size</strong>
+              <span>6 – 14 GB OCI layers</span>
+              <strong style={{ color: '#124f11' }}>11.4 MB static binary</strong>
+            </div>
+            <div className="zen-lp-obs__compare-row">
+              <strong>Idle GPU rent floor</strong>
+              <span>Unrecovered idle bleed</span>
+              <strong style={{ color: '#124f11' }}>Covered by Priority 1 filler</strong>
+            </div>
           </div>
         </div>
       </section>
