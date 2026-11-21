@@ -33,28 +33,33 @@ export function ImpulseLaunch() {
 
       <div className="zen-lp-impulse__nav-sticky">
         <nav className="zen-lp-impulse__nav" aria-label="Primary">
-          <a className="zen-lp-impulse__brand" href="#impulse-top">nightshift</a>
+          <a className="zen-lp-impulse__brand" href="#impulse-top">
+            <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+              <rect x="2" y="2" width="18" height="18" rx="6" fill="#d2e823" stroke="#121417" strokeWidth="2" />
+              <circle cx="11" cy="11" r="3" fill="#121417" />
+            </svg>
+            <span>nightshift</span>
+          </a>
           <ul className="zen-lp-impulse__nav-links">
             <li><a href="#how-it-works">How it works</a></li>
             <li><a href="#examples">Examples</a></li>
             <li><a href="#faq">FAQ</a></li>
           </ul>
-          <div className="zen-lp-impulse__nav-cta">
-            <a className="zen-lp-impulse__btn zen-lp-impulse__btn--nav" href="#impulse-close">Claim yours</a>
-          </div>
+          <a className="zen-lp-impulse__btn zen-lp-impulse__btn--nav" href="#impulse-close">Claim yours</a>
         </nav>
       </div>
 
-      {/* Lime opening split */}
+      {/* Chartreuse Hero with Gumroad ink-framed live site preview */}
       <header id="impulse-top" className="zen-lp-impulse__hero">
         <div className="zen-lp-impulse__container">
           <div className="zen-lp-impulse__split">
             <div>
+              <span className="zen-lp-impulse__sticker">★ 2AM IDEA TO LIVE .COM IN 60S</span>
               <h1 className="zen-lp-impulse__display">
                 Every 2am idea deserves a real website before morning.
               </h1>
               <p className="zen-lp-impulse__hero-sub">
-                Riff with an AI co-founder, watch it sketch a real Zen landing page next to the chat, and put it live on your own .com with one Stripe form.
+                Riff with an AI co-founder, watch it compose a real Zen landing page beside the chat, and put it live on your own .com with one Stripe form.
               </p>
 
               <form className="zen-lp-impulse__claim-row" onSubmit={onClaim}>
@@ -69,7 +74,7 @@ export function ImpulseLaunch() {
                   />
                   <span className="zen-lp-impulse__claim-prefix">.com</span>
                 </label>
-                <button type="submit" className="zen-lp-impulse__btn zen-lp-impulse__btn--forest">
+                <button type="submit" className="zen-lp-impulse__btn zen-lp-impulse__btn--primary">
                   Preview my site
                 </button>
               </form>
@@ -78,40 +83,43 @@ export function ImpulseLaunch() {
               </p>
             </div>
 
-            {/* Living output tower (floating cards directly on lime, no browser chrome) */}
-            <div className="zen-lp-impulse__tower" aria-label="Generated site preview stack">
-              <div className="zen-lp-impulse__output-card zen-lp-impulse__output-card--tilted">
-                <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  CHAT MOCKUP · LIVE DRAFT
+            {/* Tactile ink-bordered miniature website + Stripe sticker */}
+            <div className="zen-lp-impulse__stage" aria-label="Generated site preview stack">
+              <div className="zen-lp-impulse__site-frame">
+                <div className="zen-lp-impulse__site-chrome">
+                  <span style={{ fontWeight: 700 }}>https://{claimed}</span>
+                  <span style={{ background: '#d2e823', padding: '2px 8px', borderRadius: 999, border: '1.5px solid #121417', fontSize: 10.5, fontWeight: 700 }}>
+                    TLS LIVE
+                  </span>
                 </div>
-                <div style={{ marginTop: 10, fontSize: 24, fontWeight: 700, lineHeight: 1.15 }}>
-                  {claimed}
+                <div className="zen-lp-impulse__site-body">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12, color: 'var(--imp-muted)' }}>
+                    <span style={{ fontWeight: 700, color: 'var(--imp-ink)' }}>{claimed}</span>
+                    <span>Waitlist · About</span>
+                  </div>
+                  <div style={{ marginTop: 18, fontFamily: 'var(--imp-display)', fontSize: 28, fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.025em' }}>
+                    Fresh sourdough kits, dropped every Sunday at 8am.
+                  </div>
+                  <p style={{ marginTop: 10, fontSize: 14, color: 'var(--imp-muted)' }}>
+                    Built in Zen from a 90-second chat. Connected to a real SQLite waitlist.
+                  </p>
+                  <div style={{ marginTop: 18, display: 'flex', gap: 8 }}>
+                    <div style={{ flex: 1, height: 42, borderRadius: 8, border: '2px solid #121417', background: '#f4f4f0', display: 'flex', alignItems: 'center', paddingInline: 12, fontSize: 13, color: '#585b54' }}>
+                      founder@earlybird.co
+                    </div>
+                    <div style={{ height: 42, paddingInline: 18, borderRadius: 8, border: '2px solid #121417', background: '#d2e823', color: '#121417', display: 'grid', placeItems: 'center', fontSize: 13, fontWeight: 700 }}>
+                      Join waitlist
+                    </div>
+                  </div>
                 </div>
-                <p style={{ marginTop: 8, fontSize: 14, opacity: 0.9 }}>
-                  “We ship artisanal sourdough toast kits every Sunday morning.”
-                </p>
               </div>
 
-              <div className="zen-lp-impulse__output-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 700, fontSize: 15 }}>Waitlist open</span>
-                  <span style={{ fontSize: 13, color: 'var(--imp-muted)' }}>SQLite · instant</span>
-                </div>
-                <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-                  <div style={{ flex: 1, height: 40, borderRadius: 8, background: '#f3f3f1', display: 'flex', alignItems: 'center', paddingInline: 12, fontSize: 13, color: '#676b5f' }}>
-                    founder@earlybird.co
-                  </div>
-                  <div style={{ height: 40, paddingInline: 18, borderRadius: 9999, background: '#254f1a', color: '#d2e823', display: 'grid', placeItems: 'center', fontSize: 13, fontWeight: 700 }}>
-                    Join
-                  </div>
-                </div>
-              </div>
-
-              <div className="zen-lp-impulse__output-card zen-lp-impulse__output-card--accent">
-                <div style={{ fontSize: 13, opacity: 0.85 }}>DNS · HTTPS · EDGE WAKE</div>
-                <div style={{ marginTop: 6, fontSize: 22, fontWeight: 700 }}>
+              <div className="zen-lp-impulse__receipt-sticker">
+                <div style={{ fontFamily: 'var(--imp-mono)', fontSize: 10.5, fontWeight: 700 }}>STRIPE LAUNCH PACK</div>
+                <div style={{ marginTop: 4, fontSize: 17, fontWeight: 700 }}>
                   $25 today · $5/mo after
                 </div>
+                <div style={{ fontSize: 12, marginTop: 2 }}>Includes 1-yr .com + edge HTTPS</div>
               </div>
             </div>
           </div>
@@ -122,11 +130,13 @@ export function ImpulseLaunch() {
       <section id="how-it-works" className="zen-lp-impulse__chapter zen-lp-impulse__chapter--blue">
         <div className="zen-lp-impulse__container">
           <div className="zen-lp-impulse__split">
-            <div className="zen-lp-impulse__output-card" style={{ background: '#061492', color: '#ffffff', padding: 36 }}>
-              <div style={{ fontSize: 13, color: '#d2e823', fontWeight: 700 }}>STEP 1 → STEP 3</div>
-              <ol style={{ marginTop: 20, display: 'grid', gap: 18, fontSize: 18, fontWeight: 500 }}>
+            <div className="zen-lp-impulse__bento-tile" style={{ background: '#061492', color: '#ffffff' }}>
+              <span style={{ fontFamily: 'var(--imp-mono)', fontSize: 12, color: '#d2e823', fontWeight: 700 }}>
+                STEP 1 → STEP 3
+              </span>
+              <ol style={{ display: 'grid', gap: 16, fontSize: 18, fontWeight: 600 }}>
                 <li>1. Pitch your dumb or brilliant idea to the bot</li>
-                <li>2. Watch a real landing page update beside the chat</li>
+                <li>2. Watch a real Zen site update beside the chat</li>
                 <li>3. Clear one Stripe form — domain + TLS go live</li>
               </ol>
             </div>
@@ -135,7 +145,7 @@ export function ImpulseLaunch() {
                 Create and launch your corner of the internet in minutes
               </h2>
               <p className="zen-lp-impulse__hero-sub">
-                No DNS records to decipher, no AWS consoles, and no bloated WordPress themes to patch. You get a crisp site with a working signup form that sleeps for pennies until someone visits.
+                No DNS records to decipher, no AWS consoles, and no bloated WordPress plugins to patch. Your site sleeps for pennies until someone visits.
               </p>
               <div style={{ marginTop: 28 }}>
                 <a className="zen-lp-impulse__btn zen-lp-impulse__btn--lime" href="#impulse-close">Start chatting free</a>
@@ -145,8 +155,8 @@ export function ImpulseLaunch() {
         </div>
       </section>
 
-      {/* Marble proof rail + Asymmetrical Bento */}
-      <section id="examples" className="zen-lp-impulse__chapter zen-lp-impulse__chapter--marble">
+      {/* Paper proof rail + Gumroad-bordered Bento */}
+      <section id="examples" className="zen-lp-impulse__chapter zen-lp-impulse__chapter--paper">
         <div className="zen-lp-impulse__container">
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto' }}>
             <h2 className="zen-lp-impulse__h2">
@@ -156,39 +166,39 @@ export function ImpulseLaunch() {
           </div>
 
           <div className="zen-lp-impulse__proof-rail">
-            <div className="zen-lp-impulse__proof-tile zen-lp-impulse__proof-tile--r16">
+            <div className="zen-lp-impulse__proof-tile" style={{ borderRadius: 16, background: '#254f1a', color: '#d2e823' }}>
               <span>WAITLISTS</span>
-              <span style={{ fontSize: 22 }}>dogwalker.club</span>
+              <span style={{ fontSize: 20 }}>dogwalker.club</span>
             </div>
-            <div className="zen-lp-impulse__proof-tile zen-lp-impulse__proof-tile--r64">
+            <div className="zen-lp-impulse__proof-tile" style={{ borderRadius: 48, background: '#ff90e8', color: '#121417' }}>
               <span>LOCAL SHOPS</span>
-              <span style={{ fontSize: 22 }}>oakstreetbake.com</span>
+              <span style={{ fontSize: 20 }}>oakstreetbake.com</span>
             </div>
-            <div className="zen-lp-impulse__proof-tile zen-lp-impulse__proof-tile--pill">
+            <div className="zen-lp-impulse__proof-tile" style={{ borderRadius: 9999, background: '#ffc900', color: '#121417', textAlign: 'center', alignItems: 'center' }}>
               <span>AI TOOLS</span>
-              <span style={{ fontSize: 22 }}>briefme.app</span>
+              <span style={{ fontSize: 20 }}>briefme.app</span>
             </div>
-            <div className="zen-lp-impulse__proof-tile zen-lp-impulse__proof-tile--r32">
+            <div className="zen-lp-impulse__proof-tile" style={{ borderRadius: 28, background: '#780016', color: '#ffffff' }}>
               <span>EVENTS</span>
-              <span style={{ fontSize: 22 }}>roofcinema.co</span>
+              <span style={{ fontSize: 20 }}>roofcinema.co</span>
             </div>
           </div>
 
           <div className="zen-lp-impulse__bento">
             <div className="zen-lp-impulse__bento-left">
-              <div className="zen-lp-impulse__bento-tile" style={{ background: '#e9c0e9', color: '#1e2330' }}>
-                <span style={{ fontSize: 14, fontWeight: 700 }}>ZEN DESIGN SYSTEM</span>
+              <div className="zen-lp-impulse__bento-tile" style={{ background: '#e9c0e9', color: '#121417' }}>
+                <span style={{ fontFamily: 'var(--imp-mono)', fontSize: 12, fontWeight: 700 }}>ZEN DESIGN SYSTEM</span>
                 <h3>Clean layouts from day one—no uncanny AI gradients</h3>
               </div>
-              <div className="zen-lp-impulse__bento-tile" style={{ background: '#d2e823', color: '#254f1a' }}>
-                <span style={{ fontSize: 14, fontWeight: 700 }}>FLAT BILLING</span>
+              <div className="zen-lp-impulse__bento-tile" style={{ background: '#d2e823', color: '#121417' }}>
+                <span style={{ fontFamily: 'var(--imp-mono)', fontSize: 12, fontWeight: 700 }}>FLAT BILLING</span>
                 <h3>$5/mo flat so a viral post never sends a shock bill</h3>
               </div>
             </div>
             <div className="zen-lp-impulse__bento-tile" style={{ background: '#061492', color: '#ffffff' }}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: '#d2e823' }}>BUILT-IN PERSISTENCE</span>
+              <span style={{ fontFamily: 'var(--imp-mono)', fontSize: 12, fontWeight: 700, color: '#d2e823' }}>BUILT-IN PERSISTENCE</span>
               <h3>Real email &amp; waitlist collection backed by replicated SQLite</h3>
-              <p style={{ fontSize: 16, opacity: 0.88 }}>
+              <p style={{ fontSize: 16, opacity: 0.9 }}>
                 Every launched site includes an authenticated chat view to export leads, swap headlines, or add sections whenever inspiration strikes again.
               </p>
             </div>
@@ -216,21 +226,14 @@ export function ImpulseLaunch() {
         </div>
       </section>
 
-      {/* Purple Finale with edge silhouettes + White 4-column footer panel */}
+      {/* Purple Finale + White Ink-bordered Footer Panel */}
       <footer id="impulse-close" className="zen-lp-impulse__closing">
-        <svg className="zen-lp-impulse__silhouette zen-lp-impulse__silhouette--left" viewBox="0 0 300 400" aria-hidden="true">
-          <path d="M-20,40 C120,20 220,120 190,230 C165,320 60,350 -20,390 Z" fill="#e9c0e9" />
-        </svg>
-        <svg className="zen-lp-impulse__silhouette zen-lp-impulse__silhouette--right" viewBox="0 0 300 400" aria-hidden="true">
-          <path d="M320,30 C180,50 110,160 150,270 C185,365 260,375 320,395 Z" fill="#d2e823" />
-        </svg>
-
         <div className="zen-lp-impulse__container">
           <div className="zen-lp-impulse__closing-head">
             <h2 className="zen-lp-impulse__h2">
               Jumpstart your 2am corner of the internet today
             </h2>
-            <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
+            <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
               <a className="zen-lp-impulse__btn zen-lp-impulse__btn--lime" href="#impulse-top">
                 Claim {claimed}
               </a>

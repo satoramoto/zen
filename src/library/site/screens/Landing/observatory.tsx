@@ -1,50 +1,51 @@
 import { useState } from 'react';
 
-/** Modal-locked geometric glyph light sculpture: isometric open planes of tiny circles, hexagons and cross marks. */
-function GlyphSculpture({ compact = false }: { compact?: boolean }) {
-  const nodes: Array<{ x: number; y: number; kind: 'dot' | 'hex' | 'plus'; alpha: number; bright?: boolean }> = [];
+const MESH_NODES = [
+  { id: 'vast-iad-4090-01', gpu: 'RTX 4090 · 24 GB', quicRtt: '14 ms', prio: 'P0 · infer.spv', util: '94%', rate: '18.4 k tok/s' },
+  { id: 'vast-fra-h100-07', gpu: 'H100 SXM · 80 GB', quicRtt: '22 ms', prio: 'P0 · zk-prove', util: '98%', rate: '41.2 k/s' },
+  { id: 'salad-ord-3090-19', gpu: 'RTX 3090 · 24 GB', quicRtt: '19 ms', prio: 'P1 · jade-fill', util: '91%', rate: '44.7 TH/s' },
+  { id: 'colo-sjc-395-02', gpu: 'Strix Halo · 128 GB', quicRtt: '8 ms', prio: 'P0 · wasm-wake', util: '12%', rate: '110 ms wake' },
+];
+
+/** Dense Modal-inspired glyph light field rendered inside the interactive workbench. */
+function GlyphLattice({ compact = false, highlightIndex = 0 }: { compact?: boolean; highlightIndex?: number }) {
+  const pts: Array<{ x: number; y: number; kind: 'dot' | 'hex' | 'plus'; alpha: number; lit: boolean }> = [];
   const planes = compact ? 2 : 3;
   for (let p = 0; p < planes; p++) {
-    const ox = (p - (planes - 1) / 2) * 86;
-    const oy = (p - (planes - 1) / 2) * 18;
-    for (let row = -5; row <= 5; row++) {
-      for (let col = -5; col <= 5; col++) {
-        const edge = Math.abs(row) === 5 || Math.abs(col) === 5 || Math.abs(row + col) <= 1;
-        if (!edge && (row + col + p) % 2 !== 0) continue;
-        const x = 360 + ox + (col - row) * 18;
-        const y = 175 + oy + (col + row) * 9;
-        const bright = Math.abs(row) === 5 || (p === 1 && row === 0 && Math.abs(col) <= 2);
-        const alpha = bright ? 0.95 : 0.22 + ((Math.abs(row * col + p) % 5) * 0.11);
-        const kind = (row + col) % 3 === 0 ? 'hex' : (row - col) % 2 === 0 ? 'plus' : 'dot';
-        nodes.push({ x, y, kind, alpha, bright });
+    const ox = (p - (planes - 1) / 2) * 74;
+    const oy = (p - (planes - 1) / 2) * 14;
+    for (let r = -5; r <= 5; r++) {
+      for (let c = -5; c <= 5; c++) {
+        const edge = Math.abs(r) === 5 || Math.abs(c) === 5 || Math.abs(r + c) <= 1;
+        if (!edge && (r + c + p) % 2 !== 0) continue;
+        const x = 250 + ox + (c - r) * 14;
+        const y = 128 + oy + (c + r) * 7.2;
+        const lit = p === (highlightIndex % planes) && (Math.abs(r) === 5 || (r === 0 && Math.abs(c) <= 2));
+        const alpha = lit ? 0.95 : 0.2 + ((Math.abs(r * c + p) % 5) * 0.12);
+        const kind = (r + c) % 3 === 0 ? 'hex' : (r - c) % 2 === 0 ? 'plus' : 'dot';
+        pts.push({ x, y, kind, alpha, lit });
       }
     }
   }
   return (
-    <svg
-      viewBox="0 0 720 350"
-      width="100%"
-      height={compact ? 220 : 320}
-      aria-hidden="true"
-      style={{ maxWidth: 760, display: 'block' }}
-    >
+    <svg viewBox="0 0 500 256" width="100%" height={compact ? 190 : 230} aria-hidden="true" style={{ display: 'block' }}>
       <defs>
-        <radialGradient id="obs-glyph-fade" cx="50%" cy="50%" r="55%">
-          <stop offset="0%" stopColor="#7fee64" stopOpacity="0.24" />
-          <stop offset="65%" stopColor="#7fee64" stopOpacity="0.05" />
+        <radialGradient id="obs-mesh-glow" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stopColor="#7fee64" stopOpacity="0.28" />
+          <stop offset="65%" stopColor="#7fee64" stopOpacity="0.06" />
           <stop offset="100%" stopColor="#040804" stopOpacity="0" />
         </radialGradient>
       </defs>
-      <ellipse cx="360" cy="175" rx="310" ry="135" fill="url(#obs-glyph-fade)" />
-      {nodes.map((n, i) => {
-        const color = n.bright ? '#7fee64' : '#a8aba6';
+      <ellipse cx="250" cy="128" rx="220" ry="96" fill="url(#obs-mesh-glow)" />
+      {pts.map((n, i) => {
+        const color = n.lit ? '#7fee64' : '#9ea39b';
         if (n.kind === 'plus') {
           return (
             <path
               key={i}
-              d={`M${n.x - 2.5} ${n.y}h5M${n.x} ${n.y - 2.5}v5`}
+              d={`M${n.x - 2.2} ${n.y}h4.4M${n.x} ${n.y - 2.2}v4.4`}
               stroke={color}
-              strokeWidth="1.3"
+              strokeWidth="1.2"
               strokeOpacity={n.alpha}
             />
           );
@@ -53,64 +54,71 @@ function GlyphSculpture({ compact = false }: { compact?: boolean }) {
           return (
             <polygon
               key={i}
-              points={`${n.x},${n.y - 3} ${n.x + 2.6},${n.y - 1.5} ${n.x + 2.6},${n.y + 1.5} ${n.x},${n.y + 3} ${n.x - 2.6},${n.y + 1.5} ${n.x - 2.6},${n.y - 1.5}`}
+              points={`${n.x},${n.y - 2.6} ${n.x + 2.2},${n.y - 1.3} ${n.x + 2.2},${n.y + 1.3} ${n.x},${n.y + 2.6} ${n.x - 2.2},${n.y + 1.3} ${n.x - 2.2},${n.y - 1.3}`}
               fill="none"
               stroke={color}
-              strokeWidth="1.1"
+              strokeWidth="1"
               strokeOpacity={n.alpha}
             />
           );
         }
-        return <circle key={i} cx={n.x} cy={n.y} r={n.bright ? 2.4 : 1.7} fill={color} fillOpacity={n.alpha} />;
+        return <circle key={i} cx={n.x} cy={n.y} r={n.lit ? 2.2 : 1.5} fill={color} fillOpacity={n.alpha} />;
       })}
     </svg>
   );
 }
 
-/** Minimal geometric wireframes for the 3-column technical triptych. */
 function WireframeDiagram({ kind }: { kind: 'radial' | 'planes' | 'mesh' }) {
   if (kind === 'radial') {
     return (
-      <svg viewBox="0 0 240 180" width="220" height="165" aria-hidden="true">
-        <circle cx="120" cy="90" r="62" fill="none" stroke="rgba(227,229,225,0.35)" strokeWidth="1" />
-        <circle cx="120" cy="90" r="34" fill="none" stroke="rgba(227,229,225,0.2)" strokeDasharray="3 3" />
+      <svg viewBox="0 0 240 170" width="210" height="150" aria-hidden="true">
+        <circle cx="120" cy="85" r="58" fill="none" stroke="rgba(236,238,233,0.34)" strokeWidth="1" />
+        <circle cx="120" cy="85" r="32" fill="none" stroke="rgba(236,238,233,0.18)" strokeDasharray="3 3" />
         {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => {
           const rad = (deg * Math.PI) / 180;
-          const x2 = 120 + Math.cos(rad) * 62;
-          const y2 = 90 + Math.sin(rad) * 62;
-          return <line key={deg} x1="120" y1="90" x2={x2} y2={y2} stroke="rgba(227,229,225,0.28)" strokeWidth="1" />;
+          return (
+            <line
+              key={deg}
+              x1="120"
+              y1="85"
+              x2={120 + Math.cos(rad) * 58}
+              y2={85 + Math.sin(rad) * 58}
+              stroke="rgba(236,238,233,0.24)"
+              strokeWidth="1"
+            />
+          );
         })}
-        <circle cx="120" cy="90" r="4" fill="#7fee64" />
-        <circle cx="182" cy="90" r="3" fill="#7fee64" />
-        <circle cx="76" cy="46" r="3" fill="#e3e5e1" />
+        <circle cx="120" cy="85" r="4" fill="#7fee64" />
+        <circle cx="178" cy="85" r="3" fill="#7fee64" />
+        <circle cx="79" cy="44" r="3" fill="#eceee9" />
       </svg>
     );
   }
   if (kind === 'planes') {
     return (
-      <svg viewBox="0 0 240 180" width="220" height="165" aria-hidden="true">
-        {[0, 28, 56].map((dy, idx) => (
+      <svg viewBox="0 0 240 170" width="210" height="150" aria-hidden="true">
+        {[0, 26, 52].map((dy, idx) => (
           <polygon
             key={dy}
-            points={`120,${30 + dy} 195,${60 + dy} 120,${90 + dy} 45,${60 + dy}`}
+            points={`120,${26 + dy} 190,${54 + dy} 120,${82 + dy} 50,${54 + dy}`}
             fill="none"
-            stroke={idx === 1 ? '#7fee64' : 'rgba(227,229,225,0.35)'}
-            strokeWidth={idx === 1 ? '1.3' : '1'}
+            stroke={idx === 1 ? '#7fee64' : 'rgba(236,238,233,0.34)'}
+            strokeWidth={idx === 1 ? '1.35' : '1'}
             strokeDasharray={idx === 2 ? '3 3' : undefined}
           />
         ))}
-        <line x1="120" y1="30" x2="120" y2="146" stroke="rgba(227,229,225,0.2)" strokeDasharray="2 3" />
+        <line x1="120" y1="26" x2="120" y2="134" stroke="rgba(236,238,233,0.2)" strokeDasharray="2 3" />
       </svg>
     );
   }
   return (
-    <svg viewBox="0 0 240 180" width="220" height="165" aria-hidden="true">
-      <polygon points="120,26 184,58 184,122 120,154 56,122 56,58" fill="none" stroke="rgba(227,229,225,0.38)" strokeWidth="1" />
-      <polygon points="120,50 156,70 156,110 120,130 84,110 84,70" fill="none" stroke="rgba(227,229,225,0.22)" strokeDasharray="3 3" />
-      <line x1="120" y1="26" x2="120" y2="154" stroke="rgba(227,229,225,0.22)" />
-      <line x1="56" y1="58" x2="184" y2="122" stroke="rgba(227,229,225,0.22)" />
-      <circle cx="120" cy="50" r="3.5" fill="#7fee64" />
-      <circle cx="156" cy="110" r="3.5" fill="#7fee64" />
+    <svg viewBox="0 0 240 170" width="210" height="150" aria-hidden="true">
+      <polygon points="120,22 182,53 182,117 120,148 58,117 58,53" fill="none" stroke="rgba(236,238,233,0.36)" strokeWidth="1" />
+      <polygon points="120,46 154,65 154,105 120,124 86,105 86,65" fill="none" stroke="rgba(236,238,233,0.2)" strokeDasharray="3 3" />
+      <line x1="120" y1="22" x2="120" y2="148" stroke="rgba(236,238,233,0.2)" />
+      <line x1="58" y1="53" x2="182" y2="117" stroke="rgba(236,238,233,0.2)" />
+      <circle cx="120" cy="46" r="3.5" fill="#7fee64" />
+      <circle cx="154" cy="105" r="3.5" fill="#7fee64" />
     </svg>
   );
 }
@@ -118,18 +126,21 @@ function WireframeDiagram({ kind }: { kind: 'radial' | 'planes' | 'mesh' }) {
 const RATES = [
   { name: 'RTX 4090 slice', spec: '24 GB VRAM · CUDA / SPIR-V', perSecond: '$0.00011 / s', perMonth: '$0.39 / hr' },
   { name: 'H100 SXM node', spec: '80 GB HBM3 · NVLink mesh', perSecond: '$0.00058 / s', perMonth: '$2.08 / hr' },
-  { name: 'WASM / V8 worker', spec: '1 vCPU · 512 MB · 0ms cold wake', perSecond: '$0.000004 / s', perMonth: '$5.00 / mo flat' },
+  { name: 'WASM / V8 worker', spec: '1 vCPU · 512 MB · 110ms wake', perSecond: '$0.000004 / s', perMonth: '$5.00 / mo flat' },
   { name: 'Encrypted FUSE volume', spec: 'BLAKE3 chunked NVMe cache + R2', perSecond: '$0.00000001 / GB·s', perMonth: '$0.02 / GB·mo' },
 ];
 
 export function ComputeObservatory() {
   const [billingUnit, setBillingUnit] = useState<'second' | 'hour'>('second');
+  const [selectedNode, setSelectedNode] = useState(0);
   const [selectedSlice, setSelectedSlice] = useState(0);
+
+  const node = MESH_NODES[selectedNode];
 
   return (
     <div className="zen-lp zen-lp-obs">
       <div className="zen-lp-obs__announce">
-        <span>Opal Fabric v0.4 — sub-100ms GPU preemption across 1,400+ spot nodes.</span>
+        <span>Opal Fabric v0.4 — sub-100ms GPU preemption across 1,480 live spot nodes.</span>
         <a href="#rates">Read the wire spec →</a>
       </div>
 
@@ -160,12 +171,16 @@ export function ComputeObservatory() {
       <header id="top" className="zen-lp-obs__hero">
         <div className="zen-lp-obs__container">
           <div className="zen-lp-obs__hero-copy">
+            <div className="zen-lp-obs__hero-kicker">
+              <span className="zen-lp-obs__pulse-dot" aria-hidden="true" />
+              <span>QUIC WIRE MESH · 1,480 GPUs ONLINE</span>
+            </div>
             <h1 className="zen-lp-obs__display">
               One Unix command across{' '}
               <span className="zen-lp-obs__display-accent">every idle GPU</span>
             </h1>
             <p className="zen-lp-obs__hero-support">
-              An atomic node harness exposes raw CUDA, Vulkan, and WASM execution over QUIC—preempting
+              An atomic 11 MB Rust harness exposes CUDA, Vulkan, and WASM execution over QUIC—preempting
               background filler in milliseconds with zero container pulls.
             </p>
             <div className="zen-lp-obs__hero-actions">
@@ -174,8 +189,48 @@ export function ComputeObservatory() {
             </div>
           </div>
 
-          <div className="zen-lp-obs__sculpture-wrap">
-            <GlyphSculpture />
+          {/* Interactive Linear/Modal Workbench Stage fading into canvas */}
+          <div className="zen-lp-obs__theater-wrap">
+            <div className="zen-lp-obs__theater-glow" aria-hidden="true" />
+            <div className="zen-lp-obs__workbench" role="region" aria-label="Live fleet workbench">
+              <div className="zen-lp-obs__wb-bar">
+                <div className="zen-lp-obs__wb-dots"><i /><i /><i /></div>
+                <span>relay://iad-01.opal.run:443 · mTLS 0-RTT</span>
+                <span className="zen-lp-obs__green-text">● {node.prio}</span>
+              </div>
+              <div className="zen-lp-obs__wb-body">
+                <div className="zen-lp-obs__wb-rail">
+                  <div className="zen-lp-obs__wb-rail-title">FLEET NODES</div>
+                  {MESH_NODES.map((item, idx) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      className="zen-lp-obs__wb-node"
+                      aria-pressed={selectedNode === idx}
+                      onClick={() => setSelectedNode(idx)}
+                    >
+                      <span>{item.id}</span>
+                      <span className="zen-lp-obs__green-text">{item.quicRtt}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="zen-lp-obs__wb-center">
+                  <GlyphLattice highlightIndex={selectedNode} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--obs-mono)', fontSize: 11.5, color: 'var(--obs-secondary)' }}>
+                    <span>EXEC_GRAPH · stream #04</span>
+                    <span>{node.gpu}</span>
+                  </div>
+                </div>
+                <div className="zen-lp-obs__wb-inspector">
+                  <div className="zen-lp-obs__wb-rail-title">LIVE TELEMETRY</div>
+                  <div className="zen-lp-obs__wb-kv"><span>NODE</span><span>{node.id}</span></div>
+                  <div className="zen-lp-obs__wb-kv"><span>HARDWARE</span><span>{node.gpu}</span></div>
+                  <div className="zen-lp-obs__wb-kv"><span>PREEMPT SLOT</span><span className="zen-lp-obs__green-text">{node.prio}</span></div>
+                  <div className="zen-lp-obs__wb-kv"><span>UTILIZATION</span><span>{node.util}</span></div>
+                  <div className="zen-lp-obs__wb-kv"><span>THROUGHPUT</span><span className="zen-lp-obs__green-text">{node.rate}</span></div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <dl className="zen-lp-obs__trust">
@@ -216,7 +271,7 @@ export function ComputeObservatory() {
               <div>
                 <h3 className="zen-lp-obs__triptych-title">Driver-only binary</h3>
                 <p className="zen-lp-obs__triptych-desc">
-                  Loads libcuda.so.1 and libvulkan.so.1 at runtime with zero toolkit weight. One static binary runs across Vast, Salad, and owned metal.
+                  Opens libcuda.so.1 and libvulkan.so.1 at runtime with zero toolkit weight across Vast, Salad, and owned metal.
                 </p>
               </div>
             </article>
@@ -226,7 +281,7 @@ export function ComputeObservatory() {
               <div>
                 <h3 className="zen-lp-obs__triptych-title">Always-warm spot arbitrage</h3>
                 <p className="zen-lp-obs__triptych-desc">
-                  Priority 1 filler keeps spot nodes profitable 24/7. Priority 0 workloads pause filler in under 100ms without dropping the lease.
+                  Priority 1 filler covers spot rent 24/7. Priority 0 workloads pause filler in under 100ms without losing the lease.
                 </p>
               </div>
             </article>
@@ -236,7 +291,7 @@ export function ComputeObservatory() {
               <div>
                 <h3 className="zen-lp-obs__triptych-title">Chunked lazy mounts</h3>
                 <p className="zen-lp-obs__triptych-desc">
-                  Client-encrypted 4 MB BLAKE3 chunks fetch on demand from R2 or regional peer caches and flush modified blocks on exit.
+                  Client-encrypted 4 MB BLAKE3 chunks fetch on demand from R2 or peer caches and flush modified blocks on exit.
                 </p>
               </div>
             </article>
@@ -258,7 +313,7 @@ export function ComputeObservatory() {
               <ul className="zen-lp-obs__benefit-list">
                 <li className="zen-lp-obs__benefit-item">
                   <span className="zen-lp-obs__green-text">01</span>
-                  <span><strong>No head-of-line stalls:</strong> QUIC separates control heartbeats, blob streams, and stdout pipes.</span>
+                  <span><strong>No head-of-line stalls:</strong> QUIC isolates control heartbeats, blob transfers, and stdout pipes.</span>
                 </li>
                 <li className="zen-lp-obs__benefit-item">
                   <span className="zen-lp-obs__green-text">02</span>
@@ -330,7 +385,7 @@ export function ComputeObservatory() {
               <div
                 key={row.name}
                 className="zen-lp-obs__rate-row"
-                style={{ cursor: 'pointer', background: selectedSlice === idx ? 'rgba(127,238,100,0.05)' : undefined }}
+                style={{ cursor: 'pointer', background: selectedSlice === idx ? 'rgba(127,238,100,0.055)' : undefined }}
                 onClick={() => setSelectedSlice(idx)}
               >
                 <div>
@@ -397,7 +452,7 @@ export function ComputeObservatory() {
                 Zero container tax · Outbound mTLS · Verified on live spot hardware
               </p>
             </div>
-            <GlyphSculpture compact />
+            <GlyphLattice compact />
           </div>
 
           <div className="zen-lp-obs__footer">
