@@ -56,7 +56,7 @@ export function StudioLaunchpad() {
             <li><a href="#proof-line">Benchmarks</a></li>
             <li><a href="#studio-launch">Pricing</a></li>
           </ul>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="zen-lp-studio__nav-actions">
             <a className="zen-lp-studio__pill zen-lp-studio__pill--outline" href="#machinery">Live check</a>
             <a className="zen-lp-studio__pill zen-lp-studio__pill--black" href="#studio-launch">Launch idea</a>
           </div>
@@ -73,8 +73,10 @@ export function StudioLaunchpad() {
               <span>Shipyard v0.4 — instant .com + SQLite WAL in 60s →</span>
             </a>
             <h1 className="zen-lp-studio__opening-title">
-              Talk through an idea.{' '}
-              <span className="zen-lp-studio__two-tone">Put it live in sixty seconds.</span>
+              Talk through an idea.
+              <span className="zen-lp-studio__two-tone zen-lp-studio__two-tone--line">
+                Put it live in sixty seconds.
+              </span>
             </h1>
             <p className="zen-lp-studio__hero-copy">
               A conversational builder drafts a Zen landing page, buys your .com on Stripe checkout, and wakes on HTTP in 110ms—for $5/mo flat.
@@ -97,10 +99,8 @@ export function StudioLaunchpad() {
               </div>
               <div className="zen-lp-studio__studio-panes">
                 <div className="zen-lp-studio__chat-pane">
-                  <div style={{ fontFamily: 'var(--st-mono)', fontSize: 10.5, color: 'var(--st-support)' }}>
-                    01 · IDEA STUDIO
-                  </div>
-                  <div style={{ display: 'grid', gap: 8 }}>
+                  <div className="zen-lp-studio__pane-label">01 · IDEA STUDIO</div>
+                  <div className="zen-lp-studio__bubble-stack">
                     <div className="zen-lp-studio__bubble zen-lp-studio__bubble--user">
                       {active.prompt}
                     </div>
@@ -125,36 +125,28 @@ export function StudioLaunchpad() {
 
                 <div className="zen-lp-studio__preview-pane">
                   <div>
-                    <div style={{ fontFamily: 'var(--st-mono)', fontSize: 10.5, color: 'var(--st-blue)' }}>
+                    <div className="zen-lp-studio__pane-label zen-lp-studio__pane-label--blue">
                       02 · LIVE ZEN ARTIFACT
                     </div>
-                    <div style={{ marginTop: 10, fontSize: 22, fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.15 }}>
-                      {active.headline}
-                    </div>
-                    <p style={{ marginTop: 8, fontSize: 13.5, color: 'var(--st-muted)' }}>
+                    <div className="zen-lp-studio__artifact-title">{active.headline}</div>
+                    <p className="zen-lp-studio__artifact-sub">
                       Served by WASM isolate + edge ingress · {active.badge}
                     </p>
                   </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <div style={{ flex: 1, height: 34, borderRadius: 8, border: '1px solid var(--st-edge)', background: '#fafafa', paddingInline: 10, display: 'flex', alignItems: 'center', fontSize: 12, color: 'var(--st-support)' }}>
-                      you@domain.com
-                    </div>
-                    <div style={{ height: 34, paddingInline: 14, borderRadius: 8, background: '#111318', color: '#fff', display: 'grid', placeItems: 'center', fontSize: 12, fontWeight: 500 }}>
-                      Join
-                    </div>
+                  <div className="zen-lp-studio__artifact-form">
+                    <div className="zen-lp-studio__artifact-input">you@domain.com</div>
+                    <div className="zen-lp-studio__artifact-join">Join</div>
                   </div>
                 </div>
 
                 <div className="zen-lp-studio__deploy-pane">
-                  <div style={{ fontFamily: 'var(--st-mono)', fontSize: 10.5, color: 'var(--st-support)' }}>
-                    03 · ONE-FORM CHECKOUT
-                  </div>
-                  <div style={{ display: 'grid', gap: 8 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
+                  <div className="zen-lp-studio__pane-label">03 · ONE-FORM CHECKOUT</div>
+                  <div className="zen-lp-studio__deploy-meta">
+                    <div className="zen-lp-studio__deploy-price-row">
                       <span>{checkedDomain}</span>
-                      <span style={{ color: 'var(--st-blue)' }}>$25 today</span>
+                      <span className="zen-lp-studio__domain-avail">$25 today</span>
                     </div>
-                    <div style={{ fontSize: 12, color: 'var(--st-muted)' }}>
+                    <div className="zen-lp-studio__deploy-note">
                       Includes 1-yr .com registration, HTTPS cert, and R2 SQLite WAL backup ($5/mo after).
                     </div>
                   </div>
@@ -169,21 +161,22 @@ export function StudioLaunchpad() {
 
         {/* Vercel blueprint + soft machinery interactive controls */}
         <section id="machinery" className="zen-lp-studio__machinery">
+          <span className="zen-lp-studio__crosshair zen-lp-studio__crosshair--bl" aria-hidden="true">+</span>
+          <span className="zen-lp-studio__crosshair zen-lp-studio__crosshair--br" aria-hidden="true">+</span>
+
           <div className="zen-lp-studio__section-head">
             <h2 className="zen-lp-studio__section-lead">
               Built like an instrument.{' '}
               <span className="zen-lp-studio__two-tone">Priced like a utility.</span>
             </h2>
-            <span style={{ fontFamily: 'var(--st-mono)', fontSize: 12, color: 'var(--st-support)' }}>
-              EDGE INGRESS · R2 SNAPSHOTS · WASM SANDBOX
-            </span>
+            <span className="zen-lp-studio__section-meta">EDGE INGRESS · R2 SNAPSHOTS · WASM SANDBOX</span>
           </div>
 
           <div className="zen-lp-studio__machinery-grid">
             <article className="zen-lp-studio__soft-card zen-lp-studio__soft-card--blueprint">
               <div>
-                <span style={{ fontFamily: 'var(--st-mono)', fontSize: 11.5, opacity: 0.9 }}>01 · INSTANT DOMAIN + TLS</span>
-                <h3 className="zen-lp-studio__card-title" style={{ marginTop: 12 }}>
+                <span className="zen-lp-studio__card-kicker">01 · INSTANT DOMAIN + TLS</span>
+                <h3 className="zen-lp-studio__card-title">
                   Claim a real .com without touching DNS
                 </h3>
                 <p className="zen-lp-studio__card-body">
@@ -193,7 +186,7 @@ export function StudioLaunchpad() {
 
               <div className="zen-lp-studio__mini-console">
                 <form className="zen-lp-studio__domain-form" onSubmit={onCheckDomain}>
-                  <label htmlFor="studio-domain-input" style={{ position: 'absolute', left: -9999 }}>
+                  <label htmlFor="studio-domain-input" className="zen-lp__sr-only">
                     Domain name to check
                   </label>
                   <input
@@ -209,20 +202,18 @@ export function StudioLaunchpad() {
                 </form>
                 <div className="zen-lp-studio__domain-result" role="status">
                   <span>{checkedDomain}</span>
-                  <span style={{ color: '#0070f3', fontWeight: 600 }}>Available · $25 launch pack</span>
+                  <span className="zen-lp-studio__domain-avail">Available · $25 launch pack</span>
                 </div>
               </div>
             </article>
 
             <article className="zen-lp-studio__soft-card">
               <div>
-                <span style={{ fontFamily: 'var(--st-mono)', fontSize: 11.5, color: 'var(--st-blue)' }}>
-                  02 · ZEN ARTIFACT PREVIEW
-                </span>
-                <h3 className="zen-lp-studio__card-title" style={{ marginTop: 12 }}>
+                <span className="zen-lp-studio__card-kicker">02 · ZEN ARTIFACT PREVIEW</span>
+                <h3 className="zen-lp-studio__card-title">
                   Chat-composed pages that deploy verbatim
                 </h3>
-                <p className="zen-lp-studio__card-body" style={{ color: 'var(--st-muted)', opacity: 1 }}>
+                <p className="zen-lp-studio__card-body">
                   Every preview composes typed Zen components with a real waitlist database before you pay a cent.
                 </p>
               </div>
@@ -241,13 +232,11 @@ export function StudioLaunchpad() {
                     </button>
                   ))}
                 </div>
-                <div style={{ marginTop: 16 }}>
-                  <div style={{ fontFamily: 'var(--st-mono)', fontSize: 11.5, color: 'var(--st-support)' }}>
-                    https://{active.domain} · {active.badge}
+                <div>
+                  <div className="zen-lp-studio__tpl-meta">
+                    https://{checkedDomain} · {active.badge}
                   </div>
-                  <div style={{ marginTop: 6, fontSize: 18, fontWeight: 600, letterSpacing: '-0.02em' }}>
-                    {active.headline}
-                  </div>
+                  <div className="zen-lp-studio__tpl-headline">{active.headline}</div>
                 </div>
               </div>
             </article>
@@ -259,7 +248,7 @@ export function StudioLaunchpad() {
           <blockquote className="zen-lp-studio__serif-quote">
             “Idle websites cost nothing to park in object storage while background compute covers the machine rent—so $5 a month works at scale.”
           </blockquote>
-          <p style={{ marginTop: 18, fontFamily: 'var(--st-mono)', fontSize: 12, color: 'var(--st-support)' }}>
+          <p className="zen-lp-studio__quote-attr">
             ARCHITECTURE NOTE · EDGE-1 INGRESS + OPAL-NODE QUIC WAKE
           </p>
 
@@ -284,28 +273,26 @@ export function StudioLaunchpad() {
       <footer id="studio-launch" className="zen-lp-studio__closing">
         <div className="zen-lp-studio__closing-inner">
           <div>
-            <span style={{ fontFamily: 'var(--st-mono)', fontSize: 11.5, color: '#52aeff', letterSpacing: '0.08em' }}>
-              READY IN SIXTY SECONDS
-            </span>
-            <h2 className="zen-lp-studio__opening-title" style={{ marginTop: 12, color: '#ffffff', fontSize: 'clamp(32px, 3.2vw, 44px)', textAlign: 'left' }}>
+            <span className="zen-lp-studio__closing-eyebrow">READY IN SIXTY SECONDS</span>
+            <h2 className="zen-lp-studio__closing-title">
               One Stripe form from 2am idea to live website.
             </h2>
             <p className="zen-lp-studio__closing-sub">
               $25 launch pack includes your .com domain for one year, automatic HTTPS, and persistent SQLite waitlist storage—then $5/mo flat.
             </p>
-            <div className="zen-lp-studio__actions" style={{ justifyContent: 'flex-start' }}>
-              <a className="zen-lp-studio__pill zen-lp-studio__pill--lg" style={{ background: '#ffffff', color: '#111318' }} href="#machinery">
+            <div className="zen-lp-studio__actions zen-lp-studio__actions--left">
+              <a className="zen-lp-studio__pill zen-lp-studio__pill--white zen-lp-studio__pill--lg" href="#machinery">
                 Start building
               </a>
-              <a className="zen-lp-studio__pill zen-lp-studio__pill--lg" style={{ background: '#1e222b', color: '#e2e8f0' }} href="#studio-top">
+              <a className="zen-lp-studio__pill zen-lp-studio__pill--ghost-dark zen-lp-studio__pill--lg" href="#studio-top">
                 Back to top
               </a>
             </div>
           </div>
 
           <div className="zen-lp-studio__closing-box">
-            <div style={{ fontFamily: 'var(--st-mono)', fontSize: 11.5, color: '#94a3b8' }}>INCLUDED IN EVERY LAUNCH</div>
-            <ul style={{ marginTop: 18, display: 'grid', gap: 13, fontSize: 14.5 }}>
+            <div className="zen-lp-studio__closing-box-title">INCLUDED IN EVERY LAUNCH</div>
+            <ul className="zen-lp-studio__closing-list">
               <li>✓ Custom .com domain + automatic TLS certificate</li>
               <li>✓ Sandboxed WASM/V8 runtime (zero host shell risk)</li>
               <li>✓ Continuous SQLite WAL snapshots to R2 storage</li>
@@ -316,7 +303,7 @@ export function StudioLaunchpad() {
 
         <div className="zen-lp-studio__footer">
           <span>Shipyard · Powered by Zen &amp; Opal Fabric</span>
-          <div style={{ display: 'flex', gap: 20 }}>
+          <div className="zen-lp-studio__footer-links">
             <a href="#machinery">Architecture</a>
             <a href="#proof-line">Benchmarks</a>
             <a href="#studio-launch">Terms</a>

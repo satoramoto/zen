@@ -28,10 +28,11 @@ export const ComputeObservatoryPage: Story = {
     then: 'the rate table updates from per-second to hourly and flat pricing',
     act: async ({ canvasElement }) => {
       const canvas = within(canvasElement);
-      await expect(canvas.getByText('$0.00011 / s')).toBeVisible();
+      await expect(canvas.getAllByText('$0.00011 / s').length).toBe(2);
       await userEvent.click(canvas.getByRole('button', { name: /vast-fra-h100-07/i }));
       await userEvent.click(canvas.getByRole('button', { name: 'ZK Prover' }));
       await userEvent.click(canvas.getByRole('button', { name: 'Hourly / flat' }));
+      await userEvent.click(canvas.getByRole('button', { name: /H100 SXM node/i }));
     },
     check: async ({ canvasElement }) => {
       const canvas = within(canvasElement);
@@ -39,6 +40,7 @@ export const ComputeObservatoryPage: Story = {
       await expect(canvas.getAllByText('EXEC_GRAPH · P0 · zk-prove').length).toBe(2);
       await expect(canvas.getByText('$0.39 / hr')).toBeVisible();
       await expect(canvas.getByText('$5.00 / mo flat')).toBeVisible();
+      await expect(canvas.getByText(/High-bandwidth FP8 \/ INT8 tensor proving/)).toBeVisible();
     },
   }),
 };
