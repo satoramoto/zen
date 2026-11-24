@@ -21,7 +21,7 @@ export interface TimeChartProps extends TimeChartModelProps {
  *
  * **Reads as text.** The legend names each series with its latest value and change (a link where
  * it has one); pointing at the plot reads every series at that moment; a summary gives assistive
- * technology the same. The plot is Lightweight Charts (`timeChart.ts`), loaded when a chart first
+ * technology the same. The plot is Lightweight Charts (`TimeChart.plot.ts`), loaded when a chart first
  * mounts, and restyled when its scope's pack or mode changes.
  *
  * **Parts.** `root`, `head`, `legend` (`key` per series, `data-series` 1–5, `swatch`, `name`, `last`,
