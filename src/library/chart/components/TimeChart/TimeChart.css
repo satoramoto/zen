@@ -1,6 +1,6 @@
 /* TimeChart: a legend and span switch over the plot, the readout under it. The plot is
    Lightweight Charts on a transparent ground, so it sits on whatever surface holds it; its colours
-   come from the pack (timeChart.ts reads them), and so do the legend's swatches here. */
+   come from the pack (TimeChart.plot.ts reads them), and so do the legend's swatches here. */
 .lib-chart {
   --lib-chart-h: 240;
   display: grid;

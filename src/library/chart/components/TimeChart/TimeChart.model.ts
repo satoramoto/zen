@@ -1,5 +1,5 @@
 // TimeChart's model: the tree every renderer draws, framework-free. The plot is an element bound to
-// the `timeChart` store (Lightweight Charts, `timeChart.ts`); everything a person reads is text in
+// the `timeChart` store (Lightweight Charts, `TimeChart.plot.ts`); everything a person reads is text in
 // the tree: the legend (each series' name, latest value and change, a link when it has one), the
 // span switch, the readout of the moment the pointer is at, and a summary for assistive
 // technology. With too few readings it says so instead of drawing an empty plot.
